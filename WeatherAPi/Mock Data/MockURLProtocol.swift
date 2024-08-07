@@ -1,0 +1,114 @@
+//
+//  MockURLProtocol.swift
+//  WeatherAPi
+//
+//  Created by Gayan Dias on 09/07/2024.
+//
+
+import Foundation
+import Combine
+
+protocol Mockable: AnyObject {
+    var bundle: Bundle { get }
+    func loadJSON<T: Decodable>(filename: String, type: T.Type) -> T
+}
+
+extension Mockable {
+    var bundle: Bundle {
+        return Bundle(for: type(of: self))
+    }
+
+    func loadJSON<T: Decodable>(filename: String, type: T.Type) -> T {
+        guard let path = bundle.url(forResource: filename, withExtension: "json") else {
+            fatalError("Failed to load JSON")
+        }
+
+        do {
+            let data = try Data(contentsOf: path)
+            let decodedObject = try JSONDecoder().decode(type, from: data)
+
+            return decodedObject
+        } catch {
+            fatalError("Failed to decode loaded JSON")
+        }
+    }
+}
+
+class MockApiClient: Mockable, APIClient {
+    
+    var sendError: Bool
+    var mockFile: String?
+    
+    init(sendError: Bool = false, mockFile: String? = nil) {
+        self.sendError = sendError
+        self.mockFile = mockFile
+    }
+    
+    func asyncRequest<T>(endpoint: EndpointProvider, responseModel: T.Type) async throws -> T where T: Decodable {
+        if sendError {
+            throw NetworkRequestError.invalidResponse(error: "Response not valid")
+        } else {
+            let filename = mockFile ?? endpoint.mockFile!
+            return loadJSON(filename: filename, type: responseModel.self)
+        }
+    }
+    
+    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, NetworkRequestError> {
+        if sendError {
+            return Fail(error: NetworkRequestError.invalidResponse(error: "Response not valid"))
+                .eraseToAnyPublisher()
+        } else {
+            return Just(loadJSON(filename: request.endPoint.mockFile!, type: responseModel.self!) as T)
+                .setFailureType(to: NetworkRequestError.self)
+                .eraseToAnyPublisher()
+        }
+    }
+}
+
+
+///-----------------------------------------------------
+class MockURLProtocol: URLProtocol {
+    static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
+    
+    override class func canInit(with request: URLRequest) -> Bool {
+        return true
+    }
+    
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    
+    override func stopLoading() { }
+    
+    override func startLoading() {
+         guard let handler = MockURLProtocol.requestHandler else {
+            return
+        }
+        
+        do {
+            let (response, data)  = try handler(request)
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            client?.urlProtocol(self, didLoad: data)
+            client?.urlProtocolDidFinishLoading(self)
+        } catch  {
+            client?.urlProtocol(self, didFailWithError: error)
+        }
+    }
+}
+
+struct MockEndpoint: EndpointProvider {    
+    var scheme: String = "https"
+    var baseURL: String = "api.weatherstack.com"
+    var path: String = "/current"
+    var method: HTTPMethod = .get
+    var queryItems: [URLQueryItem]? = nil
+    var body: [String: Any]? = nil
+    var mockFile: String? = nil
+}
+
+struct MockRequestModel1: RequestModelProtocol {    
+    var endPoint: EndpointProvider
+    var method: HTTPMethod = .get
+    var body: Data?
+    var requestTimeout: Float?
+}
