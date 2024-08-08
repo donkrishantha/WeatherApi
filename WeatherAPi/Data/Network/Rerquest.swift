@@ -113,7 +113,8 @@ public struct RequestModel {
         
         var unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
         var unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
-        return urlRequest
+        var soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
+        return soapRequest
     }
 }
 

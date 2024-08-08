@@ -34,7 +34,7 @@ final class NetworkManager: APIClient {
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in
-                return .transportError(error.localizedDescription) //-1009
+                return .transportError(error.localizedDescription, error.code.rawValue) //-1009
             }
             //.print()
             .retry(1)
@@ -96,8 +96,6 @@ final class NetworkManager: APIClient {
             return .serverError(statusCode)
         case 501...599:
             return .error5xx(statusCode)
-        case -1002:
-            return .unSupportedUrl(statusCode)
         default:
             return .unknownError(statusCode)
         }

@@ -51,7 +51,6 @@ struct MainContentView: View {
                     text: $searchTerm
                 )
                 Button(action: {
-                    //viewModel.checkRechability()
                     viewModel.loadAsyncData()
                 }, label: {
                     Text("Press me")

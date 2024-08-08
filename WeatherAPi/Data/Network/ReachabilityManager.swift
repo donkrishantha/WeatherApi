@@ -8,6 +8,64 @@
 import Foundation
 import Network
 
+final class NetworkMonitor: ObservableObject {
+    static let shared = NetworkMonitor()
+    let queue = DispatchQueue(label: "NetworkMonitor")
+    let monitor = NWPathMonitor()
+    @Published public private(set) var isConnected: Bool = false
+    private var hasStatus: Bool = false
+    
+    init() {
+        monitor.pathUpdateHandler = { path in
+            #if targetEnvironment(simulator)
+                if (!self.hasStatus) {
+                    self.isConnected = path.status == .satisfied
+                    self.hasStatus = true
+                } else {
+                    self.isConnected = !self.isConnected
+                }
+            #else
+                self.isConnected = path.status == .satisfied
+            #endif
+            print("isConnected: " + String(self.isConnected))
+        }
+        monitor.start(queue: queue)
+    }
+}
+
+class NetworkStatus: ObservableObject {
+    static let shared = NetworkStatus()
+    private var monitor: NWPathMonitor?
+    private var queue = DispatchQueue(label: "NetworkMonitor")
+    @Published var isConnected: Bool = false
+
+    private init() {
+        monitor = NWPathMonitor()
+        startMonitoring()
+    }
+
+    deinit {
+        stopMonitoring()
+    }
+    
+    func startMonitoring() {
+        monitor?.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async {
+                let status = path.status == .satisfied
+                self?.isConnected = status
+                print(">>> \(path.status)")
+            }
+        }
+
+        monitor?.start(queue: queue)
+    }
+
+    func stopMonitoring() {
+        monitor?.cancel()
+        monitor = nil
+    }
+}
+
 /*extension NWInterface.InterfaceType: CaseIterable {
     public static var allCases: [NWInterface.InterfaceType] = [.other, .wifi, .cellular, .loopback, .wiredEthernet]
 }
@@ -72,6 +130,39 @@ final class NetworkPathMonitor : NetworkPathMonitorProtocol {
 
     func cancel() {
         monitor.cancel()
+    }
+}
+
+public class NetworkReachability {
+
+    var pathMonitor: NWPathMonitor!
+    var path: NWPath?
+    lazy var pathUpdateHandler: ((NWPath) -> Void) = { path in
+        self.path = path
+        if path.status == NWPath.Status.satisfied {
+            print("Connected")
+        } else if path.status == NWPath.Status.unsatisfied {
+            print("unsatisfied")
+        } else if path.status == NWPath.Status.requiresConnection {
+            print("requiresConnection")
+        }
+    }
+
+    let backgroudQueue = DispatchQueue.global(qos: .background)
+
+    init() {
+        pathMonitor = NWPathMonitor()
+        pathMonitor.pathUpdateHandler = self.pathUpdateHandler
+        pathMonitor.start(queue: backgroudQueue)
+    }
+
+    func isNetworkAvailable() -> Bool {
+        if let path = self.path {
+            if path.status == NWPath.Status.satisfied {
+                return true
+            }
+        }
+        return false
     }
 }
 

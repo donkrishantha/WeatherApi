@@ -9,6 +9,21 @@ import Foundation
 import Combine
 import UIKit
 
+protocol MainViewModelInputInterface: ObservableObject {
+    var value: String { get set }
+    var isTryThis: Bool { get }
+}
+
+final class MainViewModel2: MainViewModelInputInterface {
+    var value: String
+    var isTryThis: Bool
+    
+    init(value: String, isTryThis: Bool) {
+        self.value = value
+        self.isTryThis = isTryThis
+    }
+}
+
 final class MainViewModel: ObservableObject {
     
     var cancelable = Set<AnyCancellable>()
@@ -47,22 +62,6 @@ final class MainViewModel: ObservableObject {
     
     var weatherIcon: String {
         weatherDetails?.currentWeather.weatherIcon ?? ""
-    }
-    
-    func checkRechability() {
-        self.networkMonitor.pathUpdateHandler = { [weak self] status in
-            DispatchQueue.main.async { [weak self] in
-                self?.networkStatus = status == .satisfied ? .connected : .notConnected
-                if status == .satisfied {
-                    self?.loadAsyncData()
-                    self?.networkMonitor.cancel()
-                } else {
-                    self?.showAlert = true
-                    self?.alertMessage = AlertMessage(title: "Offline!", message: "The connection appear to be offline, Please check your connction")
-                }
-            }
-        }
-        self.networkMonitor.start(queue: DispatchQueue.global())
     }
     
     deinit {
@@ -115,6 +114,22 @@ extension MainViewModel {
             }
         )
         .store(in: &cancelable)
+    }
+    
+    func checkRechability() {
+        self.networkMonitor.pathUpdateHandler = { [weak self] status in
+            DispatchQueue.main.async { [weak self] in
+                self?.networkStatus = status == .satisfied ? .connected : .notConnected
+                if status == .satisfied {
+                    self?.loadAsyncData()
+                    self?.networkMonitor.cancel()
+                } else {
+                    self?.showAlert = true
+                    self?.alertMessage = AlertMessage(title: "Offline!", message: "The connection appear to be offline, Please check your connction")
+                }
+            }
+        }
+        self.networkMonitor.start(queue: DispatchQueue.global())
     }
 }
 
