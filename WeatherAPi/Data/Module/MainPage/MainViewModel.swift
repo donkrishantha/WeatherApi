@@ -7,129 +7,92 @@
 
 import Foundation
 import Combine
-import UIKit
-
-protocol MainViewModelInputInterface: ObservableObject {
-    var value: String { get set }
-    var isTryThis: Bool { get }
-}
-
-final class MainViewModel2: MainViewModelInputInterface {
-    var value: String
-    var isTryThis: Bool
-    
-    init(value: String, isTryThis: Bool) {
-        self.value = value
-        self.isTryThis = isTryThis
-    }
-}
 
 final class MainViewModel: ObservableObject {
-    
-    var cancelable = Set<AnyCancellable>()
-    let apiClient = NetworkManager()
-    @Published var weatherDetails: WeatherDetail?
+    // MARK: - Output
+    @Published private var weatherModel: WeatherModel?
     @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
+    
+    var weatherDescription: String { get { String(format: "%@ %@", "Description:",weatherModel?.weatherDescription ?? "N/A") }}
+    var weatherName: String { get { String(format: "%@ %@", "Name:",weatherModel?.weatherName ?? "N/A") }}
+    var temperature: String { get { String(format: "%@ %i", "Temperature:", weatherModel?.temperature ?? 0) }}
+    var weatherIcon: String { get { weatherModel?.weatherIcon ?? "N/A" }}
+    var observationDate: String {get { String(format: "%@ %@", "Date:", weatherModel?.observationDate?.roundTripDate(style: .medium) ?? "N/A") }}
+    var observationTime: String {get { String(format: "%@ %@", "Time:", weatherModel?.observationTime?.timeIn24HourFormat() ?? "N/A") }}
+    
+    // MARK: - Input
+    @Published var searchText: String = ""
+    private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private let repository: WeatherApiRepoImplement
     
-    @Published var searchText: String = ""
-    
-    // Network
-    @Published var networkStatus: NewNetworkStatus = .undetermined
-    var networkMonitor: NetworkPathMonitorProtocol
-    
-    // MARK: Initialisation
-    
-    init(repository: WeatherApiRepoImplement, networkMonitor: NetworkPathMonitorProtocol) {
+    // MARK: - Initialisation
+    init(repository: WeatherApiRepoImplement) {
         self.repository = repository
-        self.networkMonitor = networkMonitor
-        //self.checkRechability()
+        //self.loadLocalJsonData()
     }
     
-    // MARK: - Public properties
-    var weatherDescription: String {
-        "Description: \(weatherDetails?.currentWeather.weatherDescription ?? "")"
+    // MARK: - De-Initialisation
+    deinit {}
+}
+
+extension MainViewModel {
+    /// request data async way
+    func loadAsyncData() {
+        Task(priority: .medium) { await getWeatherDetail() }
     }
     
-    var name: String {
-        "name: \(weatherDetails?.currentLocation.name ?? "...")"
+    private func getWeatherDetail(location: String? = nil) async {
+        /// request parameters
+        let requestParameters = WeatherDetailParams(searchTerm: location ?? "New York")
+        
+        /// request to get "weather details"
+        await self.repository.searchWeatherData(params: requestParameters)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] rowWeatherResponse in
+                guard let self = self else { return }
+                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
+            }.store(in: &cancelable)
     }
     
-    var temperature: String {
-        "temperature: \(weatherDetails?.currentWeather.temperature ?? 0)"
+    /// process error in further
+    private func processErrorResponse(completion: Subscribers.Completion<NetworkRequestError>) {
+        switch completion { case .finished: break; case .failure(let error):
+            DispatchQueue.main.async {
+                self.showAlert = true
+                self.alertMessage = AlertMessage(title: "Error!", message: error.errorDescription ?? "N/A")
+            }
+        }
     }
     
-    var weatherIcon: String {
-        weatherDetails?.currentWeather.weatherIcon ?? ""
-    }
-    
-    deinit {
-        networkMonitor.cancel()
+    /// process response in further
+    private func processSuccessResponse(rowWeatherResponse: WeatherRowData) {
+        DispatchQueue.main.async{
+            self.weatherModel = WeatherModel(data: rowWeatherResponse)
+        }
     }
 }
 
 extension MainViewModel {
-    
-    // MARK: Helper Methods
-    func checkOnlineStatus() {
-        let _ = NetworkStatus.shared.startMonitoring()
-        let online = NetworkStatus.shared.isConnected
-        if online {
-            print("Online")
-        } else {
-            print("Offline")
+    /// load local json data
+    fileprivate func loadLocalJsonData() {
+        guard let data = FileLoader.readLocalFile("mock_weather_data") else {
+            fatalError("Unable to locate file \"weatherData.json\" in main bundle.")
         }
+        
+        let rawWeather = FileLoader.loadJson(data)
+        self.weatherModel = WeatherModel(data: rawWeather)
     }
+}
+
+/// request parameters
+struct WeatherDetailParams {
+    let searchTerm: String
     
-    func loadAsyncData() {
-        Task(priority: .medium) {
-            await getApiData()
-        }
-    }
-    
-    @MainActor
-    private func getApiData(location: String? = nil) async {
-        await self.repository.searchWeatherData(searchTerm: location ?? "New york",
-                                                accessKey: AppConstants.Api.apiKey )
-        .sink(
-            receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                switch completion {
-                case .finished:
-                    debugPrint("Finished")
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        self.showAlert = true
-                        self.alertMessage = AlertMessage(title: "Error", message: error.errorDescription ?? "N/A")
-                        //self.alertMessage = AlertMessage(error: error)
-                    }
-                }
-            },
-            receiveValue: { [weak self] weatherDetail in
-                guard let self = self else { return }
-                DispatchQueue.main.async{
-                    self.weatherDetails = weatherDetail
-                }
-            }
-        )
-        .store(in: &cancelable)
-    }
-    
-    func checkRechability() {
-        self.networkMonitor.pathUpdateHandler = { [weak self] status in
-            DispatchQueue.main.async { [weak self] in
-                self?.networkStatus = status == .satisfied ? .connected : .notConnected
-                if status == .satisfied {
-                    self?.loadAsyncData()
-                    self?.networkMonitor.cancel()
-                } else {
-                    self?.showAlert = true
-                    self?.alertMessage = AlertMessage(title: "Offline!", message: "The connection appear to be offline, Please check your connction")
-                }
-            }
-        }
-        self.networkMonitor.start(queue: DispatchQueue.global())
+    fileprivate init(searchTerm: String) {
+        self.searchTerm = searchTerm
     }
 }
 

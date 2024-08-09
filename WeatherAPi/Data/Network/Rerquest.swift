@@ -111,10 +111,10 @@ public struct RequestModel {
             }
         }
         
-        var unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
-        var unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
-        var soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
-        return soapRequest
+        let unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
+        let unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
+        let soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
+        return urlRequest
     }
 }
 

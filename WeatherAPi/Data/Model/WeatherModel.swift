@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct WeatherDetail: Codable {
+struct WeatherRowData: Codable {
     let currentLocation: CurrentLocation
     let currentWeather: CurrentWeather
     
@@ -82,6 +82,24 @@ struct CurrentWeather:Codable {
     }*/
 }
 
+struct WeatherModel: Codable {
+    var weatherDescription: String?
+    var weatherName: String?
+    var temperature: Int?
+    var weatherIcon: String?
+    var observationDate: String?
+    var observationTime: String?
+    
+    init(data: WeatherRowData) {
+        weatherDescription = data.currentWeather.weatherDescription
+        weatherName = data.currentLocation.name
+        temperature = data.currentWeather.temperature
+        weatherIcon = data.currentWeather.weatherIcon
+        observationDate = data.currentLocation.localTime
+        observationTime = data.currentWeather.observationTime
+    }
+}
+
 struct ErrorModel: Decodable {
     let status: Bool?
     let error: ErrorData?
@@ -97,47 +115,3 @@ struct ErrorModel: Decodable {
         let info: String?
     }
 }
-
-/*
-{
-    "request": {
-        "type": "City",
-        "query": "New York, United States of America",
-        "language": "en",
-        "unit": "m"
-    },
-    "location": {
-        "name": "New York",
-        "country": "United States of America",
-        "region": "New York",
-        "lat": "40.714",
-        "lon": "-74.006",
-        "timezone_id": "America/New_York",
-        "localtime": "2024-01-27 11:57",
-        "localtime_epoch": 1706356620,
-        "utc_offset": "-5.0"
-    },
-    "current": {
-        "observation_time": "04:57 PM",
-        "temperature": 7,
-        "weather_code": 116,
-        "weather_icons": [
-            "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals.png"
-        ],
-        "weather_descriptions": [
-            "Partly cloudy"
-        ],
-        "wind_speed": 11,
-        "wind_degree": 60,
-        "wind_dir": "ENE",
-        "pressure": 1024,
-        "precip": 0,
-        "humidity": 82,
-        "cloudcover": 75,
-        "feelslike": 5,
-        "uv_index": 1,
-        "visibility": 16,
-        "is_day": "yes"
-    }
-}
-*/

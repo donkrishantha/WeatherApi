@@ -13,17 +13,6 @@ struct AlertMessage {
     let message: String
 }
 
-struct ClientError: Error, Codable {
-    let success: Bool
-    let ErrorData: ErrorData?
-    
-    struct ErrorData: Error, Codable {
-        let code: Int?
-        let type: String?
-        let info: String?
-    }
-}
-
 enum NetworkRequestError: Error, LocalizedError, Equatable {
     case requestTimeout(_ code: Int)
     case invalidRequest(_ code: Int) // 400

@@ -23,26 +23,12 @@ struct MainContentView: View {
                 SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
                     .padding()
                 
-                VStack {
-                    switch viewModel.networkStatus {
-                    case .undetermined:
-                        Text("UDETERMINED..")
-                            .foregroundColor(.blue)
-                    case .notConnected:
-                        Text("DISCONNECTED..")
-                            .foregroundColor(.red)
-                    case .connected:
-                        Text("CONNECTED..")
-                            .foregroundColor(.green)
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.black)
-                
                 Group{
-                    Text(viewModel.name)
+                    Text(viewModel.weatherName)
                     Text(viewModel.temperature)
                     Text(viewModel.weatherDescription)
+                    Text(viewModel.observationDate)
+                    Text(viewModel.observationTime)
                 }.font(.title)
                 if !viewModel.weatherIcon.isEmpty {
                     ImageView(imageUrl: viewModel.weatherIcon, size: 80)
@@ -61,7 +47,7 @@ struct MainContentView: View {
                 .padding([.leading], 0)
             }
             .onAppear(
-                perform: viewModel.checkRechability
+                perform: viewModel.loadAsyncData
             )
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
@@ -78,8 +64,7 @@ struct MainContentView_Preview: PreviewProvider {
     static var previews: some View {
         let networkManager = NetworkManager()
         let repo = WeatherApiRepoImplement(networkManager: networkManager)
-        let networkMonitor = NetworkPathMonitor(monitor: NWPathMonitor())
-        let viewModel: MainViewModel = MainViewModel(repository: repo, networkMonitor: networkMonitor)
+        let viewModel: MainViewModel = MainViewModel(repository: repo)
         MainContentView(viewModel: viewModel)
     }
 }

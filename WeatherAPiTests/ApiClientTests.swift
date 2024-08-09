@@ -9,63 +9,6 @@ import XCTest
 import Combine
 @testable import WeatherAPi
 
-/*
-final class ApiClientTests: XCTestCase {
-    
-    var cancelable = Set<AnyCancellable>()
-    
-    struct TestModel: Codable {
-        let id: Int
-        let title: String
-    }
-    
-    private func setMockProtocol() {
-        MockURLProtocol.requestHandler = { request in
-            let exampleData =
-                """
-                {"id":-1009,"title":"Hello, world!"}
-                """
-                .data(using: .utf8)!
-            let response = HTTPURLResponse.init(url: request.url!, statusCode: 200, httpVersion: "2.0", headerFields: nil)!
-            print("++++++++++++++++++++++++++++++++++ \(response)")
-            return (response, exampleData)
-        }
-    }
-    
-    func testAsyncRequest() async throws {
-        
-        let sessionConfiguration = URLSessionConfiguration.ephemeral
-        sessionConfiguration.protocolClasses = [MockURLProtocol.self]
-        let session = URLSession(configuration: sessionConfiguration)
-        //setMockProtocol()
-        
-        let apiClient = NetworkManager(session: session)
-        let endpoint = MockEndpoint()
-        let request = RequestModel(endPoint: endpoint, method: .get)
-        
-        let expectation = XCTestExpectation(description: "Request failed.")
-        
-        let result = await apiClient.request(request, responseModel: TestModel.self)
-        
-        result.sink { result in
-            switch result {
-                case .finished:
-                    break
-                case .failure:
-                    expectation.fulfill()
-            }
-        } receiveValue: { value in
-            expectation.fulfill()
-            print("******************************* \(value.id)")
-            print(value.title)
-            XCTFail("Request successful")
-            XCTAssertEqual(value.id, -1009)
-            XCTAssertEqual(value.title, "Hello, world!")
-        }.store(in: &cancelable)
-        //await(for: [expectation], timeout: 5)
-    }
-}*/
-
 class HttpClientTest: XCTestCase, Mockable {
     
     private var cancelable: Set<AnyCancellable> = []
@@ -133,7 +76,7 @@ class HttpClientTest: XCTestCase, Mockable {
 //        let mockData: Data = Data(mockSoapResponse.utf8)
 //        return mockData
 //    }
-    
+//
 //    func test_WeatherApi_return_TransportError() async throws {
 //        let response = hTTPUrlResponse(with: -1002)
 //        MockURLProtocol.requestHandler = { request in
