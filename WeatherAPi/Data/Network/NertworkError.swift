@@ -9,8 +9,8 @@ import UIKit
 import Network
 
 struct AlertMessage {
-    let title: String
-    let message: String
+    let title: String?
+    let message: String?
 }
 
 enum NetworkRequestError: Error, LocalizedError, Equatable {

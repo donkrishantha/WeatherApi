@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import OSLog
 
 protocol APIClient {
     func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, NetworkRequestError>
@@ -15,6 +16,7 @@ protocol APIClient {
 final class NetworkManager: APIClient {
     
     var session: URLSession
+    private let logger = Logger.apiClient
     
     convenience init() {
         let configuration = URLSessionConfiguration.default
@@ -34,6 +36,7 @@ final class NetworkManager: APIClient {
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in
+                self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")
                 return .transportError(error.localizedDescription, error.code.rawValue) //-1009
             }
             //.print()
@@ -46,11 +49,11 @@ final class NetworkManager: APIClient {
     
     private func manageResponse<T: Codable>(data: Data, response: URLResponse)  -> AnyPublisher<T, NetworkRequestError> {
         guard let response = response as? HTTPURLResponse else {
+            logger.error("NETWORK MANAGER: Response not valid")
             return Fail(error: .invalidResponse(error: "Response not valid"))
                 .eraseToAnyPublisher()
         }
-        print("Response code: \(response.statusCode)")
-                
+                        
         switch response.statusCode {
         case 200..<300:
             let jsonDecoder = JSONDecoder()
@@ -60,15 +63,17 @@ final class NetworkManager: APIClient {
                 .mapError { error in
                     do {
                         let apiError = try jsonDecoder.decode(ErrorModel.self, from: data)
-                        print(response.statusCode)
+                        self.logger.error("NETWORK MANAGER: \(apiError.error?.info ?? error.localizedDescription)")
                         return .apiError(apiError.error?.info ?? error.localizedDescription)
                     } catch {
+                        self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")
                         return .decodingError(error.localizedDescription)
                     }
                 }
                 .map {$0}
                 .eraseToAnyPublisher()
         default:
+            self.logger.error("NETWORK MANAGER: \(response.statusCode)")
             return Fail(error: self.httpErrorHandel(response.statusCode))
                 .eraseToAnyPublisher()
         }

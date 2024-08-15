@@ -37,7 +37,7 @@ struct CurrentLocation: Codable {
     }*/
 }
 
-struct CurrentWeather:Codable {
+struct CurrentWeather: Codable {
     let observationTime, windDirection: String
     let temperature, windSpeed, windDegree, pressure, humidity, cloudCover, feelsLike, uvIndex, visibility: Int
     private let weatherDescriptions, weatherIcons : [String]
@@ -91,7 +91,7 @@ struct WeatherModel: Codable {
     var observationTime: String?
     
     init(data: WeatherRowData) {
-        weatherDescription = data.currentWeather.weatherDescription
+        weatherDescription = "Description" + data.currentWeather.weatherDescription
         weatherName = data.currentLocation.name
         temperature = data.currentWeather.temperature
         weatherIcon = data.currentWeather.weatherIcon

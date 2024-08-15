@@ -19,7 +19,7 @@ struct ImageView: View {
                 switch phase {
                 case .empty:
                     ZStack {
-                        Color.gray
+                        Color.yellow
                         ProgressView()
                     }
                 case .success(let image):
@@ -30,13 +30,14 @@ struct ImageView: View {
                         .foregroundColor(.red)
                     Text(error.localizedDescription)
                         .multilineTextAlignment(.center)
+                        .font(.title3)
                 @unknown default:
                     Text("Unknown")
                         .foregroundColor(.gray)
                 }
             }
             .frame(width: size, height: size)
-            .cornerRadius(15)
+            .cornerRadius(8)
         } else {
             // Fallback on earlier versions
         }

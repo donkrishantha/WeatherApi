@@ -18,12 +18,12 @@ struct SearchBar: View {
         }, onCommit: {
             self.showClearButton = false
         })
-            .modifier(ClearButton(text: $searchText, isVisible: $showClearButton))
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(12)
-            //.accessibilityIdentifier(AppConstants.A11y.searchTextField)
+        .modifier(ClearButton(text: $searchText, isVisible: $showClearButton))
+        .padding(.horizontal)
+        .padding(.vertical, 10)
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(8)
+        //.accessibilityIdentifier(AppConstants.A11y.searchTextField)
     }
 }
 
