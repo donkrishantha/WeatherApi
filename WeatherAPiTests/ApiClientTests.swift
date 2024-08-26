@@ -23,7 +23,7 @@ class HttpClientTest: XCTestCase, Mockable {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
         urlSession = URLSession(configuration: config)
-        httpClient = NetworkManager(session: urlSession)
+        httpClient = APIClient(session: urlSession)
         try super.setUpWithError()
     }
     
@@ -155,7 +155,7 @@ class HttpClientTest: XCTestCase, Mockable {
             switch result {
                 case .finished:break
                 case .failure(let error):
-                    XCTAssertEqual(NetworkRequestError.unauthorised(response.statusCode), error)
+                    XCTAssertEqual(ApiError.unauthorised(response.statusCode), error)
                     expectation.fulfill()
             }
         } receiveValue: { value in

@@ -13,7 +13,7 @@ struct AlertMessage {
     let message: String?
 }
 
-enum NetworkRequestError: Error, LocalizedError, Equatable {
+enum ApiError: Error, LocalizedError, Equatable {
     case requestTimeout(_ code: Int)
     case invalidRequest(_ code: Int) // 400
     case invalidResponse(error: String)

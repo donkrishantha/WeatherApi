@@ -8,9 +8,13 @@
 import Foundation
 import Combine
 
+enum FileExtensionType: String {
+    case json = ".json"
+}
+
 protocol Mockable: AnyObject {
     var bundle: Bundle { get }
-    func loadJSON<T: Decodable>(filename: String, type: T.Type) -> T
+    func loadJSON<T: Decodable>(filename: String, extensionType: FileExtensionType, type: T.Type) -> T
 }
 
 extension Mockable {
@@ -18,7 +22,9 @@ extension Mockable {
         return Bundle(for: type(of: self))
     }
 
-    func loadJSON<T: Decodable>(filename: String, type: T.Type) -> T {
+    func loadJSON<T: Decodable>(filename: String,
+                                extensionType: FileExtensionType,
+                                type: T.Type) -> T {
         guard let path = bundle.url(forResource: filename, withExtension: "json") else {
             fatalError("Failed to load JSON")
         }
@@ -34,7 +40,7 @@ extension Mockable {
     }
 }
 
-class MockApiClient: Mockable, APIClient {
+class MockApiClient: Mockable, APIClientProtocol {
     
     var sendError: Bool
     var mockFile: String?
@@ -46,20 +52,20 @@ class MockApiClient: Mockable, APIClient {
     
     func asyncRequest<T>(endpoint: EndpointProvider, responseModel: T.Type) async throws -> T where T: Decodable {
         if sendError {
-            throw NetworkRequestError.invalidResponse(error: "Response not valid")
+            throw ApiError.invalidResponse(error: "Response not valid")
         } else {
             let filename = mockFile ?? endpoint.mockFile!
-            return loadJSON(filename: filename, type: responseModel.self)
+            return loadJSON(filename: filename, extensionType: .json, type: responseModel.self)
         }
     }
     
-    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, NetworkRequestError> {
+    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, ApiError> {
         if sendError {
-            return Fail(error: NetworkRequestError.invalidResponse(error: "Response not valid"))
+            return Fail(error: ApiError.invalidResponse(error: "Response not valid"))
                 .eraseToAnyPublisher()
         } else {
-            return Just(loadJSON(filename: request.endPoint.mockFile!, type: responseModel.self!) as T)
-                .setFailureType(to: NetworkRequestError.self)
+            return Just(loadJSON(filename: request.endPoint.mockFile!, extensionType: .json, type: responseModel.self!) as T)
+                .setFailureType(to: ApiError.self)
                 .eraseToAnyPublisher()
         }
     }

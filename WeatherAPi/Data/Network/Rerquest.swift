@@ -44,7 +44,7 @@ public struct RequestModel1: RequestModelProtocol {
     
     func asURLRequest() throws -> URLRequest? {
         guard let url = try endPoint.getNewUrl() else {
-            throw NetworkRequestError.apiError("Define error")
+            throw ApiError.apiError("Define error")
         }
 
         var urlRequest = URLRequest(url: url)
@@ -57,7 +57,7 @@ public struct RequestModel1: RequestModelProtocol {
             do {
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
-                throw  NetworkRequestError.encodingError("Error encoding http body")
+                throw  ApiError.encodingError("Error encoding http body")
             }
         }
         return urlRequest
@@ -94,7 +94,7 @@ public struct RequestModel {
     
     func asURLRequest() throws -> URLRequest? {
         guard let url = try endPoint.getNewUrl() else {
-            throw NetworkRequestError.apiError("Define error")
+            throw ApiError.apiError("Define error")
         }
 
         var urlRequest = URLRequest(url: url)
@@ -107,13 +107,13 @@ public struct RequestModel {
             do {
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
-                throw  NetworkRequestError.encodingError("Error encoding http body")
+                throw  ApiError.encodingError("Error encoding http body")
             }
         }
         
-        let unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
-        let unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
-        let soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
+//        let unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
+//        let unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
+//        let soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
         return urlRequest
     }
 }

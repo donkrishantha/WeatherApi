@@ -17,27 +17,45 @@ struct MainContentView: View {
     }
     
     var body: some View {
-        NavigationView{
-            ZStack{
-                BackgroundView()
-                VStack(alignment: .leading) {
-                    SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
-                    
-                    detailView
-
-                    Spacer()
-                    
-                    .disableAutocorrection(true)
+        
+        TabView {
+            LoginView()
+                .tabItem {
+                    Label("Login", systemImage: "person.fill")
                 }
-                //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
-                .alert(isPresented: $viewModel.showAlert) {
-                    Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
-                          message: Text(viewModel.alertMessage?.message ?? "N/A"),
-                          dismissButton: .default(Text("Got it!")))
+                NavigationView{
+                    ZStack{
+                        BackgroundView()
+                        VStack(alignment: .leading) {
+                            SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
+        
+                            detailView
+        
+                            Spacer()
+        
+                            .disableAutocorrection(true)
+                        }
+                        //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
+                        .alert(isPresented: $viewModel.showAlert) {
+                            Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
+                                  message: Text(viewModel.alertMessage?.message ?? "N/A"),
+                                  dismissButton: .default(Text("Got it!")))
+                        }
+                        .navigationTitle("Weather details")
+                        .padding([.leading, .trailing], 15)
+                    }
                 }
-                .navigationTitle("Weather details")
-                .padding([.leading, .trailing], 15)
-            }
+                .tabItem {
+                    Label("Register", systemImage: "person.badge.plus")
+                }
+            LoginView()
+                .tabItem {
+                    Label("Feedback", systemImage: "bubble.left.fill")
+                }
+            LoginView()
+                .tabItem {
+                    Label("Subscribe", systemImage: "star.fill")
+                }
         }
     }
     
@@ -57,8 +75,8 @@ struct MainContentView: View {
                 Button(viewModel.buttonTitle) {
                     viewModel.loadAsyncData(viewModel.searchText)
                 }
-                .disabled(viewModel.isSendingDisabled)
-                .foregroundColor(viewModel.isSendingDisabled ? Color.gray : Color.blue)
+                .disabled(viewModel.isRequestSendingDisabled)
+                .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
                 .font(.title)
 
             }.padding([.top], 20)
@@ -68,8 +86,8 @@ struct MainContentView: View {
 
 struct MainContentView_Preview: PreviewProvider {
     static var previews: some View {
-        let networkManager = NetworkManager()
-        let repo = WeatherApiRepoImplement(networkManager: networkManager)
+        let networkManager = APIClient()
+        let repo = WeatherApiRepoImplement(apiClient: networkManager)
         let viewModel: MainViewModel = MainViewModel(repository: repo)
         MainContentView(viewModel: viewModel)
     }

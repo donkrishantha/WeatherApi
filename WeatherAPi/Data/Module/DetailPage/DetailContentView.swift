@@ -23,8 +23,8 @@ struct DetailContentView: View {
 struct DetailContentView_Preview: PreviewProvider {
     static var previews: some View {
         //var session: URLSession
-        let networkManager = NetworkManager()
-        let repo = WeatherApiRepoImplement(networkManager: networkManager)
+        let networkManager = APIClient()
+        let repo = WeatherApiRepoImplement(apiClient: networkManager)
         let naviController = NavigationController()
         let coordinator = AppCoordinatorImplement(navigationController: naviController)
         let viewModel: DetailViewModel = DetailViewModel(repository: repo, coordinator: coordinator)

@@ -9,12 +9,13 @@ import Foundation
 import Combine
 import OSLog
 
-protocol APIClient {
-    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, NetworkRequestError>
+protocol APIClientProtocol {
+    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, ApiError>
+    //func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?, completion: @escaping (Result<[T], Error>) -> Void)
 }
 
-final class NetworkManager: APIClient {
-    
+final class APIClient: APIClientProtocol {
+        
     var session: URLSession
     private let logger = Logger.apiClient
     
@@ -30,7 +31,7 @@ final class NetworkManager: APIClient {
         self.session = session
     }
     
-    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, NetworkRequestError> {
+    func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, ApiError> {
         return session
             .dataTaskPublisher(for: try! request.asURLRequest()!)
             .subscribe(on: DispatchQueue.global(qos: .background))
@@ -41,13 +42,13 @@ final class NetworkManager: APIClient {
             }
             //.print()
             .retry(1)
-            .flatMap { output -> AnyPublisher<T, NetworkRequestError> in
+            .flatMap { output -> AnyPublisher<T, ApiError> in
                 self.manageResponse(data: output.data, response: output.response)
             }
             .eraseToAnyPublisher()
     }
     
-    private func manageResponse<T: Codable>(data: Data, response: URLResponse)  -> AnyPublisher<T, NetworkRequestError> {
+    private func manageResponse<T: Codable>(data: Data, response: URLResponse)  -> AnyPublisher<T, ApiError> {
         guard let response = response as? HTTPURLResponse else {
             logger.error("NETWORK MANAGER: Response not valid")
             return Fail(error: .invalidResponse(error: "Response not valid"))
@@ -79,11 +80,31 @@ final class NetworkManager: APIClient {
         }
     }
     
+//    func request<T>(_ request: RequestModel, responseModel: T.Type?,
+//                    completion: @escaping (Result<[T], any Error>) -> Void) where T : Decodable, T : Encodable {
+//        self.session.dataTask(with: try request.asURLRequest()!, completionHandler: { data, response, error in
+//
+//            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+//                completion(.failure(ApiError.invalidResponse(error: "Response not valid")))
+//                return
+//            }
+//            
+//            guard let data = data,
+//                  let object = try? JSONDecoder().decode([T].self, from: data) else {
+//                completion(.failure(ApiError.decodingError(error?.localizedDescription ?? "Unknown Error")))
+//                return
+//            }
+//            
+//            completion(.success(object))
+//        })
+//        .resume()
+//    }
+    
     /// Parses a HTTP StatusCode and returns a proper error
     /// - Parameter statusCode: HTTP status code
     /// - Returns: Mapped Error
     
-    private func httpErrorHandel(_ statusCode: Int) -> NetworkRequestError {
+    private func httpErrorHandel(_ statusCode: Int) -> ApiError {
         switch statusCode {
         case 400:
             return .badRequest(statusCode)
@@ -107,17 +128,17 @@ final class NetworkManager: APIClient {
     }
     
     /*
-    private func handleError(error: Error, errorModel: ErrorModel) -> NetworkRequestError {
+    private func handleError(error: Error, errorModel: ErrorModel) -> ApiError {
         switch error {
         case is Swift.DecodingError:
             return .decodingError(_error: error.localizedDescription)
         case is Swift.EncodingError:
             return .encodingError(_error: error.localizedDescription)
-        case is NetworkRequestError:
+        case is ApiError:
             return .decodingError(_error: error.localizedDescription)
-        case _ as NetworkRequestError:
+        case _ as ApiError:
             return .urlSessionFailed("oo", 0)
-        case let error as NetworkRequestError:
+        case let error as ApiError:
             return error
         default:
             return .unknownError(00)

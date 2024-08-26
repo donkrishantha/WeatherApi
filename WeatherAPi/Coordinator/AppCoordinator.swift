@@ -20,9 +20,8 @@ final class AppCoordinatorImplement: AppCoordinatorProtocol {
     }
     
     func start() {
-        let repo = WeatherApiRepoImplement(networkManager: NetworkManager())
-        let networkMonitor = NetworkPathMonitor(monitor: NWPathMonitor())
-        let viewModel: MainViewModel = MainViewModel(repository: repo)
+        let repository = WeatherApiRepoImplement(apiClient: APIClient())
+        let viewModel: MainViewModel = MainViewModel(repository: repository)
         let viewController = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([viewController], animated: true)
     }

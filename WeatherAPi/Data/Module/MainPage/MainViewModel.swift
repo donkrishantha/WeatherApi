@@ -13,37 +13,46 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
-    @Published var alertMessage: AlertMessage?
+    @Published private(set) var alertMessage: AlertMessage?
     @Published var showAlert = false
     private let logger = Logger.dataStore
     
     var weatherDescription: String { get { "Description" + (weatherModel?.weatherDescription ?? "N/A") }}
+    
     var weatherName: String { get { "Name:" + (weatherModel?.weatherName ?? "N/A")}}
+    
     var temperature: String { get { String(format: "%@ %i", "Temperature:", weatherModel?.temperature ?? 0)}}
+    
     var weatherIcon: String { get { weatherModel?.weatherIcon ?? "N/A"}}
+    
     var observationDate: String { get { "Date:" + (weatherModel?.observationDate?.roundTripDate(style: .medium) ?? "N/A")}}
+    
     var observationTime: String { get {"Time:" + (weatherModel?.observationTime?.timeIn24HourFormat() ?? "N/A")}}
     
     // MARK: - Input
-    @Published var searchText: String = ""
+    @Published var searchText: String
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
-    private let repository: WeatherApiRepoImplement
-    private var isSending = false
+    private let repository: WeatherApiRepoProtocol?
+    private var isRequestSending = false
     
-    var buttonTitle: String { isSending ? "Sending..." : "Send" }
-    var isSendingDisabled: Bool { isSending || searchText.isEmpty }
+    var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
+    var isRequestSendingDisabled: Bool { isRequestSending || searchText.isEmpty }
     
     
     // MARK: - Initialisation
-    init(repository: WeatherApiRepoImplement) {
+    init(repository: WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
+    //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
         self.repository = repository
-        self.loadLocalJsonData()
+        searchText = "Not set"
+        if !searchText.isEmpty {
+            self.loadLocalJsonData()
+        }
         self.searchLocation()
     }
     
     // MARK: - De-Initialisation
     deinit {
-        print("++++++++++++++++++++++++++DE -Init++++++++++++++++++++++++++++++++++++++++")
+        print("++++++++++++++++++++++++++DE INIT")
     }
 }
 
@@ -61,37 +70,41 @@ extension MainViewModel {
     
     /// request data async way
     func loadAsyncData(_ searchText: String) {
-        //Task(priority: .medium) { await getWeatherDetail(searchText) }
         guard !searchText.isEmpty else { return }
         
-        isSending = true
+        isRequestSending = true
         
         Task (priority: .medium) {
             await getWeatherDetail(searchText)
             self.searchText = ""
-            isSending = false
+            isRequestSending = false
         }
     }
     
-    private func getWeatherDetail(_ text: String) async {
+    func getWeatherDetail(_ text: String) async {
         /// request parameters
         let requestParameters = WeatherDetailParams(searchTerm: text)
         
-        logger.trace("REQUEST: /current")
-        
-        /// request to get "weather details"
-        await self.repository.searchWeatherData(params: requestParameters)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] rowWeatherResponse in
-                guard let self = self else { return }
-                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
-            }.store(in: &cancelable)
+        guard repository != nil else {
+            await getWeatherDetail(searchText)
+            
+            logger.trace("REQUEST: /current")
+            
+            /// request to get "weather details"
+            await self.repository?.searchWeatherData(params: requestParameters)
+                .sink { [weak self] completion in
+                    guard let self = self else { return }
+                    self.processErrorResponse(completion: completion)
+                } receiveValue: { [weak self] rowWeatherResponse in
+                    guard let self = self else { return }
+                    self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
+                }.store(in: &cancelable)
+            return
+        }
     }
     
     /// process error in further
-    private func processErrorResponse(completion: Subscribers.Completion<NetworkRequestError>) {
+    private func processErrorResponse(completion: Subscribers.Completion<ApiError>) {
         switch completion { case .finished: break; case .failure(let error):
             logger.error("ERROR : \(error)")
             DispatchQueue.main.async {
@@ -129,7 +142,7 @@ extension MainViewModel {
 struct WeatherDetailParams {
     let searchTerm: String
     
-    fileprivate init(searchTerm: String) {
+     init(searchTerm: String) {
         self.searchTerm = searchTerm
     }
 }
