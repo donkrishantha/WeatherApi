@@ -5,7 +5,7 @@
 //  Created by Gayan Dias on 04/08/2024.
 //
 
-import XCTest
+//import XCTest
 import Foundation
 import Combine
 @testable import WeatherAPi
@@ -26,7 +26,7 @@ final class MockWeatherRepository: Mockable, WeatherApiRepoProtocol {
                 .eraseToAnyPublisher()
         } else {
             let mockWeatherDetail = "mock_weather_detail"
-            return Just(loadJSON(filename: mockWeatherDetail, type: WeatherRowData.self))
+            return Just(loadJSON(filename: mockWeatherDetail, extensionType: .json, type: WeatherRowData.self))
                 .setFailureType(to: ApiError.self)
                 .eraseToAnyPublisher()
         }

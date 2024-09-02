@@ -21,8 +21,8 @@ final class MainViewModelTest: XCTestCase {
     }
 
     override func tearDownWithError() throws {
-        viewModel = nil
         repository = nil
+        viewModel = nil
         cancelable.forEach {$0.cancel()}
         cancelable.removeAll()
         try super.tearDownWithError()
@@ -34,14 +34,15 @@ final class MainViewModelTest: XCTestCase {
     }
     
     func test_search_results() {
-        
-        ///  Given
-        viewModel.searchText = "New York"
+        /// Given
+        let expectation = XCTestExpectation(description: "searchResults")
         let repository = MockWeatherRepository(sendError: false)
         let viewModel = MainViewModel(repository: repository)
         
-        let expectation = XCTestExpectation(description: "searchResults")
-
+        /// When
+        viewModel.searchText = "New York"
+        
+        /// Then
         viewModel.$weatherModel
             .sink(receiveValue: { weather in
                 if ((weather?.weatherName?.isEmpty) != nil) {
@@ -49,16 +50,19 @@ final class MainViewModelTest: XCTestCase {
                 }
             })
             .store(in: &cancelable)
-
         wait(for: [expectation], timeout: 10)
     }
     
+    
     func test_search_results_with_emptyString() {
-        viewModel.searchText = ""
-        let viewModel = MainViewModel(repository: MockWeatherRepository(sendError: false))
-
+        /// Given
         let expectation = XCTestExpectation(description: "searchResults")
-
+        let viewModel = MainViewModel(repository: MockWeatherRepository(sendError: false))
+        
+        /// When
+        viewModel.searchText = ""
+    
+        /// Then
         viewModel.$weatherModel
             .sink(receiveValue: { weather in
                 if ((weather?.weatherName?.isEmpty) == nil) {
@@ -66,72 +70,48 @@ final class MainViewModelTest: XCTestCase {
                 }
             })
             .store(in: &cancelable)
-
         wait(for: [expectation], timeout: 10)
     }
     
+    
     func test_load_asyncData() async throws {
-        
         /// Given
+        let expectation = XCTestExpectation(description: "Load async data!")
         let viewModel = MainViewModel(repository: MockWeatherRepository(sendError: false))
-        viewModel.searchText = "New York"
         
         /// When
-        let expectation = XCTestExpectation(description: "Load async data!")
-                
+        viewModel.searchText = "New York"
+        
         /// Then
         viewModel.$weatherModel
             .sink(receiveValue: { [weak self] weather in
-                guard let self = self else { return }
+                guard self != nil else { return }
                 if ((weather?.weatherName?.isEmpty) != nil) {
                     XCTAssertEqual(weather?.weatherName, "New York")
                     XCTAssertEqual(weather?.temperature , 28)
-                    XCTAssertEqual(weather?.weatherIcon, "Clear")
                     XCTAssertEqual(weather?.weatherIcon, "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0008_clear_sky_night.png")
                     XCTAssertEqual(weather?.observationDate, "2024-08-02 01:27")
                     XCTAssertEqual(weather?.observationTime, "05:27 AM")
                     expectation.fulfill()
-                }                
+                }
             })
             .store(in: &cancelable)
+        await fulfillment(of: [expectation], timeout: 10)
     }
-
     
     func test_getWeatherDetails() async throws {
-        
         /// Given
-        viewModel.searchText = "New York"
+        let expectation = XCTestExpectation(description: "Load async data!")
         let repository = MockWeatherRepository(sendError: false)
         let viewModel = MainViewModel(repository: repository)
-        let requestParameters = WeatherDetailParams.init(searchTerm: viewModel.searchText)
         
         /// When
-        let expectation = XCTestExpectation(description: "Load async data!")
-                
+        viewModel.searchText = "New York"
+        let requestParameters = WeatherDetailParams.init(searchTerm: viewModel.searchText)
+        
         /// Then
         await repository.searchWeatherData(params: requestParameters)
-//            .sink(receiveValue: { [weak self] weatherRowData in
-//                guard let self = self else { return }
-//                if !weatherRowData.currentLocation.name.isEmpty {
-//                    XCTAssertEqual(weatherRowData.currentLocation.name, "New York")
-//                    XCTAssertEqual(weatherRowData.currentWeather.temperature, 28)
-//                    XCTAssertEqual(weatherRowData.currentWeather.weatherIcon, "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0008_clear_sky_night.png")
-//                    XCTAssertEqual(weatherRowData.currentLocation.localTime, "2024-08-02 01:27")
-//                    XCTAssertEqual(weatherRowData.currentWeather.observationTime, "05:27 AM")
-//                    expectation.fulfill()
-//                    expectation.fulfill()
-//                }
-//            })
-//            .store(in: &cancelable)
-        
-            .sink { [weak self] weather in
-                guard self != nil else { return }
-                switch weather {
-                case .finished: break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] weatherRowData in
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] weatherRowData in
                 guard self != nil else { return }
                 if !weatherRowData.currentLocation.name.isEmpty {
                     XCTAssertEqual(weatherRowData.currentLocation.name, "New York")
@@ -141,9 +121,36 @@ final class MainViewModelTest: XCTestCase {
                     XCTAssertEqual(weatherRowData.currentWeather.observationTime, "05:27 AM")
                     expectation.fulfill()
                 }
-            }
+            })
             .store(in: &cancelable)
-
+        await fulfillment(of: [expectation], timeout: 10)
+    }
+    
+    func test_getWeatherDetails_With_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Load async data!")
+        let repository = MockWeatherRepository(sendError: true)
+        let viewModel = MainViewModel(repository: repository)
+        
+        /// When
+        viewModel.searchText = "New York"
+        let requestParameters = WeatherDetailParams.init(searchTerm: viewModel.searchText)
+        
+        /// Then
+        await repository.searchWeatherData(params: requestParameters)
+            .sink { [weak self] weather in
+                guard self != nil else { return }
+                switch weather {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    XCTAssertEqual(error.errorDescription, ApiError.apiError("Error").localizedDescription)
+                    expectation.fulfill()
+                }
+            } receiveValue: { _ in}
+            .store(in: &cancelable)
+        await fulfillment(of: [expectation], timeout: 10)
     }
 }
 

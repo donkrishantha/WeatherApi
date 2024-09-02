@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchBar: View {
     @Binding var searchText: String
     @State var showClearButton = false
-    var placeholder = "Search"
+    var placeholder = "Search for location"
 
     var body: some View {
         TextField(placeholder, text: $searchText, onEditingChanged: { editing in

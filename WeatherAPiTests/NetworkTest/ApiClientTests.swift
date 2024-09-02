@@ -42,7 +42,7 @@ class HttpClientTest: XCTestCase, Mockable {
                                headerFields: herder)!
     }
     
-    private func mockDatas() -> Data {
+    private func mockData() -> Data {
         let mockString =
         """
         {"id":12345,"title":"Hello, world!"}
@@ -60,54 +60,45 @@ class HttpClientTest: XCTestCase, Mockable {
         return mockData
     }
     
-//    private func mockSoapResponse() -> Data {
-//        let mockSoapResponse =
-//        """
-//        <?xml version="1.0"?>
-//
-//        <soap:Envelope
-//        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-//        soap:encodingStyle="http://www.w3.org/2003/05/soap-encoding">
-//          ...
-//          Message information goes here
-//          ...
-//        </soap:Envelope>
-//        """
-//        let mockData: Data = Data(mockSoapResponse.utf8)
-//        return mockData
-//    }
-//
-//    func test_WeatherApi_return_TransportError() async throws {
-//        let response = hTTPUrlResponse(with: -1002)
-//        MockURLProtocol.requestHandler = { request in
-//            return (response, self.mockSoapResponse())
-//        }
-//        
-//        let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-//        let expectation = XCTestExpectation(description: "Error Response")
-//        
-//        await httpClient.request(request, responseModel: TestModel.self)
-//            .sink { result in
-//                switch result {
-//                    case .finished:
-//                    break
-//                    case .failure(let error):
-//                    XCTAssertEqual(.transportError(error.localizedDescription,response.statusCode), error)
-//                        expectation.fulfill()
-//                }
-//            } receiveValue: { value in
-//            }.store(in: &cancelable)
-//        await fulfillment(of: [expectation], timeout: 5)
-//    }
+    private func mockInvalidJsonData() -> Data {
+        let mockData = "{\"data1\"\"\"}".data(using: .utf8)!
+        return mockData
+    }
     
-    func test_WeatherApi_return_Success() async throws {
+    /*
+    func test_WeatherApi_return_TransportError() async throws {
+        let response = hTTPUrlResponse(with: -1002)
         MockURLProtocol.requestHandler = { request in
-            return (self.hTTPUrlResponse(with: 200), self.mockDatas())
+            return (response, self.mockInvalidJsonData())
         }
         
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "Success Response")
+        let expectation = XCTestExpectation(description: "Error Response")
         
+        await httpClient.request(request, responseModel: TestModel.self)
+            .sink { result in
+                switch result {
+                    case .finished:break
+                    case .failure(let error):
+                    XCTAssertEqual(.transportError(error.localizedDescription, response.statusCode), error)
+                        expectation.fulfill()
+                }
+            } receiveValue: { value in
+            }.store(in: &cancelable)
+        await fulfillment(of: [expectation], timeout: 5)
+    }*/
+    
+    func test_WeatherApi_return_Success() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Success Response")
+        MockURLProtocol.requestHandler = { request in
+            return (self.hTTPUrlResponse(with: 200), self.mockData())
+        }
+        
+        /// When
+        let request = RequestModel(endPoint: MockEndpoint(), method: .get)
+    
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
         } receiveValue: { value in
@@ -120,14 +111,17 @@ class HttpClientTest: XCTestCase, Mockable {
     
     
     func test_WeatherApi_return_BadResponse_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "BadResponse Error")
         let response = hTTPUrlResponse(with: 400)
         MockURLProtocol.requestHandler = { request in
-            return (response, self.mockDatas())
+            return (response, self.mockData())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "BadResponse Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
             switch result {
@@ -136,20 +130,23 @@ class HttpClientTest: XCTestCase, Mockable {
                     XCTAssertEqual(.badRequest(response.statusCode), error)
                     expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 7)
     }
     
     func test_WeatherApi_return_Unauthorised_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Unauthorised Error")
         let response = hTTPUrlResponse(with: 401)
         MockURLProtocol.requestHandler = { request in
-            return (response, self.mockDatas())
+            return (response, self.mockData())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "Unauthorised Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
             switch result {
@@ -158,20 +155,23 @@ class HttpClientTest: XCTestCase, Mockable {
                     XCTAssertEqual(ApiError.unauthorised(response.statusCode), error)
                     expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 5)
     }
     
     func test_WeatherApi_return_NotFound_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "NotFound Error")
         let response = hTTPUrlResponse(with: 404)
         MockURLProtocol.requestHandler = { request in
-            return (response, self.mockDatas())
+            return (response, self.mockData())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "NotFound Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
             switch result {
@@ -180,20 +180,23 @@ class HttpClientTest: XCTestCase, Mockable {
                     XCTAssertEqual(.notFound(response.statusCode), error)
                     expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 5)
     }
     
     func test_WeatherApi_return_Forbidden_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Forbidden Error")
         let response = hTTPUrlResponse(with: 403)
         MockURLProtocol.requestHandler = { request in
-            return (response, self.mockDatas())
+            return (response, self.mockData())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "Forbidden Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
             switch result {
@@ -202,20 +205,23 @@ class HttpClientTest: XCTestCase, Mockable {
                     XCTAssertEqual(.forbidden(response.statusCode), error)
                     expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 5)
     }
     
     func test_WeatherApi_return_API_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Api Error")
         let response = hTTPUrlResponse(with: 200)
         MockURLProtocol.requestHandler = { request in
-            return (response, self.mockDatas())
+            return (response, self.mockData())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "Api Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestDecodingErrorModel.self)
         .sink { result in
             switch result {
@@ -224,29 +230,32 @@ class HttpClientTest: XCTestCase, Mockable {
                     XCTAssertEqual(.apiError(error.localizedDescription), error)
                     expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 5)
     }
     
     func test_WeatherApi_return_Decoding_Error() async throws {
+        /// Given
+        let expectation = XCTestExpectation(description: "Decoding Error")
         let response = hTTPUrlResponse(with: 200)
         MockURLProtocol.requestHandler = { request in
             return (response, self.mockDataWithError())
         }
         
+        /// When
         let request = RequestModel(endPoint: MockEndpoint(), method: .get)
-        let expectation = XCTestExpectation(description: "Decoding Error")
         
+        /// Then
         await httpClient.request(request, responseModel: TestModel.self)
         .sink { result in
             switch result {
                 case .finished:break
                 case .failure(let error):
                 XCTAssertEqual(.decodingError(error.localizedDescription), error)
-                    expectation.fulfill()
+                expectation.fulfill()
             }
-        } receiveValue: { value in
+        } receiveValue: { _ in
         }.store(in: &cancelable)
         await fulfillment(of: [expectation], timeout: 5)
     }

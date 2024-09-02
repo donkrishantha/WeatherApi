@@ -30,7 +30,7 @@ final class MainViewModel: ObservableObject {
     var observationTime: String { get {"Time:" + (weatherModel?.observationTime?.timeIn24HourFormat() ?? "N/A")}}
     
     // MARK: - Input
-    @Published var searchText: String
+    @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private let repository: WeatherApiRepoProtocol?
     private var isRequestSending = false
@@ -43,9 +43,10 @@ final class MainViewModel: ObservableObject {
     init(repository: WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
     //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
         self.repository = repository
-        searchText = "Not set"
+        print(searchText)
         if !searchText.isEmpty {
-            self.loadLocalJsonData()
+            //self.loadLocalJsonData()
+            self.loadAsyncData(searchText)
         }
         self.searchLocation()
     }
@@ -76,6 +77,7 @@ extension MainViewModel {
         
         Task (priority: .medium) {
             await getWeatherDetail(searchText)
+            //self.loadLocalJsonData()
             self.searchText = ""
             isRequestSending = false
         }
@@ -85,8 +87,8 @@ extension MainViewModel {
         /// request parameters
         let requestParameters = WeatherDetailParams(searchTerm: text)
         
-        guard repository != nil else {
-            await getWeatherDetail(searchText)
+        //guard repository != nil else {
+            //await getWeatherDetail(searchText)
             
             logger.trace("REQUEST: /current")
             
@@ -100,7 +102,7 @@ extension MainViewModel {
                     self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
                 }.store(in: &cancelable)
             return
-        }
+        ///}
     }
     
     /// process error in further
@@ -116,10 +118,10 @@ extension MainViewModel {
     
     /// process response in further
     private func processSuccessResponse(rowWeatherResponse: WeatherRowData) {
-       // DispatchQueue.main.async{
-            logger.info("SUCCESS:")
+        //DispatchQueue.main.async{
+            self.logger.info("SUCCESS:")
             self.weatherModel = WeatherModel(data: rowWeatherResponse)
-        ///}
+        //}
     }
 }
 
@@ -132,9 +134,9 @@ extension MainViewModel {
         
         let rawWeather = FileLoader.loadJson(data)
         self.logger.debug("Local database")
-        DispatchQueue.main.async{
+        //DispatchQueue.main.async{
             self.weatherModel = WeatherModel(data: rawWeather)
-        }
+        //}
     }
 }
 

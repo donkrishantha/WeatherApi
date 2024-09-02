@@ -12,7 +12,7 @@ protocol WeatherApiRepoProtocol {
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData,ApiError>
 }
 
-class WeatherApiRepoImplement: Mockable, WeatherApiRepoProtocol {
+struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
 
     private var apiClient: APIClient
     

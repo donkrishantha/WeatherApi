@@ -65,6 +65,7 @@ final class APIClient: APIClientProtocol {
                     do {
                         let apiError = try jsonDecoder.decode(ErrorModel.self, from: data)
                         self.logger.error("NETWORK MANAGER: \(apiError.error?.info ?? error.localizedDescription)")
+                        self.logger.error("Decode failed: \(error)\nData result: \(String(describing: String(data: data, encoding: String.Encoding.utf8)))")
                         return .apiError(apiError.error?.info ?? error.localizedDescription)
                     } catch {
                         self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")

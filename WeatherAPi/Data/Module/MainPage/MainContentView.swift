@@ -19,32 +19,11 @@ struct MainContentView: View {
     var body: some View {
         
         TabView {
-            LoginView()
+            mainView
                 .tabItem {
                     Label("Login", systemImage: "person.fill")
                 }
-                NavigationView{
-                    ZStack{
-                        BackgroundView()
-                        VStack(alignment: .leading) {
-                            SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
-        
-                            detailView
-        
-                            Spacer()
-        
-                            .disableAutocorrection(true)
-                        }
-                        //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
-                        .alert(isPresented: $viewModel.showAlert) {
-                            Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
-                                  message: Text(viewModel.alertMessage?.message ?? "N/A"),
-                                  dismissButton: .default(Text("Got it!")))
-                        }
-                        .navigationTitle("Weather details")
-                        .padding([.leading, .trailing], 15)
-                    }
-                }
+            LoginView()
                 .tabItem {
                     Label("Register", systemImage: "person.badge.plus")
                 }
@@ -57,6 +36,41 @@ struct MainContentView: View {
                     Label("Subscribe", systemImage: "star.fill")
                 }
         }
+    }
+    
+    private var mainView: some View {
+        return AnyView(
+            NavigationView{
+                ZStack{
+                    BackgroundView()
+                    VStack(alignment: .leading) {
+                        SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
+                        
+                        if viewModel.searchText.isEmpty {
+                            /// History
+                            //placesListView
+                        } else {
+                            /// Search results
+                            //searchPlacesListView
+                        }
+    
+                        self.detailView
+    
+                        Spacer()
+    
+                        .disableAutocorrection(true)
+                    }
+                    //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
+                    .alert(isPresented: $viewModel.showAlert) {
+                        Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
+                              message: Text(viewModel.alertMessage?.message ?? "N/A"),
+                              dismissButton: .default(Text("Got it!")))
+                    }
+                    .navigationTitle("Weather details")
+                    .padding([.leading, .trailing], 15)
+                }
+            }
+        )
     }
     
     private var detailView: some View {
