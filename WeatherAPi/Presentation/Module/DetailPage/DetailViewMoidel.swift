@@ -12,12 +12,10 @@ final class DetailViewModel: ObservableObject {
     
     var subscriptions = Set<AnyCancellable>()
     private let repository: WeatherApiRepoImplement
-    private let coordinator: AppCoordinatorProtocol
+    //private let coordinator: AppCoordinatorProtocol
     
-    init(repository: WeatherApiRepoImplement,
-         coordinator: AppCoordinatorProtocol) {
+    init(repository: WeatherApiRepoImplement) {
         self.repository = repository
-        self.coordinator = coordinator
     }
 }
 

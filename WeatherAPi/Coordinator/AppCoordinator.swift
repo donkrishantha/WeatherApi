@@ -13,15 +13,17 @@ protocol AppCoordinatorProtocol: AnyObject {
 }
 
 final class AppCoordinatorImplement: AppCoordinatorProtocol {
+    
+    private let dependencyContainer: DependencyContainer
     unowned private let navigationController: NavigationController
     
-    init(navigationController: NavigationController) {
+    init(dependencyContainer: DependencyContainer, navigationController: NavigationController) {
         self.navigationController = navigationController
+        self.dependencyContainer = dependencyContainer
     }
     
     func start() {
-        let repository = WeatherApiRepoImplement(apiClient: APIClient())
-        let viewModel: MainViewModel = MainViewModel(repository: repository)
+        let viewModel: MainViewModel = MainViewModel(repository: dependencyContainer.weatherApiRepository)
         let viewController = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([viewController], animated: true)
     }

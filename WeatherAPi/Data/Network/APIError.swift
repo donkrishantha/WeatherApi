@@ -124,6 +124,7 @@ enum ContentType: String {
 //412 Precondition Failed – one or more conditions in the request header fields evaluated to false
 //500 Internal Server Error – a generic error occurred on the server
 //503 Service Unavailable – the requested service is not available
+//410 https://medium.com/@jacobmartinbartlett/async-testing-masterclass-2-mocking-like-a-pro-475bba9d25aa
 
 //http://the-internet.herokuapp.com/status_codes/200
 //http://the-internet.herokuapp.com/status_codes/301

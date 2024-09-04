@@ -87,22 +87,26 @@ extension MainViewModel {
         /// request parameters
         let requestParameters = WeatherDetailParams(searchTerm: text)
         
-        //guard repository != nil else {
-            //await getWeatherDetail(searchText)
-            
-            logger.trace("REQUEST: /current")
-            
-            /// request to get "weather details"
-            await self.repository?.searchWeatherData(params: requestParameters)
-                .sink { [weak self] completion in
-                    guard let self = self else { return }
-                    self.processErrorResponse(completion: completion)
-                } receiveValue: { [weak self] rowWeatherResponse in
-                    guard let self = self else { return }
-                    self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
-                }.store(in: &cancelable)
+        /// validate repository
+        guard let repository = repository else {
+            self.showAlert = true
+            self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
             return
-        ///}
+        }
+           
+        /// logger status
+        logger.trace("REQUEST: /current")
+        
+        /// request to get "weather details"
+        await self.repository?.searchWeatherData(params: requestParameters)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] rowWeatherResponse in
+                guard let self = self else { return }
+                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
+            }.store(in: &cancelable)
+        return
     }
     
     /// process error in further

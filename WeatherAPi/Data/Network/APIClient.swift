@@ -15,9 +15,20 @@ protocol APIClientProtocol {
 }
 
 final class APIClient: APIClientProtocol {
-        
+    
+    private let session: URLSession
+    private let logger = Logger.apiClient
+
+    init(session: URLSession) {
+        self.session = session
+    }
+    /*
     var session: URLSession
     private let logger = Logger.apiClient
+    
+    init(session: URLSession = URLSession.shared) {
+        self.session = session
+    }*/
     
     convenience init() {
         let configuration = URLSessionConfiguration.default
@@ -25,10 +36,6 @@ final class APIClient: APIClientProtocol {
         configuration.timeoutIntervalForRequest = 60
         configuration.timeoutIntervalForResource = 300
         self.init(session: URLSession(configuration: configuration))
-    }
-    
-    init(session: URLSession = URLSession.shared) {
-        self.session = session
     }
     
     func request<T: Codable>(_ request: RequestModel, responseModel: T.Type?) async -> AnyPublisher<T, ApiError> {

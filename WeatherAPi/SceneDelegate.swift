@@ -20,14 +20,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func setUpWindow(in scene: UIWindowScene) -> UIWindow {
-        
+        let dependencyContainer = DependencyContainer()
         let navigationController = NavigationController()
         
         let window = UIWindow(windowScene: scene)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
-        let coordinator = AppCoordinatorImplement(navigationController: navigationController)
+        let coordinator = AppCoordinatorImplement(dependencyContainer: dependencyContainer,
+                                                  navigationController: navigationController)
         coordinator.start()
         
         return window
