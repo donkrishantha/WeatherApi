@@ -9,11 +9,12 @@ import Foundation
 import Combine
 
 protocol WeatherApiRepoProtocol {
-    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData,ApiError>
+    
+    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
 }
 
 struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
-
+    
     private var apiClient: APIClient
     
     init(apiClient: APIClient) {
@@ -21,9 +22,9 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
     }
     
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
-        let endpointNew = EventsEndpoints.getCurrentWeatherDetails(accessKey: AppConstants.Api.apiKey,
+        let endpoint = EventsEndpoints.getCurrentWeatherDetails(accessKey: AppConstants.Api.apiKey,
                                                                    query: params.searchTerm)
-        let request = RequestModel(endPoint: endpointNew, method: .get)
+        let request = RequestModel(endPoint: endpoint, method: .get)
         return await apiClient.request(request, responseModel: WeatherRowData.self)
     }
     

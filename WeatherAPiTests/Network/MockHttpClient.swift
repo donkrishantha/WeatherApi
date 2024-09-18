@@ -11,6 +11,16 @@ import Combine
 @testable import WeatherAPi
 
 final class MockWeatherRepository: Mockable, WeatherApiRepoProtocol {
+    func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<WeatherAPi.WeatherRowData, WeatherAPi.ApiError> {
+        return Fail(error: ApiError.apiError("Error"))
+            .eraseToAnyPublisher()
+    }
+    
+    func upload(data: Data, fileName: String, mediaType: String) async -> AnyPublisher<WeatherAPi.WeatherRowData, WeatherAPi.ApiError> {
+        return Fail(error: ApiError.apiError("Error"))
+            .eraseToAnyPublisher()
+    }
+    
     
     var sendError: Bool
     var mockFile: String?

@@ -130,3 +130,41 @@ enum ContentType: String {
 //http://the-internet.herokuapp.com/status_codes/301
 //http://the-internet.herokuapp.com/status_codes/404
 //http://the-internet.herokuapp.com/status_codes/500
+
+
+/*
+private func handleError(error: Error, errorModel: ErrorModel) -> ApiError {
+    switch error {
+    case is Swift.DecodingError:
+        return .decodingError(_error: error.localizedDescription)
+    case is Swift.EncodingError:
+        return .encodingError(_error: error.localizedDescription)
+    case is ApiError:
+        return .decodingError(_error: error.localizedDescription)
+    case _ as ApiError:
+        return .urlSessionFailed("oo", 0)
+    case let error as ApiError:
+        return error
+    default:
+        return .unknownError(00)
+    }
+}*/
+
+/*private func handleStatusCode(statusCode: Int) throws {
+    switch statusCode {
+    case 200 ..< 300:
+        break
+    case 400:
+        throw APIError.httpError(.badRequest)
+    case 401:
+        throw APIError.httpError(.unauthorized)
+    case 403:
+        throw APIError.httpError(.forbidden)
+    case 404:
+        throw APIError.httpError(.notFound)
+    case 500:
+        throw APIError.httpError(.serverError)
+    default:
+        throw APIError.httpError(.unknown)
+    }
+}*/

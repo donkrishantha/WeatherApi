@@ -107,15 +107,15 @@
 				<key>location-parameters</key>
 				<dict>
 					<key>EndingColumnNumber</key>
-					<string>41</string>
+					<string>0</string>
 					<key>EndingLineNumber</key>
-					<string>177</string>
+					<string>126</string>
 					<key>StartingColumnNumber</key>
-					<string>35</string>
+					<string>0</string>
 					<key>StartingLineNumber</key>
-					<string>177</string>
+					<string>125</string>
 					<key>Timestamp</key>
-					<string>744310552.940295</string>
+					<string>747589628.2028461</string>
 				</dict>
 				<key>rebasable-url</key>
 				<dict>
@@ -131,15 +131,16 @@
 			<key>text-context</key>
 			<dict>
 				<key>focused</key>
-				<string>number</string>
+				<string>let sendableClosure = { @Sendable (number: Int) -&gt; String in
+</string>
 				<key>leading</key>
 				<string>
 /*
-let sendableClosure = { @Sendable (</string>
+</string>
 				<key>trailing</key>
-				<string>: Int) -&gt; String in
-    if number &gt; 12 {
+				<string>    if number &gt; 12 {
         return "More than a dozen."
+    } else {
 </string>
 			</dict>
 			<key>type</key>

@@ -117,9 +117,10 @@ struct MockEndpoint: EndpointProvider {
     var mockFile: String? = nil
 }
 
-struct MockRequestModel1: RequestModelProtocol {    
-    var endPoint: EndpointProvider
-    var method: HTTPMethod = .get
-    var body: Data?
-    var requestTimeout: Float?
-}
+//struct MockRequestModel1: EventsEndpoints {
+//    var endPoint: EndpointProvider
+//    var method: HTTPMethod = .get
+//    var body: Data?
+//    var requestTimeout: Float?
+//    var multipart: MultipartRequest2?
+//}

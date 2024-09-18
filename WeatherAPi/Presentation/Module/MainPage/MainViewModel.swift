@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import OSLog
+import UIKit
 
 final class MainViewModel: ObservableObject {
     
@@ -32,6 +33,7 @@ final class MainViewModel: ObservableObject {
     // MARK: - Input
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
+    private var loadDataSubject = PassthroughSubject<Bool, ApiError>()
     private let repository: WeatherApiRepoProtocol?
     private var isRequestSending = false
     
@@ -88,7 +90,7 @@ extension MainViewModel {
         let requestParameters = WeatherDetailParams(searchTerm: text)
         
         /// validate repository
-        guard let repository = repository else {
+        guard repository != nil else {
             self.showAlert = true
             self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
             return

@@ -7,68 +7,12 @@
 
 import Foundation
 
-protocol RequestModelProtocol {
-    var endPoint: EndpointProvider { get }
-    var method: HTTPMethod { get }
-    var body: Data?  { get }
-    var requestTimeout: Float?  { get }
-}
-
-public struct RequestModel1: RequestModelProtocol {
-    var endPoint: any EndpointProvider
-    var method: HTTPMethod
-    var body: Data?
-    var requestTimeout: Float?
-    
-    /// GET
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data? = nil,
-         reqTimeout: Float? =  nil) {
-        self.endPoint = endPoint
-        self.method = method
-        self.body = reqBody
-        self.requestTimeout = reqTimeout
-    }
-    
-    /// POST
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data,
-         reqTimeout: Float? =  nil) {
-        self.endPoint = endPoint
-        self.method = method
-        self.body = reqBody
-        self.requestTimeout = reqTimeout
-    }
-    
-    func asURLRequest() throws -> URLRequest? {
-        guard let url = try endPoint.getNewUrl() else {
-            throw ApiError.apiError("Define error")
-        }
-
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
-        
-        if let body = body {
-            do {
-                urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                throw  ApiError.encodingError("Error encoding http body")
-            }
-        }
-        return urlRequest
-    }
-}
-
 public struct RequestModel {
     var endPoint: EndpointProvider
     var method: HTTPMethod
     var body: Data?
     let requestTimeout: Float?
+    var multipart: MultipartRequest2?
     
     /// GET
     init(endPoint: EndpointProvider,
@@ -109,6 +53,13 @@ public struct RequestModel {
             } catch {
                 throw  ApiError.encodingError("Error encoding http body")
             }
+        }
+        
+        /// image upload
+        if let multipart = multipart {
+            urlRequest.setValue(multipart.headerValue, forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue("\(multipart.length)", forHTTPHeaderField: "Content-Length")
+            urlRequest.httpBody = multipart.httpBody
         }
         
 //        let unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
@@ -199,4 +150,74 @@ func getUrlRequest() -> URLRequest? {
     let error400 = URLRequest(url: URL(string: "https://www.domain.com/support/kb/404_not_found_error/")!)
     let error300 = URLRequest(url: URL(string: "https://httpbin.org/status/300")!)
     return request
+}*/
+
+/*
+protocol RequestModelProtocol {
+    var endPoint: EndpointProvider { get }
+    var method: HTTPMethod { get }
+    var body: Data?  { get }
+    var requestTimeout: Float?  { get }
+    var multipart: MultipartRequest2? { get }
+}
+
+public struct RequestModel1: RequestModelProtocol {
+    var endPoint: any EndpointProvider
+    var method: HTTPMethod
+    var body: Data?
+    var requestTimeout: Float?
+    var multipart: MultipartRequest2?
+
+    
+    /// GET
+    init(endPoint: EndpointProvider,
+         method: HTTPMethod,
+         reqBody: Data? = nil,
+         reqTimeout: Float? =  nil) {
+        self.endPoint = endPoint
+        self.method = method
+        self.body = reqBody
+        self.requestTimeout = reqTimeout
+    }
+    
+    /// POST
+    init(endPoint: EndpointProvider,
+         method: HTTPMethod,
+         reqBody: Data,
+         reqTimeout: Float? =  nil) {
+        self.endPoint = endPoint
+        self.method = method
+        self.body = reqBody
+        self.requestTimeout = reqTimeout
+    }
+    
+    func asURLRequest() throws -> URLRequest? {
+        guard let url = try endPoint.getNewUrl() else {
+            throw ApiError.apiError("Define error")
+        }
+
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = method.rawValue
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
+        
+        /// post request
+        if let body = body {
+            do {
+                urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                throw  ApiError.encodingError("Error encoding http body")
+            }
+        }
+        
+        /// image upload
+        if let multipart = multipart {
+            urlRequest.setValue(multipart.headerValue, forHTTPHeaderField: "Content-Type")
+            urlRequest.setValue("\(multipart.length)", forHTTPHeaderField: "Content-Length")
+            urlRequest.httpBody = multipart.httpBody
+        }
+        
+        return urlRequest
+    }
 }*/

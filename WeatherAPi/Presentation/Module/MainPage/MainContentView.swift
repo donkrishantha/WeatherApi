@@ -12,6 +12,11 @@ struct MainContentView: View {
     
     @ObservedObject private var viewModel: MainViewModel
     
+    /// Image picker property
+    @State private var selectedImage: UIImage? = nil
+    @State private var showImagePicker: Bool = false
+    /// -------------
+    
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
     }
@@ -27,7 +32,8 @@ struct MainContentView: View {
                 .tabItem {
                     Label("Register", systemImage: "person.badge.plus")
                 }
-            LoginView()
+            let viewModel = ImageUploadViewModel()
+            ImageUploadContentView(viewModel: viewModel)
                 .tabItem {
                     Label("Feedback", systemImage: "bubble.left.fill")
                 }
@@ -69,9 +75,13 @@ struct MainContentView: View {
                     .navigationTitle("Weather details")
                     .padding([.leading, .trailing], 15)
                 }
+                .sheet(isPresented: $showImagePicker) {
+                    ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
+                }
             }
         )
     }
+    
     
     private var detailView: some View {
         return AnyView(
