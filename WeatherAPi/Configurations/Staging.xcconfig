@@ -8,5 +8,6 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-GO_SHARING_API_HOST = api-test.go-sharing.dev
+WEATHER_API_HOST = api.weatherstack.com_Staging
+API_KEY = d207fbf0c9b345a0c23bb5066b7bea54_Staging
 ADYEN_API_HOST = a2ccc6ed4c2b13af-GreenMoRent-checkout-live.adyenpayments.com

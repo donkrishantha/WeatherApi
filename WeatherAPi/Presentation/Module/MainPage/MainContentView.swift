@@ -37,7 +37,9 @@ struct MainContentView: View {
                 .tabItem {
                     Label("Feedback", systemImage: "bubble.left.fill")
                 }
-            LoginView()
+            let repository = WeatherApiRepoImplement(apiClient: APIClient())
+            let viewM = DetailViewModel(repository: repository)
+            DetailContentView(viewModel: viewM)
                 .tabItem {
                     Label("Subscribe", systemImage: "star.fill")
                 }

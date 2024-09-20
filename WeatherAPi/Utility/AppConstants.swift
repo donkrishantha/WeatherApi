@@ -32,3 +32,31 @@ enum AppConstants {
         case json = "application/json"
     }
 }
+
+enum Environment {
+    
+    private static let infoDic: [String: Any] = {
+        guard let dic =  Bundle.main.infoDictionary else {
+            fatalError("Plist is not found")
+        }
+        return dic
+    }()
+    
+    static let baseUrl: URL = {
+        guard let urlString = Environment.infoDic["WEATHER_API_HOST"] as? String else {
+            fatalError("BASE_ URL is not found")
+        }
+        
+        guard let url = URL(string: urlString) else {
+            fatalError("ROOT_URL is invalid")
+        }
+        return url
+    }()
+    
+    static let apiKy: String = {
+        guard let key = Environment.infoDic["API_KEY"] as? String else {
+            fatalError("API_KEY is not found")
+        }
+        return key
+    }()
+}

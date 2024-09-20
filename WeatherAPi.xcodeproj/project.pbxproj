@@ -172,8 +172,8 @@
 		BD00ADBA2C7853F90064415F /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				BDB3E2052C3C175A000DB0C9 /* Extensions */,
 				BD10F14A2BD1079100B79888 /* AppConstants.swift */,
+				BDB3E2052C3C175A000DB0C9 /* Extensions */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -227,6 +227,7 @@
 				BD2171312B56B9C600F58C14 /* SceneDelegate.swift */,
 				BD21717E2B56C4CF00F58C14 /* NavigationController.swift */,
 				BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */,
+				BD21713D2B56B9D000F58C14 /* Info.plist */,
 				BDB3E2042C3C16A2000DB0C9 /* Configurations */,
 				BD81F91F2C88C03300B81077 /* Generated */,
 				BD21715F2B56BC3800F58C14 /* Asssets */,
@@ -236,7 +237,6 @@
 				BD2171602B56BD1700F58C14 /* Data */,
 				BD2171782B56C23900F58C14 /* Coordinator */,
 				BD81F91B2C8854C600B81077 /* Presentation */,
-				BD21713D2B56B9D000F58C14 /* Info.plist */,
 			);
 			path = WeatherAPi;
 			sourceTree = "<group>";
@@ -284,8 +284,8 @@
 		BD2171612B56BD2700F58C14 /* Module */ = {
 			isa = PBXGroup;
 			children = (
-				BD00ADBB2C7856220064415F /* Login */,
 				BD2171622B56BD6300F58C14 /* MainPage */,
+				BD00ADBB2C7856220064415F /* Login */,
 				BD4B57042C90871B0025814A /* ImageUpload */,
 				BD2171632B56BD6E00F58C14 /* DetailPage */,
 			);

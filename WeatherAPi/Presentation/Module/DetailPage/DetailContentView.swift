@@ -16,7 +16,15 @@ struct DetailContentView: View {
     }
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView{
+            ZStack(alignment: .topLeading){
+                VStack(alignment: .leading) {
+                    Text("BASE_URL: \(Environment.baseUrl)")
+                    Text("\(Environment.apiKy)")
+                }
+            }
+            .navigationTitle("Environment Details")
+        }
     }
 }
 
