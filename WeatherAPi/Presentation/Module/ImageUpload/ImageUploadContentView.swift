@@ -25,7 +25,7 @@ struct ImageUploadContentView: View {
                 }
                 
                 Button(action: {
-                    viewModel.loadAsyncData(requestType: .userVerify)
+                    viewModel.verifyTokenRequest()
                 }) {
                     Text("Verify User")
                 }

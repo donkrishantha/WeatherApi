@@ -11,7 +11,7 @@ import OSLog
 
 enum ImageUploadViewModelRequestType {
     case userVerify
-    case imageUpload(Void)
+    case imageUpload
 }
 
 final class ImageUploadViewModel: ObservableObject {
@@ -27,68 +27,80 @@ final class ImageUploadViewModel: ObservableObject {
     private(set) var cancelable: Set<AnyCancellable> = []
     private var repository: ImageUploadProtocol?
     
-    
+    // MARK: Init
     init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient())) {
         self.repository = repository
     }
     
+    // MARK: De-Init
     deinit {
         debugPrint("De-Initialisation.")
     }
 }
 
+// Make api request
 extension ImageUploadViewModel {
     
     /// request data async way
-    func loadAsyncData(requestType: ImageUploadViewModelRequestType) {
-        switch requestType {
-        case .userVerify:
-            Task(priority: .medium) { await verifyToken(requestType: .userVerify) }
-        case .imageUpload: break
-           // Task(priority: .medium) { await imageUpload(requestType: \\}\\\\\\\\\\
-        }
+    func verifyTokenRequest() {
+        Task(priority: .medium) { await verifyToken(requestType: .userVerify) }
     }
     
-    func uploadImageData(userName: String?, file: Data?) {
-        
+    func imageUploadRequest(userName: String?, file: Data?) {
+        Task(priority: .medium) { await imageUpload(requestType: .imageUpload, userName: userName, file: file) }
     }
     
-    /// api request
-    func verifyToken(requestType: ImageUploadViewModelRequestType) async {
+    /// api request "verifyToken"
+    private func verifyToken(requestType: ImageUploadViewModelRequestType) async {
         await repository?.checkTokenVerify()
             .sink { [weak self] completion in
                 guard let self = self else { return }
-                self.processErrorResponse(with: completion)
-            } receiveValue: { [weak self] uploadResponse in
+                self.processErrorResponseWith(type: requestType, with: completion)
+            } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.uploadModel = uploadResponse
+                self.processSuccessResponseWith(type: .userVerify, and: response)
             }.store(in: &cancelable)
     }
     
-    /// image upload
-    func imageUpload(requestType: ImageUploadViewModelRequestType, userName: String?, file: Data?) async {
+    /// image upload request "imageUpload"
+    private func imageUpload(requestType: ImageUploadViewModelRequestType, userName: String?, file: Data?) async {
         await repository?.updateUserProfile(userName: userName, file: file)
             .sink { [weak self] completion in
                 guard let self = self else { return }
-                self.processErrorResponse(with: completion)
-            } receiveValue: { [weak self] imageResponse in
+                self.processErrorResponseWith(type: requestType, with: completion)
+            } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.logger.info("SUCCESS:")
-                self.imageResponse = imageResponse
+                self.processSuccessResponseWith(type: .imageUpload, and: response)
             }.store(in: &cancelable)
     }
 }
 
-
+// Handel request responses & errors
 extension ImageUploadViewModel {
-    /// process error in further
-    private func processErrorResponse(with completion: Subscribers.Completion<ApiError>) {
+    /// process error in response
+    private func processErrorResponseWith(type: ImageUploadViewModelRequestType,
+                                          with completion: Subscribers.Completion<ApiError>){
         switch completion { case .finished: break; case .failure(let error):
             logger.error("ERROR : \(error)")
-            DispatchQueue.main.async {
-                self.showAlert = true
-                self.alertMessage = AlertMessage(title: "Error!", message: error.errorDescription ?? "N/A")
+            switch type {
+            case .userVerify, .imageUpload:
+                DispatchQueue.main.async {
+                    self.showAlert = true
+                    self.alertMessage = AlertMessage(title: "Error!", message: error.errorDescription ?? "N/A")
+                }
             }
+        }
+    }
+    
+    /// process error in response
+    private func processSuccessResponseWith<T: Codable >(type: ImageUploadViewModelRequestType,
+                                                         and response: T) {
+        self.logger.info("SUCCESS:")
+        switch type {
+        case .userVerify:
+            self.imageResponse = response as? ImageResponse
+        case .imageUpload:
+            self.uploadModel = response as? UploadModel
         }
     }
 }

@@ -124,10 +124,8 @@ extension MainViewModel {
     
     /// process response in further
     private func processSuccessResponse(rowWeatherResponse: WeatherRowData) {
-        //DispatchQueue.main.async{
-            self.logger.info("SUCCESS:")
-            self.weatherModel = WeatherModel(data: rowWeatherResponse)
-        //}
+        self.logger.info("SUCCESS:")
+        self.weatherModel = WeatherModel(data: rowWeatherResponse)
     }
 }
 
