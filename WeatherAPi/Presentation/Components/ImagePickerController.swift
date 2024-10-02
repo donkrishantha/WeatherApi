@@ -60,6 +60,7 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             /// Create a regular HTTP URL request & use multipart components
             /// 9bdfb0d5866ec0b701b58e7bd9450d6b3b4c2
+            //let url = URL(string: "https://api.cloudflare.com/client/v4/zones/9bdfb0d5866ec0b701b58e7bd9450d6b3b4c2")!
             let url = URL(string: "https://api.cloudflare.com/client/v4/zones/9bdfb0d5866ec0b701b58e7bd9450d6b3b4c2")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -87,8 +88,5 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
-
     }
-    
-    
 }

@@ -16,7 +16,10 @@ class Multipart {
     ]
     
     let parameters = [
-        ["name": "file","value": ""],
+        [
+            "name": "file",
+         "value": ""
+        ],
         [
             "name": "fileName",
             "value": ""

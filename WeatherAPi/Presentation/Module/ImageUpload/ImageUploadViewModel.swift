@@ -46,6 +46,7 @@ extension ImageUploadViewModel {
         Task(priority: .medium) { await verifyToken(requestType: .userVerify) }
     }
     
+    /// request data async way
     func imageUploadRequest(userName: String?, file: Data?) {
         Task(priority: .medium) { await imageUpload(requestType: .imageUpload, userName: userName, file: file) }
     }
