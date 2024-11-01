@@ -31,22 +31,14 @@ public struct MultipartRequest {
         "Content-Disposition: form-data; name=\"\(key)\""
     }
 
-    public mutating func add(
-        key: String,
-        value: String
-    ) {
+    public mutating func add(key: String,value: String) {
         appendBoundarySeparator()
         data.appendString(disposition(key) + separator)
         appendSeparator()
         data.appendString(value + separator)
     }
 
-    public mutating func add(
-        key: String,
-        fileName: String,
-        fileMimeType: String,
-        fileData: Data
-    ) {
+    public mutating func add(key: String,fileName: String,fileMimeType: String,fileData: Data) {
         appendBoundarySeparator()
         data.appendString(disposition(key) + "; filename=\"\(fileName)\"" + separator)
         data.appendString("Content-Type: \(fileMimeType)" + separator + separator)

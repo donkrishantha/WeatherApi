@@ -12,17 +12,18 @@ class Multipart {
     let headers = [
         "Content-Type": "multipart/form-data; boundary=---011000010111000001101001",
         "Accept": "application/json",
-        "Authorization": "Basic cHJpdmF0ZV9JUy9TTUlZNi9PeWUySzdzNHFiVTFzRnRoVjA9Og=="
+        "Authorization": "Basic private_IS/SMIY6/Oye2K7s4qbU1sFthV0="
+        //"Authorization": "Basic cHJpdmF0ZV9JUy9TTUlZNi9PeWUySzdzNHFiVTFzRnRoVjA9Og=="
     ]
     
     let parameters = [
         [
             "name": "file",
-         "value": ""
+             "value": ""
         ],
         [
             "name": "fileName",
-            "value": ""
+            "value": "Profile picture"
         ],
         [
             "name": "publicKey",

@@ -5,9 +5,10 @@
 //  Created by Gayan Dias on 09/08/2024.
 //
 
-import Foundation
+import UIKit
 
 extension String {
+    
     func roundTripDate(style: DateFormatter.Style) -> String? {
         //set things up
         let formatter = DateFormatter()
@@ -33,5 +34,11 @@ extension String {
             return nil
         }
         return formatter.string(from: date)
+    }
+    
+    func convertBase64ToImage(imageString: String) -> UIImage {
+        let imageData = Data(base64Encoded: imageString,
+                             options: Data.Base64DecodingOptions.ignoreUnknownCharacters)!
+        return UIImage(data: imageData)!
     }
 }

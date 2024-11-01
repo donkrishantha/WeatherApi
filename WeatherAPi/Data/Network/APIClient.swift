@@ -36,6 +36,12 @@ final class APIClient: APIClientProtocol {
         configuration.waitsForConnectivity = true
         configuration.timeoutIntervalForRequest = 60
         configuration.timeoutIntervalForResource = 300
+        // Allow both WiFi and cellular access
+        configuration.allowsCellularAccess = true
+        // Allow network access even when the system considers it expensive
+        configuration.allowsExpensiveNetworkAccess = true
+        // Allow network access when the user has enabled Low Data Mode
+        configuration.allowsConstrainedNetworkAccess = true
         self.init(session: URLSession(configuration: configuration))
     }
     
@@ -78,11 +84,14 @@ final class APIClient: APIClientProtocol {
             }
             .eraseToAnyPublisher()
     }
+    
+    func uploadAsync() async {
+        //return session.up
+    }
 }
 
 extension APIClient {
-    
-    private func manageResponse<T: Codable>(data: Data, response: URLResponse)  -> AnyPublisher<T, ApiError> {
+    private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError> {
         guard let response = response as? HTTPURLResponse else {
             logger.error("NETWORK MANAGER: Response not valid")
             return Fail(error: .invalidResponse(error: "Response not valid"))

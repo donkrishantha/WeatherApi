@@ -10,6 +10,32 @@ import Combine
 import OSLog
 import UIKit
 
+class Test {
+    
+    init()  {
+        //await self.someWork()
+    }
+    
+    @MainActor
+    func someWork() async {
+        var someVar = ""
+        await otherWork()
+        someVar = "Done"
+        print(someVar)
+    }
+    
+    func otherWork() async {
+        print("Test")
+    }
+}
+
+//class Test2 {
+    var result = Test()
+//let test = await result.someWork()
+    //let result = await access.someWork()
+//}
+
+
 final class MainViewModel: ObservableObject {
     
     // MARK: - Output
@@ -51,11 +77,39 @@ final class MainViewModel: ObservableObject {
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
+        self.callMethod()
     }
     
     // MARK: - De-Initialisation
     deinit {
         print("++++++++++++++++++++++++++DE INIT")
+    }
+    
+    /// Test @MainActor
+    @MainActor
+    func someWork() async {
+        var someVar = ""
+        print("--------1 :\(Thread.isMainThread)")
+        //Task {
+            await otherWork()
+        //}
+        print("--------2 :\(Thread.isMainThread)")
+        someVar = "Done"
+        print("--------3 :\(Thread.isMainThread)")
+        print(someVar)
+        print("--------4 :\(Thread.isMainThread)")
+    }
+    
+    //@MainActor
+    func otherWork() async {
+        print("--------5 :\(Thread.isMainThread)")
+        print("Test")
+    }
+    
+    func callMethod() {
+        Task {
+            await someWork()
+        }
     }
 }
 

@@ -28,12 +28,13 @@ struct MainContentView: View {
                 .tabItem {
                     Label("Login", systemImage: "person.fill")
                 }
-            LoginView()
+            let viewModel = LoginViewModel()
+            LoginView(viewModel: viewModel)
                 .tabItem {
                     Label("Register", systemImage: "person.badge.plus")
                 }
-            let viewModel = ImageUploadViewModel()
-            ImageUploadContentView(viewModel: viewModel)
+            let viewModel1 = ImageUploadViewModel()
+            ImageUploadContentView(viewModel: viewModel1)
                 .tabItem {
                     Label("Feedback", systemImage: "bubble.left.fill")
                 }

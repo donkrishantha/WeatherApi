@@ -16,7 +16,7 @@ enum ImageUploadEndpoint: EndpointProvider {
         switch self {
         case .checkUserVerify:
             return "/client/v4/user/tokens/verify"
-        case .uploadImage(fileString: let fileString, file: let file):
+        case .uploadImage(fileString: _, file: _):
             return "/api/v1/files/upload"
         }
     }
@@ -25,7 +25,7 @@ enum ImageUploadEndpoint: EndpointProvider {
         switch self {
         case .checkUserVerify:
             .get
-        case .uploadImage(fileString: let fileString, file: let file):
+        case .uploadImage(fileString: _, file: _):
             .post
         }
     }
@@ -34,7 +34,7 @@ enum ImageUploadEndpoint: EndpointProvider {
         switch self {
         case .checkUserVerify:
             return nil
-        case .uploadImage(fileString: let fileString, file: let file):
+        case .uploadImage(fileString: _, file: _):
             return nil
         }
     }
@@ -43,7 +43,7 @@ enum ImageUploadEndpoint: EndpointProvider {
         switch self {
         case .checkUserVerify:
             return nil
-        case .uploadImage(fileString: let fileString, file: let file):
+        case .uploadImage(fileString: _, file: _):
             return nil
         }
     }
@@ -52,7 +52,7 @@ enum ImageUploadEndpoint: EndpointProvider {
         switch self {
         case .checkUserVerify:
             return nil
-        case .uploadImage(fileString: let fileString, file: let file):
+        case .uploadImage(fileString: _, file: _):
             return nil
         }
     }

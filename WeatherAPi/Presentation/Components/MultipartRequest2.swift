@@ -14,11 +14,11 @@ struct MultipartRequest2 {
     private let boundary: String = UUID().uuidString
     private let separator: String = "\r\n"
 
-    private var topBoundry: String {
+    private var topBoundary: String {
         return "--\(boundary)"
     }
 
-    private var endBoundry: String {
+    private var endBoundary: String {
         return "--\(boundary)--"
     }
 
@@ -43,7 +43,7 @@ struct MultipartRequest2 {
     }
 
     func append(fileString: String, withName name: String) {
-        data.append(topBoundry)
+        data.append(topBoundary)
         data.append(separator)
         data.append(contentDisposition(name, fileName: nil))
         data.append(separator)
@@ -53,7 +53,7 @@ struct MultipartRequest2 {
     }
 
     func append(fileData: Data, withName name: String, fileName: String?, mimeType: FileType?) {
-        data.append(topBoundry)
+        data.append(topBoundary)
         data.append(separator)
         data.append(contentDisposition(name, fileName: fileName))
         data.append(separator)
@@ -73,7 +73,7 @@ struct MultipartRequest2 {
         let pathExtension = fileURL.pathExtension
         let mimeType = mimeType(for: pathExtension)
         
-        data.append(topBoundry)
+        data.append(topBoundary)
         data.append(separator)
         data.append(contentDisposition(name, fileName: fileName))
         data.append(separator)
