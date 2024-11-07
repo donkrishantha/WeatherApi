@@ -39,12 +39,12 @@ class ImagePickerCoordinator: NSObject, UINavigationControllerDelegate, UIImageP
             //var base64d: Data = selectedImg
             let imageData: Data = selectedImage!.pngData()!
             var imageSize: Int = imageData.count
-            print("actual size of image in KB: %f ", Double(imageSize) / 1000.0)
+            //print("actual size of image in KB: %f ", Double(imageSize) / 1000.0)
             
             ///---------------------------
             /////Convert image to Base 64 String
             let imageStringData = convertImageToBase64(image: selectedImage!)
-            print("IMAGE base64 String: \(imageStringData)")
+            //print("IMAGE base64 String: \(imageStringData)")
         }
     }
     

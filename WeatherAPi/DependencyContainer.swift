@@ -17,7 +17,7 @@ final class DependencyContainer {
         session: urlSession
     )
     
-    private(set) lazy var weatherApiRepository: WeatherApiRepoProtocol = WeatherApiRepoImplement(
+    private(set) lazy var weatherApiRepository: any WeatherApiRepoProtocol = WeatherApiRepoImplement(
         apiClient: apiClient
     )
 }

@@ -59,7 +59,7 @@ extension ImageUploadViewModel {
                 self.processErrorResponseWith(type: requestType, with: completion)
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.processSuccessResponseWith(type: .userVerify, and: response)
+                self.processSuccessResponseWith(type: requestType, and: response)
             }.store(in: &cancelable)
     }
     
@@ -71,7 +71,7 @@ extension ImageUploadViewModel {
                 self.processErrorResponseWith(type: requestType, with: completion)
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.processSuccessResponseWith(type: .imageUpload, and: response)
+                self.processSuccessResponseWith(type: requestType, and: response)
             }.store(in: &cancelable)
     }
 }

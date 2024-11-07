@@ -10,32 +10,6 @@ import Combine
 import OSLog
 import UIKit
 
-class Test {
-    
-    init()  {
-        //await self.someWork()
-    }
-    
-    @MainActor
-    func someWork() async {
-        var someVar = ""
-        await otherWork()
-        someVar = "Done"
-        print(someVar)
-    }
-    
-    func otherWork() async {
-        print("Test")
-    }
-}
-
-//class Test2 {
-    var result = Test()
-//let test = await result.someWork()
-    //let result = await access.someWork()
-//}
-
-
 final class MainViewModel: ObservableObject {
     
     // MARK: - Output
@@ -60,16 +34,16 @@ final class MainViewModel: ObservableObject {
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private var loadDataSubject = PassthroughSubject<Bool, ApiError>()
-    private let repository: WeatherApiRepoProtocol?
-    private var isRequestSending = false
+    private let repository: (any WeatherApiRepoProtocol)?
+    private(set) var isRequestSending = false
     
     var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
     var isRequestSendingDisabled: Bool { isRequestSending || searchText.isEmpty }
     
     
     // MARK: - Initialisation
-    init(repository: WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
-    //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
+    init(repository: any WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
+        //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
         self.repository = repository
         print(searchText)
         if !searchText.isEmpty {
@@ -77,39 +51,11 @@ final class MainViewModel: ObservableObject {
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
-        self.callMethod()
     }
     
     // MARK: - De-Initialisation
     deinit {
-        print("++++++++++++++++++++++++++DE INIT")
-    }
-    
-    /// Test @MainActor
-    @MainActor
-    func someWork() async {
-        var someVar = ""
-        print("--------1 :\(Thread.isMainThread)")
-        //Task {
-            await otherWork()
-        //}
-        print("--------2 :\(Thread.isMainThread)")
-        someVar = "Done"
-        print("--------3 :\(Thread.isMainThread)")
-        print(someVar)
-        print("--------4 :\(Thread.isMainThread)")
-    }
-    
-    //@MainActor
-    func otherWork() async {
-        print("--------5 :\(Thread.isMainThread)")
-        print("Test")
-    }
-    
-    func callMethod() {
-        Task {
-            await someWork()
-        }
+        print("DE INIT")
     }
 }
 
@@ -149,12 +95,13 @@ extension MainViewModel {
             self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
             return
         }
-           
+        
         /// logger status
         logger.trace("REQUEST: /current")
         
         /// request to get "weather details"
-        await self.repository?.searchWeatherData(params: requestParameters)
+        let searchWeatherData = await self.repository?.searchWeatherData(params: requestParameters) as? AnyPublisher<WeatherRowData, ApiError>
+        searchWeatherData?
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 self.processErrorResponse(completion: completion)
@@ -193,7 +140,7 @@ extension MainViewModel {
         let rawWeather = FileLoader.loadJson(data)
         self.logger.debug("Local database")
         //DispatchQueue.main.async{
-            self.weatherModel = WeatherModel(data: rawWeather)
+        self.weatherModel = WeatherModel(data: rawWeather)
         //}
     }
 }
@@ -202,9 +149,9 @@ extension MainViewModel {
 struct WeatherDetailParams {
     let searchTerm: String
     
-     init(searchTerm: String) {
+    init(searchTerm: String) {
         self.searchTerm = searchTerm
     }
 }
 
- 
+

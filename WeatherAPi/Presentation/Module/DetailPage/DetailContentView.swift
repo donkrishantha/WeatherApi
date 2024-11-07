@@ -31,7 +31,7 @@ struct DetailContentView: View {
 struct DetailContentView_Preview: PreviewProvider {
     static var previews: some View {
         let dependencyContainer = DependencyContainer()
-        let repository: WeatherApiRepoProtocol = dependencyContainer.weatherApiRepository
+        let repository: any WeatherApiRepoProtocol = dependencyContainer.weatherApiRepository
         let viewModel: DetailViewModel = DetailViewModel(repository: repository as! WeatherApiRepoImplement)
         DetailContentView(viewModel: viewModel)
     }
