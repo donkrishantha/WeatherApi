@@ -69,7 +69,8 @@ struct ImageUploadContentView: View {
                     .frame(width: 300, height: 300)
                     .cornerRadius(15.0)
                 Button("Choose Picture") {
-                    self.showSheet = true
+                    //self.showSheet = true
+                    viewModel.verifyTokenTask()
                 }.padding()
                     .actionSheet(isPresented: $showSheet) {
                         UIDevice.isSimulator() ? (
@@ -90,6 +91,11 @@ struct ImageUploadContentView: View {
                             .cancel()
                         ]))
                 }
+            }
+            .alert(isPresented: $viewModel.showAlert) {
+                Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
+                      message: Text(viewModel.alertMessage?.message ?? "N/A"),
+                      dismissButton: .default(Text("Got it!")))
             }
             .sheet(isPresented: self.$showImagePicker) {
                 ImagePicker3(selectedImage: self.$image2,

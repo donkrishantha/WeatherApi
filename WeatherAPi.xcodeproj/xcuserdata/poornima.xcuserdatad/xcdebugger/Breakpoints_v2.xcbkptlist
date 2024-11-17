@@ -114,6 +114,36 @@
             endingLineNumber = "75"
             landmarkName = "bodySection"
             landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "EE57DB69-EA88-4478-908C-75EDA71F32DC - 43d8548cc1393d63"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherAPi.BasketballGameView.bodySection.getter : some"
+                  moduleName = "WeatherAPi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/poornima/Dropbox/Mac/Documents/Gayan/Projects/iOS/Weather-%20API/WeatherAPi/WeatherAPi/Presentation/Module/Login/LoginView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "75"
+                  endingLineNumber = "75">
+               </Location>
+               <Location
+                  uuid = "EE57DB69-EA88-4478-908C-75EDA71F32DC - 7c55599c376e1007"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(WeatherAPi.ScoreView, WeatherAPi.ScoreView)&gt; in WeatherAPi.BasketballGameView.bodySection.getter : some"
+                  moduleName = "WeatherAPi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/poornima/Dropbox/Mac/Documents/Gayan/Projects/iOS/Weather-%20API/WeatherAPi/WeatherAPi/Presentation/Module/Login/LoginView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "75"
+                  endingLineNumber = "75">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

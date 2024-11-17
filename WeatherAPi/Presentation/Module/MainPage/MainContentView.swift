@@ -62,12 +62,12 @@ struct MainContentView: View {
                             /// Search results
                             //searchPlacesListView
                         }
-    
+                        
                         self.detailView
-    
+                        
                         Spacer()
-    
-                        .disableAutocorrection(true)
+                        
+                            .disableAutocorrection(true)
                     }
                     //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
                     .alert(isPresented: $viewModel.showAlert) {
@@ -105,7 +105,7 @@ struct MainContentView: View {
                 .disabled(viewModel.isRequestSendingDisabled)
                 .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
                 .font(.title)
-
+                
             }.padding([.top], 20)
         )
     }

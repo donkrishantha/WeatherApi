@@ -42,37 +42,52 @@ final class ImageUploadViewModel: ObservableObject {
 extension ImageUploadViewModel {
     
     /// request data async way
-    func verifyTokenRequest() {
-        Task(priority: .medium) { await verifyToken(requestType: .userVerify) }
+    func verifyTokenTask() {
+        Task(priority: .medium) { await verifyTokenRequest(requestType: .userVerify) }
     }
     
     /// request data async way
-    func imageUploadRequest(userName: String?, file: Data?) {
-        Task(priority: .medium) { await imageUpload(requestType: .imageUpload, userName: userName, file: file) }
+    func imageUploadTask(userName: String?, file: Data?) {
+        Task(priority: .medium) { await imageUploadRequest(requestType: .imageUpload, userName: userName, file: file) }
     }
     
     /// api request "verifyToken"
-    private func verifyToken(requestType: ImageUploadViewModelRequestType) async {
-        await repository?.checkTokenVerify()
-            .sink { [weak self] completion in
+    private func verifyTokenRequest(requestType: ImageUploadViewModelRequestType) async {
+        let response1 = await repository?.checkTokenVerify()
+        responseHandler(response: response1, requestType: requestType)
+        /*await repository?.checkTokenVerify()
+        response1?.sink { [weak self] completion in
                 guard let self = self else { return }
                 self.processErrorResponseWith(type: requestType, with: completion)
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
                 self.processSuccessResponseWith(type: requestType, and: response)
-            }.store(in: &cancelable)
+            }.store(in: &cancelable)*/
     }
     
     /// image upload request "imageUpload"
-    private func imageUpload(requestType: ImageUploadViewModelRequestType, userName: String?, file: Data?) async {
-        await repository?.updateUserProfile(userName: userName, file: file)
+    private func imageUploadRequest(requestType: ImageUploadViewModelRequestType, userName: String?, file: Data?) async {
+        let response2 = await repository?.updateUserProfile(userName: userName, file: file)
+        responseHandler(response: response2, requestType: requestType)
+        /*await repository?.updateUserProfile(userName: userName, file: file)
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 self.processErrorResponseWith(type: requestType, with: completion)
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
                 self.processSuccessResponseWith(type: requestType, and: response)
-            }.store(in: &cancelable)
+            }.store(in: &cancelable)*/
+    }
+    
+    private func responseHandler<T: Codable>(response: AnyPublisher<T, ApiError>?,
+                         requestType: ImageUploadViewModelRequestType) {
+        response?.sink { [weak self] completion in
+            guard let self = self else { return }
+            self.processErrorResponseWith(type: requestType, with: completion)
+        } receiveValue: { [weak self] response in
+            guard let self = self else { return }
+            self.processSuccessResponseWith(type: requestType, and: response)
+        }.store(in: &cancelable)
     }
 }
 
