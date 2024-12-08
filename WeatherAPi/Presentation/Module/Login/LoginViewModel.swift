@@ -30,13 +30,13 @@ final class LoginViewModel: ObservableObject {
     }
     
     func getWeatherInfor() {
-        let weatherStation = WeatherStation()
+        let subject = Subject()
         let weatherDemo = WeatherDemo()
         
-        weatherStation.registerObserver(weatherDemo)
-        weatherStation.setMeasurements(temp: 10.0, humidity: 20.0, pressure: 56.0)
+        subject.registerObserver(weatherDemo)
+        subject.setMeasurements(temp: 10.0, humidity: 20.0, pressure: 56.0)
         
-        weatherStation.removeObserver(weatherDemo)
+        subject.removeObserver(weatherDemo)
     }
 }
 
@@ -96,7 +96,11 @@ private extension LoginViewModel {
 }
 
 /// Observable pattern design.
-class WeatherDemo: WeatherObserver {
+class WeatherDemo: ObserverProtocol {
+    func moderate(temp: Double, humidity: Double, pressure: Double) {
+        print("LoginViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
+    }
+    
     func update(temp: Double, humidity: Double, pressure: Double) {
         print("LoginViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
     }

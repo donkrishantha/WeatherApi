@@ -7,38 +7,71 @@
 
 import Foundation
 
-// Test Observere pattern
-protocol WeatherObserver: AnyObject {
-    func update(temp: Double, humidity: Double, pressure: Double)
+// Notification type
+enum UpdateState {
+    case updateComplete
+    case moderateComplete
 }
 
-class WeatherStation {
+// Observer (protocol)
+protocol ObserverProtocol: AnyObject {
+    func update(temp: Double, humidity: Double, pressure: Double)
+    func moderate(temp: Double, humidity: Double, pressure: Double)
+}
+
+// Subject (protocol)
+protocol SubjectProtocol {
+    func registerObserver(_ observer: ObserverProtocol)
+    func removeObserver(_ observer: ObserverProtocol)
+    func notifyObservers(status: UpdateState)
+}
+
+// Concrete Subject
+class Subject: SubjectProtocol {
     var temperature: Double = 0.0
     var humidity: Double = 0.0
     var pressure: Double = 0.0
-    var observers: [WeatherObserver] = []
+    var observers: [ObserverProtocol] = []
 
-    func registerObserver(_ observer: WeatherObserver) {
+    /// Add observer
+    func registerObserver(_ observer: ObserverProtocol) {
         observers.append(observer)
     }
 
-    func removeObserver(_ observer: WeatherObserver) {
+    /// Remove Observer
+    func removeObserver(_ observer: ObserverProtocol) {
         if let index = observers.firstIndex(where: { $0 === observer }) {
             observers.remove(at: index)
         }
     }
 
-    func notifyObservers() {
+    /// Notify Observer
+    func notifyObservers(status: UpdateState) {
         for observer in observers {
-            observer.update(temp: temperature, humidity: humidity, pressure: pressure)
+            switch status {
+            case .updateComplete:
+                observer.update(temp: temperature, humidity: humidity, pressure: pressure)
+            case .moderateComplete:
+                observer.moderate(temp: temperature, humidity: humidity, pressure: pressure)
+            }
+            
         }
     }
 
+    /// Additional function
     func setMeasurements(temp: Double, humidity: Double, pressure: Double) {
         self.temperature = temp
         self.humidity = humidity
         self.pressure = pressure
-        notifyObservers()
+        notifyObservers(status: .updateComplete)
+    }
+    
+    /// Additional function
+    func setModerate(temp: Double, humidity: Double, pressure: Double) {
+        self.temperature = temp
+        self.humidity = humidity
+        self.pressure = pressure
+        notifyObservers(status: .moderateComplete)
     }
     
     deinit {

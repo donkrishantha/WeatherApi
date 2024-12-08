@@ -19,16 +19,18 @@ final class DetailViewModel: ObservableObject {
     }
     
     func testObserverDesignPattern(count: Int) {
-        let weatherStation = WeatherStation()
+        let subject = Subject()
         let counterDetail = WeatherApp()
         let loginViewModel = WeatherDemo()
         
-        weatherStation.registerObserver(counterDetail)
-        weatherStation.registerObserver(loginViewModel)
-        weatherStation.setMeasurements(temp: 0.0, humidity: 0.0, pressure: Double(count))
+        subject.registerObserver(counterDetail)
+        subject.registerObserver(loginViewModel)
         
-        weatherStation.removeObserver(counterDetail)
-        weatherStation.removeObserver(loginViewModel)
+        //subject.setMeasurements(temp: 0.0, humidity: 0.0, pressure: Double(count))
+        subject.setModerate(temp: 0.0, humidity: 0.0, pressure: Double(count))
+        
+        subject.removeObserver(counterDetail)
+        subject.removeObserver(loginViewModel)
     }
 }
 

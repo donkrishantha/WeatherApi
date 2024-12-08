@@ -179,7 +179,11 @@ struct WeatherDetailParams {
 }
 
 /// Observable pattern design.
-class WeatherApp: WeatherObserver {
+class WeatherApp: ObserverProtocol {
+    func moderate(temp: Double, humidity: Double, pressure: Double) {
+        print("MainViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
+    }
+    
     func update(temp: Double, humidity: Double, pressure: Double) {
         print("MainViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
     }
