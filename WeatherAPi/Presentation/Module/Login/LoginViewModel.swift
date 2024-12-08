@@ -28,6 +28,16 @@ final class LoginViewModel: ObservableObject {
             .assign(to: \.formIsValid, on: self)
             .store(in: &publishers)
     }
+    
+    func getWeatherInfor() {
+        let weatherStation = WeatherStation()
+        let weatherDemo = WeatherDemo()
+        
+        weatherStation.registerObserver(weatherDemo)
+        weatherStation.setMeasurements(temp: 10.0, humidity: 20.0, pressure: 56.0)
+        
+        weatherStation.removeObserver(weatherDemo)
+    }
 }
 
 // MARK: - Setup validations
@@ -82,5 +92,12 @@ private extension LoginViewModel {
             return isNameValid && isEmailValid && isPasswordValid && passwordMatches
         }
         .eraseToAnyPublisher()
+    }
+}
+
+/// Observable pattern design.
+class WeatherDemo: WeatherObserver {
+    func update(temp: Double, humidity: Double, pressure: Double) {
+        print("LoginViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
     }
 }

@@ -17,6 +17,19 @@ final class DetailViewModel: ObservableObject {
     init(repository: WeatherApiRepoImplement) {
         self.repository = repository
     }
+    
+    func testObserverDesignPattern(count: Int) {
+        let weatherStation = WeatherStation()
+        let counterDetail = WeatherApp()
+        let loginViewModel = WeatherDemo()
+        
+        weatherStation.registerObserver(counterDetail)
+        weatherStation.registerObserver(loginViewModel)
+        weatherStation.setMeasurements(temp: 0.0, humidity: 0.0, pressure: Double(count))
+        
+        weatherStation.removeObserver(counterDetail)
+        weatherStation.removeObserver(loginViewModel)
+    }
 }
 
 extension DetailViewModel {
@@ -39,10 +52,4 @@ extension DetailViewModel {
 //        //remove the observer
 //        weatherStation.removeObserver(weatherApp)
 //    }
-}
-
-extension DetailViewModel: WeatherObserver {
-    func update(temp: Double, humidity: Double, pressure: Double) {
-        print("WeatherApp: New weather data received: temp \(temp) humidity \(humidity) pressure (pressure)")
-    }
 }

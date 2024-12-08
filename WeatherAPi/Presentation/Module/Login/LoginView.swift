@@ -29,6 +29,7 @@ struct LoginView: View {
                     
                     Button("Sign Up") {
                         print("Button tapped")
+                        viewModel.getWeatherInfor()
                     }
                     .padding()
                     .frame(maxWidth: .infinity)

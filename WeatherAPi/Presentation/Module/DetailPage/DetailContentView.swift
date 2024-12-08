@@ -34,6 +34,8 @@ struct DetailContentView: View {
                             if countDownTimer > 0 && timerRunning {
                                 countDownTimer -= 1
                                 //viewModel.updateCounter()
+                                print(countDownTimer)
+                                viewModel.testObserverDesignPattern(count: countDownTimer)
                             } else {
                                 timerRunning = false
                             }

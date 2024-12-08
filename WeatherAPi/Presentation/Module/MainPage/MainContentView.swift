@@ -101,8 +101,7 @@ struct MainContentView: View {
                 }
                 
                 Button(viewModel.buttonTitle) {
-                    //viewModel.loadAsyncData(viewModel.searchText)
-                    viewModel.testObserverPattern()
+                    viewModel.loadAsyncData(viewModel.searchText)
                 }
                 self.timerView
                 .disabled(viewModel.isRequestSendingDisabled)
