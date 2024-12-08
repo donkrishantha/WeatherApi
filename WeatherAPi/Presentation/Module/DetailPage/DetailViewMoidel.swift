@@ -25,4 +25,24 @@ extension DetailViewModel {
 //        await self.repository.searchWeatherData(searchTerm: <#T##String#>, accessKey: <#T##String#>)
 //    }
     
+//    func updateCounter() {
+//        let weatherStation = WeatherStation()
+//        let weatherApp = DetailViewModel(repository: WeatherApiRepoImplement(apiClient: APIClient()))
+//
+//        //register the observer
+//        weatherStation.registerObserver(weatherApp)
+//
+//        //set the measurements and notify the observer
+//        weatherStation.setMeasurements(temp: 72.0, humidity: 65.0, pressure: 1013.25)
+//        // Output: "WeatherApp: New weather data received: temp 72.0 humidity 65.0 pressure 1013.25"
+//
+//        //remove the observer
+//        weatherStation.removeObserver(weatherApp)
+//    }
+}
+
+extension DetailViewModel: WeatherObserver {
+    func update(temp: Double, humidity: Double, pressure: Double) {
+        print("WeatherApp: New weather data received: temp \(temp) humidity \(humidity) pressure (pressure)")
+    }
 }

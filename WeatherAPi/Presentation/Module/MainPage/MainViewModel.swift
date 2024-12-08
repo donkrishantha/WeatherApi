@@ -10,6 +10,11 @@ import Combine
 import OSLog
 import UIKit
 
+enum AsyncErrors: Error {
+    case dataNotAvailable
+    case dataExist
+}
+
 final class MainViewModel: ObservableObject {
     
     // MARK: - Output
@@ -51,11 +56,51 @@ final class MainViewModel: ObservableObject {
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
+        self.testObserverPattern()
     }
     
     // MARK: - De-Initialisation
     deinit {
         print("DE INIT")
+    }
+    
+    func testAsyncThrows(count: Int) async throws -> Int {
+        if count > 3 {
+            throw AsyncErrors.dataExist
+        }
+        
+        return count
+    }
+    
+    func callAsyncThrows() {
+        Task{
+            do {
+                let value = try? await self.testAsyncThrows(count: 2)
+                print("error definition : \(value ?? 0)")
+            } catch {
+                print("Error definition")
+            }
+        }
+    }
+    
+    /// Test Observer pattern
+    func testObserverPattern() {
+        let weatherStation = WeatherStation()
+        let weatherApp = WeatherApp()
+
+        //register the observer
+        weatherStation.registerObserver(weatherApp)
+
+        //set the measurements and notify the observer
+        weatherStation.setMeasurements(temp: 72.0, humidity: 65.0, pressure: 1013.25)
+        // Output: "WeatherApp: New weather data received: temp 72.0 humidity 65.0 pressure 1013.25"
+
+        //remove the observer
+        weatherStation.removeObserver(weatherApp)
+
+        //set the measurements again
+        //weatherStation.setMeasurements(temp: 75.0, humidity: 70.0, pressure: 1015.0)
+        // Output: nothing
     }
 }
 
@@ -154,4 +199,9 @@ struct WeatherDetailParams {
     }
 }
 
-
+/// Observable pattern design.
+class WeatherApp: WeatherObserver {
+    func update(temp: Double, humidity: Double, pressure: Double) {
+        print("WeatherApp: New weather data received: temp \(temp) humidity \(humidity) pressure (pressure)")
+    }
+}

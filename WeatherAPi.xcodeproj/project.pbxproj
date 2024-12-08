@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BD00ADBD2C78564B0064415F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD00ADBC2C78564B0064415F /* LoginView.swift */; };
 		BD010BE72C99DA910060CCDF /* Multipart.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD010BE62C99DA910060CCDF /* Multipart.swift */; };
+		BD077EDD2CEC7A5200253CF5 /* WeatherStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD077EDC2CEC7A5200253CF5 /* WeatherStation.swift */; };
 		BD10F1492BCFADC700B79888 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F1482BCFADC700B79888 /* ImageView.swift */; };
 		BD10F14B2BD1079200B79888 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F14A2BD1079100B79888 /* AppConstants.swift */; };
 		BD10F14D2BD5173600B79888 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F14C2BD5173600B79888 /* SearchBar.swift */; };
@@ -91,6 +92,7 @@
 		BD010BE62C99DA910060CCDF /* Multipart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Multipart.swift; sourceTree = "<group>"; };
 		BD010BE82C9B2F6B0060CCDF /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		BD010BE92C9B2F800060CCDF /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
+		BD077EDC2CEC7A5200253CF5 /* WeatherStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStation.swift; sourceTree = "<group>"; };
 		BD10F1482BCFADC700B79888 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		BD10F14A2BD1079100B79888 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		BD10F14C2BD5173600B79888 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -200,6 +202,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		BD077EDB2CEC79F100253CF5 /* Observers */ = {
+			isa = PBXGroup;
+			children = (
+				BD077EDC2CEC7A5200253CF5 /* WeatherStation.swift */,
+			);
+			path = Observers;
+			sourceTree = "<group>";
+		};
 		BD10F1472BCFAD9A00B79888 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +255,7 @@
 				BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */,
 				BD21713D2B56B9D000F58C14 /* Info.plist */,
 				BDB3E2042C3C16A2000DB0C9 /* Configurations */,
+				BD077EDB2CEC79F100253CF5 /* Observers */,
 				BD81F91F2C88C03300B81077 /* Generated */,
 				BD21715F2B56BC3800F58C14 /* Asssets */,
 				BD00ADBA2C7853F90064415F /* Utility */,
@@ -632,6 +643,7 @@
 				BD10F1492BCFADC700B79888 /* ImageView.swift in Sources */,
 				BD2171812B56C5E000F58C14 /* Endpoint.swift in Sources */,
 				BDB3E2072C3C1772000DB0C9 /* Url.swift in Sources */,
+				BD077EDD2CEC7A5200253CF5 /* WeatherStation.swift in Sources */,
 				BD4B57012C8B618F0025814A /* MultipartRequest.swift in Sources */,
 				BD4B57082C9087510025814A /* ImageUploadViewModel.swift in Sources */,
 				BD21716D2B56BE3B00F58C14 /* DetailViewMoidel.swift in Sources */,

@@ -103,47 +103,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "EE57DB69-EA88-4478-908C-75EDA71F32DC"
+            uuid = "371D4377-5887-43F8-A2E8-9BD2BACBF2D3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "WeatherAPi/Presentation/Module/Login/LoginView.swift"
+            filePath = "WeatherAPi/Presentation/Module/DetailPage/DetailContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "bodySection"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "EE57DB69-EA88-4478-908C-75EDA71F32DC - 43d8548cc1393d63"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "WeatherAPi.BasketballGameView.bodySection.getter : some"
-                  moduleName = "WeatherAPi"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/poornima/Dropbox/Mac/Documents/Gayan/Projects/iOS/Weather-%20API/WeatherAPi/WeatherAPi/Presentation/Module/Login/LoginView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75">
-               </Location>
-               <Location
-                  uuid = "EE57DB69-EA88-4478-908C-75EDA71F32DC - 7c55599c376e1007"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(WeatherAPi.ScoreView, WeatherAPi.ScoreView)&gt; in WeatherAPi.BasketballGameView.bodySection.getter : some"
-                  moduleName = "WeatherAPi"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/poornima/Dropbox/Mac/Documents/Gayan/Projects/iOS/Weather-%20API/WeatherAPi/WeatherAPi/Presentation/Module/Login/LoginView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "73356E63-3653-4839-AD7D-BF9CDBB4F73A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeatherAPi/Presentation/Module/DetailPage/DetailContentView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "43A57424-CD4E-4D30-A61E-C14CB26B9468"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeatherAPi/Observers/WeatherStation.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "WeatherStation"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

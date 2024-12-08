@@ -26,42 +26,42 @@ struct ImageUploadContentView: View {
     var body: some View {
         NavigationView{
             /*VStack {
-                if let image = selectedImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                } else {
-                    Text("No image selected")
-                }
-                
-                Button(action: {
-                    viewModel.verifyTokenRequest()
-                }) {
-                    Text("Verify User")
-                }
-                
-                Button(action: {
-                    showImagePicker = true
-                }) {
-                    Text("Select Image")
-                }
-                
-                Button(action: {
-                    // select camera
-                }) {
-                    Text("Open Camera")
-                }
-            }
-            .alert(isPresented: $viewModel.showAlert) {
-                Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
-                      message: Text(viewModel.alertMessage?.message ?? "N/A"),
-                      dismissButton: .default(Text("Got it!")))
-            }
-            .navigationTitle("Update profile")
-            .padding([.leading, .trailing], 15)
-            .sheet(isPresented: $showImagePicker) {
-                ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
-            }*/
+             if let image = selectedImage {
+             Image(uiImage: image)
+             .resizable()
+             .scaledToFit()
+             } else {
+             Text("No image selected")
+             }
+             
+             Button(action: {
+             viewModel.verifyTokenRequest()
+             }) {
+             Text("Verify User")
+             }
+             
+             Button(action: {
+             showImagePicker = true
+             }) {
+             Text("Select Image")
+             }
+             
+             Button(action: {
+             // select camera
+             }) {
+             Text("Open Camera")
+             }
+             }
+             .alert(isPresented: $viewModel.showAlert) {
+             Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
+             message: Text(viewModel.alertMessage?.message ?? "N/A"),
+             dismissButton: .default(Text("Got it!")))
+             }
+             .navigationTitle("Update profile")
+             .padding([.leading, .trailing], 15)
+             .sheet(isPresented: $showImagePicker) {
+             ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
+             }*/
             
             VStack {
                 Image(uiImage: image2 ?? UIImage(named: "placeholder")!)
@@ -74,23 +74,23 @@ struct ImageUploadContentView: View {
                 }.padding()
                     .actionSheet(isPresented: $showSheet) {
                         UIDevice.isSimulator() ? (
-                        ActionSheet(title: Text("Select Photo"), message: Text("Choose"), buttons: [
-                            .default(Text("Photo Library")) {
-                                self.showImagePicker = true
-                                self.sourceType = .photoLibrary
-                            }
-                        ])) : (ActionSheet(title: Text("Select Photo"), message: Text("Choose"), buttons: [
-                            .default(Text("Photo Library")) {
-                                self.showImagePicker = true
-                                self.sourceType = .photoLibrary
-                            },
-                            .default(Text("Camera")) {
-                                self.showImagePicker = true
-                                self.sourceType = .camera
-                            },
-                            .cancel()
-                        ]))
-                }
+                            ActionSheet(title: Text("Select Photo"), message: Text("Choose"),
+                                        buttons: [.default(Text("Photo Library")) {
+                                                self.showImagePicker = true
+                                                self.sourceType = .photoLibrary
+                                            }
+                                        ])) : (ActionSheet(title: Text("Select Photo"), message: Text("Choose"),
+                                                           buttons: [.default(Text("Photo Library")) {
+                                            self.showImagePicker = true
+                                            self.sourceType = .photoLibrary
+                                        },
+                                                                     .default(Text("Camera")) {
+                                                                         self.showImagePicker = true
+                                                                         self.sourceType = .camera
+                                                                     },
+                                                                     .cancel()
+                                                                    ]))
+                    }
             }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),

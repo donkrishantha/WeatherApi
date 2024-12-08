@@ -93,7 +93,7 @@ extension ImageUploadViewModel {
 
 // Handel request responses & errors
 extension ImageUploadViewModel {
-    /// process error in response
+    //// process error response
     private func processErrorResponseWith(type: ImageUploadViewModelRequestType,
                                           with completion: Subscribers.Completion<ApiError>){
         switch completion { case .finished: break; case .failure(let error):
@@ -108,8 +108,8 @@ extension ImageUploadViewModel {
         }
     }
     
-    /// process error in response
-    private func processSuccessResponseWith<T: Codable >(type: ImageUploadViewModelRequestType,
+    /// process success response
+    private func processSuccessResponseWith<T: Codable>(type: ImageUploadViewModelRequestType,
                                                          and response: T) {
         self.logger.info("SUCCESS:")
         switch type {
