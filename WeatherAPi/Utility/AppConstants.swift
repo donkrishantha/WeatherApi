@@ -17,7 +17,7 @@ enum AppConstants {
     enum QueryKey: String {
         case apiKey = "access_key"
         case searchString = "query"
-
+        
         // Weather Query
         case numOfDays = "num_of_days"
         case forcast = "fx"
@@ -59,4 +59,27 @@ enum Environment {
         }
         return key
     }()
+}
+
+enum Configuration {
+    enum Error: Swift.Error {
+        case missingKey, invalidValue
+    }
+    
+    static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
+        guard let object = Bundle.main.object(forInfoDictionaryKey: key) else {
+            throw Error.missingKey
+        }
+        
+        switch object {
+        case let value as T:
+            return value
+        case let string as String:
+            guard let value = T(string) else { fallthrough }
+        default:
+            throw Error.invalidValue
+        }
+        
+        return object as! T
+    }
 }

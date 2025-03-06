@@ -15,7 +15,10 @@ struct MainContentView: View {
     /// Image picker property
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker: Bool = false
+    @State private var showAlert2: Bool = false
     /// -------------
+    @State private var showingAlert1 = false
+    @State private var showingAlert2 = false
     
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
@@ -55,13 +58,13 @@ struct MainContentView: View {
                     VStack(alignment: .leading) {
                         SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
                         
-//                        if viewModel.searchText.isEmpty {
-//                            /// History
-//                            //placesListView
-//                        } else {
-//                            /// Search results
-//                            //searchPlacesListView
-//                        }
+                        //                        if viewModel.searchText.isEmpty {
+                        //                            /// History
+                        //                            //placesListView
+                        //                        } else {
+                        //                            /// Search results
+                        //                            //searchPlacesListView
+                        //                        }
                         
                         self.detailView
                         self.timerView
@@ -74,7 +77,11 @@ struct MainContentView: View {
                     .alert(isPresented: $viewModel.showAlert) {
                         Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
                               message: Text(viewModel.alertMessage?.message ?? "N/A"),
-                              dismissButton: .default(Text("Got it!")))
+                              //dismissButton: .default(Text("Ok")
+                              primaryButton:.destructive(Text("Ok"), action: {
+                            print("Deleting...")
+                        }) , secondaryButton: .cancel()
+                        )
                     }
                     .navigationTitle("Weather details")
                     .padding([.leading, .trailing], 15)
@@ -102,11 +109,24 @@ struct MainContentView: View {
                 
                 Button(viewModel.buttonTitle) {
                     viewModel.loadAsyncData(viewModel.searchText)
+                    viewModel.showAlert = true
+                    viewModel.alertMessage = AlertMessage(title: "Alert!", message: "Please enter search term.")
                 }
+                
+                Button("Show 1") {
+                    viewModel.showAlert = true
+                    viewModel.alertMessage = AlertMessage(title: "Alert1", message: "Please enter search term.")
+                }
+                
+                Button("Show 2") {
+                    viewModel.showAlert = true
+                    viewModel.alertMessage = AlertMessage(title: "Alert2", message: "Please enter search term.")
+                }
+                
                 self.timerView
-                .disabled(viewModel.isRequestSendingDisabled)
-                .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
-                .font(.title)
+                    .disabled(viewModel.isRequestSendingDisabled)
+                    .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
+                    .font(.title)
                 
             }.padding([.top], 20)
         )
@@ -145,6 +165,7 @@ struct MainContentView: View {
     }
 }
 
+#if DEBUG
 struct MainContentView_Preview: PreviewProvider {
     static var previews: some View {
         let networkManager = APIClient()
@@ -153,3 +174,5 @@ struct MainContentView_Preview: PreviewProvider {
         MainContentView(viewModel: viewModel)
     }
 }
+#endif
+

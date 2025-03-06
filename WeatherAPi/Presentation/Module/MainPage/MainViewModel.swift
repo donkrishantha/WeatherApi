@@ -15,11 +15,16 @@ enum AsyncErrors: Error {
     case dataExist
 }
 
+enum MainViewModelError: Error {
+    case networkError
+    case dataParsingError
+}
+
 final class MainViewModel: ObservableObject {
     
     // MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
-    @Published private(set) var alertMessage: AlertMessage?
+    @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
     private let logger = Logger.dataStore
     
@@ -39,7 +44,8 @@ final class MainViewModel: ObservableObject {
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private var loadDataSubject = PassthroughSubject<Bool, ApiError>()
-    private let repository: (any WeatherApiRepoProtocol)?
+    private var repository: (any WeatherApiRepoProtocol)? = nil
+    //@Injected var repository: (any WeatherApiRepoProtocol)?
     private(set) var isRequestSending = false
     
     var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
@@ -50,12 +56,24 @@ final class MainViewModel: ObservableObject {
     init(repository: any WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
         //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
         self.repository = repository
-        print(searchText)
         if !searchText.isEmpty {
             //self.loadLocalJsonData()
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
+        self.testMacro()
+    }
+    
+    func testMacro() {
+        //#if DEBUG
+        
+        #if PRODCUTION
+        print("-----PRODUCTION")
+        #elseif STAGING
+        print("------STAGING")
+        #elseif TEST
+        print("-----TEST")
+        #endif
     }
     
     // MARK: - De-Initialisation
@@ -63,24 +81,24 @@ final class MainViewModel: ObservableObject {
         print("DE INIT")
     }
     
-    func testAsyncThrows(count: Int) async throws -> Int {
-        if count > 3 {
-            throw AsyncErrors.dataExist
-        }
-        
-        return count
-    }
-    
-    func callAsyncThrows() {
-        Task{
-            do {
-                let value = try? await self.testAsyncThrows(count: 2)
-                print("error definition : \(value ?? 0)")
-            } catch {
-                print("Error definition")
-            }
-        }
-    }
+    /*func testAsyncThrows(count: Int) async throws -> Int {
+     if count > 3 {
+     throw AsyncErrors.dataExist
+     }
+     
+     return count
+     }
+     
+     func callAsyncThrows() {
+     Task{
+     do {
+     let value = try? await self.testAsyncThrows(count: 2)
+     print("error definition : \(value ?? 0)")
+     } catch {
+     print("Error definition")
+     }
+     }
+     }*/
 }
 
 extension MainViewModel {
@@ -119,9 +137,10 @@ extension MainViewModel {
             self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
             return
         }
-        
+#if DEBUG
         /// logger status
         logger.trace("REQUEST: /current")
+#endif
         
         /// request to get "weather details"
         let searchWeatherData = await self.repository?.searchWeatherData(params: requestParameters) as? AnyPublisher<WeatherRowData, ApiError>
@@ -149,24 +168,29 @@ extension MainViewModel {
     
     /// process response in further
     private func processSuccessResponse(rowWeatherResponse: WeatherRowData) {
+#if DEBUG
         self.logger.info("SUCCESS:")
+#endif
         self.weatherModel = WeatherModel(data: rowWeatherResponse)
     }
 }
 
 extension MainViewModel {
+    
     /// load local json data
     fileprivate func loadLocalJsonData() {
         guard let data = FileLoader.readLocalFile("mock_weather_data") else {
             fatalError("Unable to locate file \"weatherData.json\" in main bundle.")
         }
+        print("Test")
         
         let rawWeather = FileLoader.loadJson(data)
+#if DEBUG
         self.logger.debug("Local database")
-        //DispatchQueue.main.async{
+#endif
         self.weatherModel = WeatherModel(data: rawWeather)
-        //}
     }
+    
 }
 
 /// request parameters

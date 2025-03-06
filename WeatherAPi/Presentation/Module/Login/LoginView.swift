@@ -49,6 +49,7 @@ struct LoginView: View {
     }
 }
 
+#if DEBUG
 struct LoginView_Preview: PreviewProvider {
     static var previews: some View {
         //let viewModel: LoginViewModel = LoginViewModel()
@@ -57,6 +58,7 @@ struct LoginView_Preview: PreviewProvider {
         ScoreView(teamName: "Team A")
     }
 }
+#endif
 
 struct BasketballGameView: View {
     //@State private var quarter = 1

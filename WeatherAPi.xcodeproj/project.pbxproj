@@ -52,6 +52,7 @@
 		BD5457D92D0D4B7D0097F865 /* FactoryPattern2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457D82D0D4B7D0097F865 /* FactoryPattern2.swift */; };
 		BD5457DB2D0D4C450097F865 /* FactoryPattern3.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457DA2D0D4C450097F865 /* FactoryPattern3.swift */; };
 		BD5457DE2D0EF4000097F865 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457DD2D0EF4000097F865 /* PropertyWrappers.swift */; };
+		BD5457E02D119A270097F865 /* Inject.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457DF2D119A270097F865 /* Inject.swift */; };
 		BD69AB082C6F916F00DA4D2D /* Mockable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69AB072C6F916F00DA4D2D /* Mockable.swift */; };
 		BD81F9102C84C41B00B81077 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB3E2092C3D3C76000DB0C9 /* MockURLProtocol.swift */; };
 		BD81F9152C85ADC000B81077 /* mock_weather_detail.json in Resources */ = {isa = PBXBuildFile; fileRef = BD90103D2C5CA6CC00F7A700 /* mock_weather_detail.json */; };
@@ -63,6 +64,7 @@
 		BDC11F302CC117D100A01088 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC11F2F2CC117D100A01088 /* LoginViewModel.swift */; };
 		BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */; };
 		BDDCA68E2C5792B400750EB0 /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */; };
+		BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5CCB12D1F075500D47330 /* CustomAlert.swift */; };
 		BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF21CE32B62266E00932F42 /* Rerquest.swift */; };
 		BDF3E9162CAC5A2000E2C32E /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF3E9152CAC5A1F00E2C32E /* UIKit.swift */; };
 		BDF79D472C65DD96004FF5A8 /* mock_weather_data.json in Resources */ = {isa = PBXBuildFile; fileRef = BDF79D462C65DD96004FF5A8 /* mock_weather_data.json */; };
@@ -143,6 +145,7 @@
 		BD5457D82D0D4B7D0097F865 /* FactoryPattern2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryPattern2.swift; sourceTree = "<group>"; };
 		BD5457DA2D0D4C450097F865 /* FactoryPattern3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryPattern3.swift; sourceTree = "<group>"; };
 		BD5457DD2D0EF4000097F865 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
+		BD5457DF2D119A270097F865 /* Inject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inject.swift; sourceTree = "<group>"; };
 		BD69AB072C6F916F00DA4D2D /* Mockable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mockable.swift; sourceTree = "<group>"; };
 		BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		BD90103D2C5CA6CC00F7A700 /* mock_weather_detail.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mock_weather_detail.json; sourceTree = "<group>"; };
@@ -153,8 +156,10 @@
 		BDB3E2092C3D3C76000DB0C9 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		BDC11F2D2CC117C500A01088 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		BDC11F2F2CC117D100A01088 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		BDC92C432D5B56E400E8758B /* WeatherAPiRelease-Test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WeatherAPiRelease-Test.entitlements"; sourceTree = "<group>"; };
 		BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
+		BDE5CCB12D1F075500D47330 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BDF21CE32B62266E00932F42 /* Rerquest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rerquest.swift; sourceTree = "<group>"; };
 		BDF3E9152CAC5A1F00E2C32E /* UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit.swift; sourceTree = "<group>"; };
 		BDF79D462C65DD96004FF5A8 /* mock_weather_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mock_weather_data.json; sourceTree = "<group>"; };
@@ -257,10 +262,13 @@
 		BD21712E2B56B9C600F58C14 /* WeatherAPi */ = {
 			isa = PBXGroup;
 			children = (
+				BDC92C432D5B56E400E8758B /* WeatherAPiRelease-Test.entitlements */,
+				BDE5CCB02D1F073400D47330 /* Alert */,
 				BD21712F2B56B9C600F58C14 /* AppDelegate.swift */,
 				BD2171312B56B9C600F58C14 /* SceneDelegate.swift */,
 				BD21717E2B56C4CF00F58C14 /* NavigationController.swift */,
 				BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */,
+				BD5457DF2D119A270097F865 /* Inject.swift */,
 				BD21713D2B56B9D000F58C14 /* Info.plist */,
 				BDB3E2042C3C16A2000DB0C9 /* Configurations */,
 				BD077EDB2CEC79F100253CF5 /* Observers */,
@@ -508,6 +516,14 @@
 			path = Factories;
 			sourceTree = "<group>";
 		};
+		BDE5CCB02D1F073400D47330 /* Alert */ = {
+			isa = PBXGroup;
+			children = (
+				BDE5CCB12D1F075500D47330 /* CustomAlert.swift */,
+			);
+			path = Alert;
+			sourceTree = "<group>";
+		};
 		BDF79D402C65DC4B004FF5A8 /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
@@ -677,6 +693,7 @@
 				BD21716D2B56BE3B00F58C14 /* DetailViewMoidel.swift in Sources */,
 				BD21717F2B56C4CF00F58C14 /* NavigationController.swift in Sources */,
 				BD4B570C2C908CC10025814A /* UploadModel.swift in Sources */,
+				BD5457E02D119A270097F865 /* Inject.swift in Sources */,
 				BD2171302B56B9C600F58C14 /* AppDelegate.swift in Sources */,
 				BD5457DB2D0D4C450097F865 /* FactoryPattern3.swift in Sources */,
 				BD5457D72D0D497F0097F865 /* FactoryPattern1.swift in Sources */,
@@ -700,6 +717,7 @@
 				BDFBFD982C4D150D0002AA76 /* WeatherDetailDTO.swift in Sources */,
 				BD4B57032C8B6A5D0025814A /* MultipartRequest2.swift in Sources */,
 				BD10F14D2BD5173600B79888 /* SearchBar.swift in Sources */,
+				BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */,
 				BD21717D2B56C2E400F58C14 /* WeatherRepository.swift in Sources */,
 				BD1297672C6CF74E007938F1 /* Logger.swift in Sources */,
 				BDC11F2E2CC117C500A01088 /* LoginViewController.swift in Sources */,
@@ -820,6 +838,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D TEST";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -840,7 +859,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -950,6 +969,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D STAGING";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -970,7 +990,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1080,6 +1100,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D PRODUCTION";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1100,7 +1121,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1204,6 +1225,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1214,6 +1236,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "WeatherAPi/WeatherAPiRelease-Test.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VDTSFZ79Z9;
@@ -1223,7 +1246,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1231,6 +1254,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Capital.WeatherAPi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1327,6 +1351,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1346,7 +1371,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1354,6 +1379,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Capital.WeatherAPi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1450,6 +1476,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1469,7 +1496,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1477,6 +1504,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Capital.WeatherAPi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1578,6 +1606,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1635,6 +1664,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1654,7 +1684,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1682,14 +1712,16 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = Capital.WeatherAPi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -26,13 +26,15 @@ final class APIClient: APIClientProtocol {
     
     private let session: URLSession
     private let logger = Logger.apiClient
-
+    
     init(session: URLSession) {
         self.session = session
     }
     
     convenience init() {
         let configuration = URLSessionConfiguration.default
+        // Cash policy
+        //configuration.requestCachePolicy = .useProtocolCachePolicy
         configuration.waitsForConnectivity = true
         configuration.timeoutIntervalForRequest = 60
         configuration.timeoutIntervalForResource = 300
@@ -84,20 +86,18 @@ final class APIClient: APIClientProtocol {
             }
             .eraseToAnyPublisher()
     }
-    
-    func uploadAsync() async {
-        //return session.up
-    }
 }
 
 extension APIClient {
     private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError> {
         guard let response = response as? HTTPURLResponse else {
+#if DEBUG
             logger.error("NETWORK MANAGER: Response not valid")
+#endif
             return Fail(error: .invalidResponse(error: "Response not valid"))
                 .eraseToAnyPublisher()
         }
-                        
+        
         switch response.statusCode {
         case 200..<300:
             let jsonDecoder = JSONDecoder()
@@ -107,19 +107,25 @@ extension APIClient {
                 .mapError { error in
                     do {
                         let apiError = try jsonDecoder.decode(ErrorModel.self, from: data)
+                        #if DEBUG
                         self.logger.error("NETWORK MANAGER: \(apiError.error?.info ?? error.localizedDescription)")
                         self.logger.error("Decode failed: \(error)\nData result: \(String(describing: String(data: data, encoding: String.Encoding.utf8)))")
+                        #endif
                         return .apiError(apiError.error?.info ?? error.localizedDescription)
                     } catch {
+                        #if DEBUG
                         print("‼️", error)
                         self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")
+                        #endif
                         return .decodingError(error.localizedDescription)
                     }
                 }
                 .map {$0}
                 .eraseToAnyPublisher()
         default:
+            #if DEBUG
             self.logger.error("NETWORK MANAGER: \(response.statusCode)")
+            #endif
             return Fail(error: self.httpErrorHandel(response.statusCode))
                 .eraseToAnyPublisher()
         }

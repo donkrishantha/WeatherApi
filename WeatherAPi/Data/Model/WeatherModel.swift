@@ -7,19 +7,28 @@
 
 import Foundation
 
-struct WeatherRowData: Codable {
+struct WeatherRowData {
     let currentLocation: CurrentLocation
     let currentWeather: CurrentWeather
-    
+}
+
+extension WeatherRowData: Codable {
     enum CodingKeys: String, CodingKey {
         case currentLocation = "location"
         case currentWeather = "current"
     }
 }
 
-struct CurrentLocation: Codable {
-    let name,country, region, latitude, longitude, localTime : String
-    
+struct CurrentLocation {
+    let name: String
+    let country: String
+    let region: String
+    let latitude: String
+    let longitude: String
+    let localTime: String
+}
+
+extension CurrentLocation: Codable {
     enum CodingKeys: String, CodingKey {
         case name, country, region
         case latitude = "lat"
@@ -28,13 +37,13 @@ struct CurrentLocation: Codable {
     }
     
     /*init(from dto: CurrentLocationDto) {
-        self.name = dto.name
-        self.country = dto.country
-        self.region = dto.region
-        self.latitude = dto.latitude
-        self.longitude = dto.longitude
-        self.localTime = dto.localTime
-    }*/
+     self.name = dto.name
+     self.country = dto.country
+     self.region = dto.region
+     self.latitude = dto.latitude
+     self.longitude = dto.longitude
+     self.localTime = dto.localTime
+     }*/
 }
 
 struct CurrentWeather: Codable {
@@ -64,22 +73,22 @@ struct CurrentWeather: Codable {
     }
     
     /*init(from dto: CurrentWeatherDto) {
-        self.observationTime = dto.observationTime
-        self.windDirection = dto.windDirection
-        
-        self.temperature = dto.temperature
-        self.windSpeed = dto.windSpeed
-        self.windDegree = dto.windDegree
-        self.pressure = dto.pressure
-        self.humidity = dto.humidity
-        self.cloudCover = dto.cloudCover
-        self.feelsLike = dto.feelsLike
-        self.uvIndex = dto.uvIndex
-        self.visibility = dto.visibility
-        
-        self.weatherDescriptions = dto.weatherDescriptions
-        self.weatherIcons = dto.weatherIcons
-    }*/
+     self.observationTime = dto.observationTime
+     self.windDirection = dto.windDirection
+     
+     self.temperature = dto.temperature
+     self.windSpeed = dto.windSpeed
+     self.windDegree = dto.windDegree
+     self.pressure = dto.pressure
+     self.humidity = dto.humidity
+     self.cloudCover = dto.cloudCover
+     self.feelsLike = dto.feelsLike
+     self.uvIndex = dto.uvIndex
+     self.visibility = dto.visibility
+     
+     self.weatherDescriptions = dto.weatherDescriptions
+     self.weatherIcons = dto.weatherIcons
+     }*/
 }
 
 struct WeatherModel: Codable {

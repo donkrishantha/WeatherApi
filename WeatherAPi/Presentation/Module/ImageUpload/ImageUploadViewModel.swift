@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import OSLog
 
+/// Api request type
 enum ImageUploadViewModelRequestType {
     case userVerify
     case imageUpload
@@ -26,6 +27,7 @@ final class ImageUploadViewModel: ObservableObject {
     // MARK: Input
     private(set) var cancelable: Set<AnyCancellable> = []
     private var repository: ImageUploadProtocol?
+    //@Injected var repository: ImageUploadProtocol?
     
     // MARK: Init
     init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient())) {
@@ -43,12 +45,16 @@ extension ImageUploadViewModel {
     
     /// request data async way
     func verifyTokenTask() {
-        Task(priority: .medium) { await verifyTokenRequest(requestType: .userVerify) }
+        Task(priority: .medium) {
+            await verifyTokenRequest(requestType: .userVerify)
+        }
     }
     
     /// request data async way
     func imageUploadTask(userName: String?, file: Data?) {
-        Task(priority: .medium) { await imageUploadRequest(requestType: .imageUpload, userName: userName, file: file) }
+        Task(priority: .medium) {
+            await imageUploadRequest(requestType: .imageUpload, userName: userName, file: file)
+        }
     }
     
     /// api request "verifyToken"

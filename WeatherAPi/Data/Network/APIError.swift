@@ -70,6 +70,30 @@ enum ApiError: Error, LocalizedError, Equatable {
     }
 }
 
+/*
+do {
+    let user = try JSONDecoder().decode(User.self, from: jsonData)
+} catch let error as DecodingError {
+    switch error {
+    case .keyNotFound(let key, let context):
+        let path = context.codingPath.map { $0.stringValue }.joined(separator: " -> ")
+        print("Missing key '\(key.stringValue)' at path \(path), reason: \(context.debugDescription)")
+    case .typeMismatch(let type, let context):
+        let path = context.codingPath.map { $0.stringValue }.joined(separator: " -> ")
+        print("Type '\(type)' mismatch at path \(path), reason: \(context.debugDescription)")
+    case .valueNotFound(let type, let context):
+        let path = context.codingPath.map { $0.stringValue }.joined(separator: " -> ")
+        print("Value of type '\(type)' not found at path \(path), reason: \(context.debugDescription)")
+    case .dataCorrupted(let context):
+        let path = context.codingPath.map { $0.stringValue }.joined(separator: " -> ")
+        print("Data corrupted at path \(path), reason: \(context.debugDescription)")
+    @unknown default:
+        print("Unknown decoding error: \(error.localizedDescription)")
+    }
+} catch {
+    print("Another error occurred: \(error)")
+}*/
+
 struct ApiErrorNew: Error {
     var statusCode: Int!
     let errorCode: String

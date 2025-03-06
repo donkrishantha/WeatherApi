@@ -17,6 +17,13 @@ struct DetailContentView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     init(viewModel: DetailViewModel) {
+#if os(iOS)
+  print("print on iOS only")
+#elseif os(macOS)
+  print("print on macOS only")
+#elseif os(watchOS)
+  print("print on watchOS only")
+#endif
         self.viewModel = viewModel
     }
     
@@ -60,6 +67,7 @@ struct DetailContentView: View {
     }
 }
 
+#if DEBUG
 struct DetailContentView_Preview: PreviewProvider {
     static var previews: some View {
         let dependencyContainer = DependencyContainer()
@@ -68,3 +76,4 @@ struct DetailContentView_Preview: PreviewProvider {
         DetailContentView(viewModel: viewModel)
     }
 }
+#endif
