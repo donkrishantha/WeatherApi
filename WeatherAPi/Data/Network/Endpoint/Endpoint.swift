@@ -21,9 +21,22 @@ protocol EndpointProvider {
 }
 
 extension EndpointProvider {
-
     var baseURL: URL {
         return .WeatherApi
+    }
+    
+    var queryItems: [URLQueryItem]? {
+        let queryItem = URLQueryItem(name: "", value: "")
+        return [queryItem]
+    }
+    
+    var body: [String: Any]? {
+        let body = [String: String]()
+        return body
+    }
+    
+    var mockFile: String? {
+        return ""
     }
     
     func getUrl() throws -> URL? {
