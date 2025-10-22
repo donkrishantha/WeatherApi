@@ -11,6 +11,7 @@ import Network
 struct MainContentView: View {
     
     @ObservedObject private var viewModel: MainViewModel
+    //@StateObject private var viewModel: MainViewModel
     
     /// Image picker property
     @State private var selectedImage: UIImage? = nil
@@ -36,11 +37,11 @@ struct MainContentView: View {
                 .tabItem {
                     Label("Register", systemImage: "person.badge.plus")
                 }
-            let viewModel1 = ImageUploadViewModel()
-            ImageUploadContentView(viewModel: viewModel1)
-                .tabItem {
-                    Label("Feedback", systemImage: "bubble.left.fill")
-                }
+//            let viewModel1 = ImageUploadViewModel()
+//            ImageUploadContentView(viewModel: viewModel1)
+//                .tabItem {
+//                    Label("Feedback", systemImage: "bubble.left.fill")
+//                }
             let repository = WeatherApiRepoImplement(apiClient: APIClient())
             let viewM = DetailViewModel(repository: repository)
             DetailContentView(viewModel: viewM)
@@ -97,16 +98,15 @@ struct MainContentView: View {
     private var detailView: some View {
         return AnyView(
             VStack(alignment: .leading) {
-                Text(viewModel.weatherName)
-                Text(viewModel.temperature)
-                Text(viewModel.weatherDescription)
-                Text(viewModel.observationDate)
-                Text(viewModel.observationTime)
-                if !viewModel.weatherIcon.isEmpty {
-                    ImageView(imageUrl: viewModel.weatherIcon, size: 80)
-                        .foregroundColor(.gray)
-                }
+                Text("Description: " + (viewModel.weatherModel?.weatherDescription ?? "N/A"))
+                Text("Temperature: " + (viewModel.weatherModel?.temperature ?? "N/A"))
+                Text("Time: " + (viewModel.weatherModel?.observationTime ?? "N/A"))
                 
+//                if (((viewModel.weatherModel?.weatherIcon?.isEmpty) == nil)) {
+//                    ImageView(imageUrl: viewModel.weatherIcon?.weatherIcon, size: 80)
+//                        .foregroundColor(.gray)
+//                }
+                /*
                 Button(viewModel.buttonTitle) {
                     viewModel.loadAsyncData(viewModel.searchText)
                     viewModel.showAlert = true
@@ -121,7 +121,7 @@ struct MainContentView: View {
                 Button("Show 2") {
                     viewModel.showAlert = true
                     viewModel.alertMessage = AlertMessage(title: "Alert2", message: "Please enter search term.")
-                }
+                }*/
                 
                 self.timerView
                     .disabled(viewModel.isRequestSendingDisabled)
@@ -166,13 +166,13 @@ struct MainContentView: View {
 }
 
 #if DEBUG
-struct MainContentView_Preview: PreviewProvider {
-    static var previews: some View {
-        let networkManager = APIClient()
-        let repo = WeatherApiRepoImplement(apiClient: networkManager)
-        let viewModel: MainViewModel = MainViewModel(repository: repo)
-        MainContentView(viewModel: viewModel)
-    }
-}
+//struct MainContentView_Preview: PreviewProvider {
+//    static var previews: some View {
+//        let networkManager = APIClient()
+//        let repo = WeatherApiRepoImplement(apiClient: networkManager)
+//        let viewModel: MainViewModel = MainViewModel(repository: repo)
+//        MainContentView(viewModel: viewModel)
+//    }
+//}
 #endif
 

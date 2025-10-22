@@ -7,6 +7,14 @@
 
 import Foundation
 
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case patch = "PATCH"
+    case delete = "DELETE"
+}
+
 public struct RequestModel {
     var endPoint: EndpointProvider
     var method: HTTPMethod
@@ -37,7 +45,7 @@ public struct RequestModel {
     }
     
     func asURLRequest() throws -> URLRequest? {
-        guard let url = try endPoint.getNewUrl() else {
+        guard let url = try endPoint.getUrl() else {
             throw ApiError.apiError("Define error")
         }
 
@@ -47,6 +55,7 @@ public struct RequestModel {
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
         
+        /// post request body
         if let body = body {
             do {
                 urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
@@ -62,9 +71,6 @@ public struct RequestModel {
             urlRequest.httpBody = multipart.httpBody
         }
         
-//        let unitTestUrlRequest = URLRequest(url: URL(string: "ht://www.w3.org/2003/05/soap-envelope/")!)
-//        let unitTestUrlRequest2 = URLRequest(url: URL(string: "http://0.0.0.0/app/v0_1/api/")!)
-//        let soapRequest = URLRequest(url: URL(string: "https://www.w3.org/2003/05/soap-envelope/")!)
         return urlRequest
     }
 }

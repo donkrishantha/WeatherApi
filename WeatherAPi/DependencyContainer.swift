@@ -36,6 +36,14 @@ final class DependencyContainer {
     private(set) lazy var weatherApiRepository: any WeatherApiRepoProtocol = WeatherApiRepoImplement(
         apiClient: apiClient
     )
+    
+    private(set) lazy var imageUploadRepository: any ImageUploadProtocol = ImageUploadRepositoryImp(
+        apiClient: apiClient
+    )
+    
+    private(set) lazy var weatherApiUseCaseProtocol: any WeatherApiUseCaseProtocol = WeatherApiUseCaseImple(
+        repository: weatherApiRepository
+    )
 }
 
 /*

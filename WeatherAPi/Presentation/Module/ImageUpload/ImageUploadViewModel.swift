@@ -17,24 +17,30 @@ enum ImageUploadViewModelRequestType {
 
 final class ImageUploadViewModel: ObservableObject {
     
-    // MARK: Output
+    /// MARK: Output
     @Published private(set) var uploadModel: UploadModel?
     @Published private(set) var imageResponse: ImageResponse?
     @Published private(set) var alertMessage: AlertMessage?
     @Published var showAlert = false
     private let logger = Logger.dataStore
     
-    // MARK: Input
+    /// MARK: Input
     private(set) var cancelable: Set<AnyCancellable> = []
     private var repository: ImageUploadProtocol?
-    //@Injected var repository: ImageUploadProtocol?
+    private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
+    private let imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol?
     
-    // MARK: Init
-    init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient())) {
+    
+    /// MARK: Init
+    init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient()),
+         weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol,
+         imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol) {
         self.repository = repository
+        self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
+        self.imageUploadUseCaseProtocol = imageUploadUseCaseProtocol
     }
     
-    // MARK: De-Init
+    /// MARK: De-Init
     deinit {
         debugPrint("De-Initialisation.")
     }
@@ -53,14 +59,16 @@ extension ImageUploadViewModel {
     /// request data async way
     func imageUploadTask(userName: String?, file: Data?) {
         Task(priority: .medium) {
-            await imageUploadRequest(requestType: .imageUpload, userName: userName, file: file)
+            await imageUploadRequest(requestType: .imageUpload,
+                                     userName: userName,
+                                     file: file)
         }
     }
     
     /// api request "verifyToken"
     private func verifyTokenRequest(requestType: ImageUploadViewModelRequestType) async {
-        let response1 = await repository?.checkTokenVerify()
-        responseHandler(response: response1, requestType: requestType)
+        let response: AnyPublisher<UploadModel, ApiError>? = await imageUploadUseCaseProtocol?.execute()
+        responseHandler(response: response, requestType: requestType)
         /*await repository?.checkTokenVerify()
         response1?.sink { [weak self] completion in
                 guard let self = self else { return }
@@ -72,9 +80,11 @@ extension ImageUploadViewModel {
     }
     
     /// image upload request "imageUpload"
-    private func imageUploadRequest(requestType: ImageUploadViewModelRequestType, userName: String?, file: Data?) async {
-        let response2 = await repository?.updateUserProfile(userName: userName, file: file)
-        responseHandler(response: response2, requestType: requestType)
+    private func imageUploadRequest(requestType: ImageUploadViewModelRequestType,
+                                    userName: String?,
+                                    file: Data?) async {
+        let response: AnyPublisher<ImageResponse, ApiError>? = await repository?.updateUserProfile(userName: userName, file: file)
+        responseHandler(response: response, requestType: requestType)
         /*await repository?.updateUserProfile(userName: userName, file: file)
             .sink { [weak self] completion in
                 guard let self = self else { return }
@@ -99,7 +109,7 @@ extension ImageUploadViewModel {
 
 // Handel request responses & errors
 extension ImageUploadViewModel {
-    //// process error response
+    /// process error response
     private func processErrorResponseWith(type: ImageUploadViewModelRequestType,
                                           with completion: Subscribers.Completion<ApiError>){
         switch completion { case .finished: break; case .failure(let error):
@@ -120,9 +130,26 @@ extension ImageUploadViewModel {
         self.logger.info("SUCCESS:")
         switch type {
         case .userVerify:
-            self.imageResponse = response as? ImageResponse
+            /*DispatchQueue.main.async {
+                guard let response = response as? ImageResponse else {
+                    return
+                }
+                self.imageResponse = response as? ImageResponse
+            }*/
+            Task { @MainActor in
+                guard let response = response as? ImageResponse else { return }
+                self.imageResponse = response
+            }
         case .imageUpload:
-            self.uploadModel = response as? UploadModel
+            /*
+             DispatchQueue.main.async {
+                 self.uploadModel = response as? UploadModel
+             }
+             */
+            Task { @MainActor in
+                guard let response = response as? UploadModel else { return }
+                self.uploadModel = response
+            }
         }
     }
 }

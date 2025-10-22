@@ -22,42 +22,30 @@ enum MainViewModelError: Error {
 
 final class MainViewModel: ObservableObject {
     
-    // MARK: - Output
+    /// MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
     @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
     private let logger = Logger.dataStore
     
-    var weatherDescription: String { get { "Description" + (weatherModel?.weatherDescription ?? "N/A") }}
-    
-    var weatherName: String { get { "Name:" + (weatherModel?.weatherName ?? "N/A")}}
-    
-    var temperature: String { get { String(format: "%@ %i", "Temperature:", weatherModel?.temperature ?? 0)}}
-    
-    var weatherIcon: String { get { weatherModel?.weatherIcon ?? "N/A"}}
-    
-    var observationDate: String { get { "Date:" + (weatherModel?.observationDate?.roundTripDate(style: .medium) ?? "N/A")}}
-    
-    var observationTime: String { get {"Time:" + (weatherModel?.observationTime?.timeIn24HourFormat() ?? "N/A")}}
-    
-    // MARK: - Input
+    /// MARK: - Input
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private var loadDataSubject = PassthroughSubject<Bool, ApiError>()
     private var repository: (any WeatherApiRepoProtocol)? = nil
     //@Injected var repository: (any WeatherApiRepoProtocol)?
+    private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
     private(set) var isRequestSending = false
     
     var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
     var isRequestSendingDisabled: Bool { isRequestSending || searchText.isEmpty }
     
     
-    // MARK: - Initialisation
-    init(repository: any WeatherApiRepoProtocol = WeatherApiRepoImplement(apiClient: APIClient())) {
+    /// MARK: - Initialisation
+    init(weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol) {
         //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
-        self.repository = repository
+        self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
         if !searchText.isEmpty {
-            //self.loadLocalJsonData()
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
@@ -80,25 +68,6 @@ final class MainViewModel: ObservableObject {
     deinit {
         print("DE INIT")
     }
-    
-    /*func testAsyncThrows(count: Int) async throws -> Int {
-     if count > 3 {
-     throw AsyncErrors.dataExist
-     }
-     
-     return count
-     }
-     
-     func callAsyncThrows() {
-     Task{
-     do {
-     let value = try? await self.testAsyncThrows(count: 2)
-     print("error definition : \(value ?? 0)")
-     } catch {
-     print("Error definition")
-     }
-     }
-     }*/
 }
 
 extension MainViewModel {
@@ -122,7 +91,9 @@ extension MainViewModel {
         Task (priority: .medium) {
             await getWeatherDetail(searchText)
             //self.loadLocalJsonData()
-            self.searchText = ""
+            DispatchQueue.main.sync {
+                self.searchText = ""
+            }
             isRequestSending = false
         }
     }
@@ -132,25 +103,27 @@ extension MainViewModel {
         let requestParameters = WeatherDetailParams(searchTerm: text)
         
         /// validate repository
+        /*
         guard repository != nil else {
             self.showAlert = true
             self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
             return
-        }
-#if DEBUG
+        }*/
+        #if DEBUG
         /// logger status
         logger.trace("REQUEST: /current")
-#endif
+        #endif
         
         /// request to get "weather details"
-        let searchWeatherData = await self.repository?.searchWeatherData(params: requestParameters) as? AnyPublisher<WeatherRowData, ApiError>
+        //let searchWeatherData = await self.repository?.searchWeatherData(params: requestParameters) as? AnyPublisher<WeatherRowData, ApiError>
+        let searchWeatherData = await self.weatherApiUseCaseProtocol?.execute(params: requestParameters)
         searchWeatherData?
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 self.processErrorResponse(completion: completion)
             } receiveValue: { [weak self] rowWeatherResponse in
                 guard let self = self else { return }
-                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse)
+                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse.currentWeather)
             }.store(in: &cancelable)
         return
     }
@@ -167,11 +140,13 @@ extension MainViewModel {
     }
     
     /// process response in further
-    private func processSuccessResponse(rowWeatherResponse: WeatherRowData) {
-#if DEBUG
+    private func processSuccessResponse(rowWeatherResponse: CurrentWeather) {
+        #if DEBUG
         self.logger.info("SUCCESS:")
-#endif
-        self.weatherModel = WeatherModel(data: rowWeatherResponse)
+        #endif
+        //self.weatherModel = WeatherModel(data: rowWeatherResponse)
+        let response = WeatherModel(data: rowWeatherResponse)
+        self.weatherModel = response
     }
 }
 
@@ -185,10 +160,10 @@ extension MainViewModel {
         print("Test")
         
         let rawWeather = FileLoader.loadJson(data)
-#if DEBUG
+        #if DEBUG
         self.logger.debug("Local database")
-#endif
-        self.weatherModel = WeatherModel(data: rawWeather)
+        #endif
+        self.weatherModel = WeatherModel(data: rawWeather.currentWeather)
     }
     
 }
@@ -202,7 +177,7 @@ struct WeatherDetailParams {
     }
 }
 
-/// Observable pattern design.
+/// Observable pattern design test logic here.
 class WeatherApp: ObserverProtocol {
     func moderate(temp: Double, humidity: Double, pressure: Double) {
         print("MainViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")

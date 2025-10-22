@@ -91,9 +91,9 @@ final class APIClient: APIClientProtocol {
 extension APIClient {
     private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError> {
         guard let response = response as? HTTPURLResponse else {
-#if DEBUG
+            #if DEBUG
             logger.error("NETWORK MANAGER: Response not valid")
-#endif
+            #endif
             return Fail(error: .invalidResponse(error: "Response not valid"))
                 .eraseToAnyPublisher()
         }

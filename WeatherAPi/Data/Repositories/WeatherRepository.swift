@@ -9,13 +9,13 @@ import Foundation
 import Combine
 
 protocol WeatherApiRepoProtocol {
-    associatedtype Element
-    func searchWeatherData(params: WeatherDetailParams) async -> Element
+    //associatedtype Element
+    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
 }
 
 struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
     
-    typealias Element = AnyPublisher<WeatherRowData, ApiError>
+    //typealias Element = AnyPublisher<WeatherRowData, ApiError>
     private var apiClient: APIClient
     
     init(apiClient: APIClient) {

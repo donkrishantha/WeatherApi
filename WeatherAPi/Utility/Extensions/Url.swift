@@ -18,7 +18,7 @@ extension URL {
         var components = URLComponents()
         components.scheme = "http"
         components.host = "api.weatherstack.com"//Bundle.main.infoDictionary?["WEATHER_API_HOST"] as? String
-        print(components.url!)
+        print(components.url!) // http://api.weatherstack.com
         return components.url!
     }
 }

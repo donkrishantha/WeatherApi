@@ -14,33 +14,20 @@ enum EndpointError: Error {
 protocol EndpointProvider {
     var baseURL: URL { get }
     var path: String { get }
-    var method: HTTPMethod { get }
-    var token: String { get }
     var queryItems: [URLQueryItem]? { get }
     var body: [String: Any]? { get }
     var mockFile: String? { get }
-    //var uploadData: Data? { get }
-    func getNewUrl() throws -> URL?
+    func getUrl() throws -> URL?
 }
 
 extension EndpointProvider {
 
     var baseURL: URL {
         return .WeatherApi
-        //return URL(string: "http://api.weatherstack.com")!
-        //return URL(fileURLWithPath: "api.weatherstack.com")
-    }
-
-    var token: String {
-        return AppConstants.Api.apiKey
     }
     
-//    var uploadData: Data? {
-//        return nil
-//    }
-    
-    func getNewUrl() throws -> URL? {
-        let url = baseURL.appendingPathComponent(path)
+    func getUrl() throws -> URL? {
+        let url = baseURL.appendingPathComponent(path) //http://api.weatherstack.com/current
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
         components?.queryItems = queryItems
         guard let url = components?.url else {
@@ -50,13 +37,46 @@ extension EndpointProvider {
     }
 }
 
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case patch = "PATCH"
-    case delete = "DELETE"
-}
+/*
+ protocol EndpointProvider {
+     var baseURL: URL { get }
+     var path: String { get }
+     //var method: HTTPMethod { get }
+     //var token: String { get }
+     var queryItems: [URLQueryItem]? { get }
+     var body: [String: Any]? { get }
+     var mockFile: String? { get }
+     //var uploadData: Data? { get }
+     func getUrl() throws -> URL?
+ }
+
+ extension EndpointProvider {
+
+     var baseURL: URL {
+         return .WeatherApi
+         //return URL(string: "http://api.weatherstack.com")!
+         //return URL(fileURLWithPath: "api.weatherstack.com")
+     }
+     
+     func getUrl() throws -> URL? {
+         let url = baseURL.appendingPathComponent(path) //http://api.weatherstack.com/current
+         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+         components?.queryItems = queryItems
+         guard let url = components?.url else {
+             throw EndpointError.invalidURL
+         }
+         return url
+     }
+ }
+ */
+
+//enum HTTPMethod: String {
+//    case get = "GET"
+//    case post = "POST"
+//    case put = "PUT"
+//    case patch = "PATCH"
+//    case delete = "DELETE"
+//}
 
 /*
 struct ApiError2: Error {
@@ -118,7 +138,6 @@ extension Endpoint {
     }
 }*/
 
-
 // Set up any request headers or parameters here
 //endpoint.headers?.forEach { request.addValue($0.value, forHTTPHeaderField: $0.key) }
 
@@ -130,6 +149,3 @@ let sendableClosure = { @Sendable (number: Int) -> String in
         return "Less than a dozen"
     }
 }*/
-
-
-

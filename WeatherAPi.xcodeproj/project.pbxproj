@@ -54,9 +54,12 @@
 		BD5457DE2D0EF4000097F865 /* PropertyWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457DD2D0EF4000097F865 /* PropertyWrappers.swift */; };
 		BD5457E02D119A270097F865 /* Inject.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5457DF2D119A270097F865 /* Inject.swift */; };
 		BD69AB082C6F916F00DA4D2D /* Mockable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD69AB072C6F916F00DA4D2D /* Mockable.swift */; };
+		BD6BFEC32EA926E300F24B73 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6BFEC22EA926E300F24B73 /* ErrorModel.swift */; };
+		BD74156C2EA35E2300DB89D6 /* WeatherApiUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74156B2EA35E2300DB89D6 /* WeatherApiUseCase.swift */; };
 		BD81F9102C84C41B00B81077 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB3E2092C3D3C76000DB0C9 /* MockURLProtocol.swift */; };
 		BD81F9152C85ADC000B81077 /* mock_weather_detail.json in Resources */ = {isa = PBXBuildFile; fileRef = BD90103D2C5CA6CC00F7A700 /* mock_weather_detail.json */; };
 		BD81F91E2C88BF1100B81077 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */; };
+		BD9A20492EA4B416003D67B8 /* ImageUploadUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9A20482EA4B416003D67B8 /* ImageUploadUseCase.swift */; };
 		BD9FA0722C5F6A8500A15CD7 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9FA0712C5F6A8500A15CD7 /* MockURLProtocol.swift */; };
 		BD9FA0742C5F6CE000A15CD7 /* MockHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9FA0732C5F6CE000A15CD7 /* MockHttpClient.swift */; };
 		BDB3E2072C3C1772000DB0C9 /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB3E2062C3C1772000DB0C9 /* Url.swift */; };
@@ -147,8 +150,11 @@
 		BD5457DD2D0EF4000097F865 /* PropertyWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertyWrappers.swift; sourceTree = "<group>"; };
 		BD5457DF2D119A270097F865 /* Inject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inject.swift; sourceTree = "<group>"; };
 		BD69AB072C6F916F00DA4D2D /* Mockable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mockable.swift; sourceTree = "<group>"; };
+		BD6BFEC22EA926E300F24B73 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
+		BD74156B2EA35E2300DB89D6 /* WeatherApiUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApiUseCase.swift; sourceTree = "<group>"; };
 		BD81F91D2C88BF1100B81077 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		BD90103D2C5CA6CC00F7A700 /* mock_weather_detail.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mock_weather_detail.json; sourceTree = "<group>"; };
+		BD9A20482EA4B416003D67B8 /* ImageUploadUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadUseCase.swift; sourceTree = "<group>"; };
 		BD9FA0712C5F6A8500A15CD7 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		BD9FA0732C5F6CE000A15CD7 /* MockHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHttpClient.swift; sourceTree = "<group>"; };
 		BDB3E2032C3C1689000DB0C9 /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Test.xcconfig; sourceTree = "<group>"; };
@@ -322,6 +328,7 @@
 				BD2171702B56BE9800F58C14 /* Model */,
 				BD2171732B56C20100F58C14 /* Network */,
 				BD21717B2B56C2C600F58C14 /* Repositories */,
+				BD74156A2EA35CF900DB89D6 /* UseCase */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -363,6 +370,7 @@
 				BDFBFD962C4D14F30002AA76 /* DTO */,
 				BD2171712B56BEEE00F58C14 /* WeatherModel.swift */,
 				BD4B570B2C908CC10025814A /* UploadModel.swift */,
+				BD6BFEC22EA926E300F24B73 /* ErrorModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -422,6 +430,15 @@
 				BD5457DD2D0EF4000097F865 /* PropertyWrappers.swift */,
 			);
 			path = PropertyWrapper;
+			sourceTree = "<group>";
+		};
+		BD74156A2EA35CF900DB89D6 /* UseCase */ = {
+			isa = PBXGroup;
+			children = (
+				BD74156B2EA35E2300DB89D6 /* WeatherApiUseCase.swift */,
+				BD9A20482EA4B416003D67B8 /* ImageUploadUseCase.swift */,
+			);
+			path = UseCase;
 			sourceTree = "<group>";
 		};
 		BD81F9162C86506100B81077 /* MockData */ = {
@@ -683,6 +700,7 @@
 				BD2171722B56BEEE00F58C14 /* WeatherModel.swift in Sources */,
 				BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */,
 				BD2171752B56C21A00F58C14 /* APIClient.swift in Sources */,
+				BD9A20492EA4B416003D67B8 /* ImageUploadUseCase.swift in Sources */,
 				BD4B57062C90873E0025814A /* ImageUploadViewController.swift in Sources */,
 				BD10F1492BCFADC700B79888 /* ImageView.swift in Sources */,
 				BD2171812B56C5E000F58C14 /* Endpoint.swift in Sources */,
@@ -710,7 +728,9 @@
 				BD1297652C6BC169007938F1 /* Background.swift in Sources */,
 				BD81F91E2C88BF1100B81077 /* DependencyContainer.swift in Sources */,
 				BD2171692B56BDF500F58C14 /* MainContentView.swift in Sources */,
+				BD74156C2EA35E2300DB89D6 /* WeatherApiUseCase.swift in Sources */,
 				BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */,
+				BD6BFEC32EA926E300F24B73 /* ErrorModel.swift in Sources */,
 				BDFEFE142CB57CFE00F47842 /* Base64.swift in Sources */,
 				BD010BE72C99DA910060CCDF /* Multipart.swift in Sources */,
 				BD4B570E2C908FC40025814A /* ImageUploadRepository.swift in Sources */,

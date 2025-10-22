@@ -94,46 +94,46 @@ do {
     print("Another error occurred: \(error)")
 }*/
 
-struct ApiErrorNew: Error {
-    var statusCode: Int!
-    let errorCode: String
-    var message: String
-    
-    init(statusCode: Int = 0, errorCode: String, message: String) {
-        self.statusCode = statusCode
-        self.errorCode = errorCode
-        self.message = message
-    }
-    
-    var errorCodeNumber: String {
-        let numberString = errorCode.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-        return numberString
-    }
-    
-    private enum CodingKeys: String, CodingKey {
-        case errorCode
-        case message
-    }
-}
+//struct ApiErrorNew: Error {
+//    var statusCode: Int!
+//    let errorCode: String
+//    var message: String
+//    
+//    init(statusCode: Int = 0, errorCode: String, message: String) {
+//        self.statusCode = statusCode
+//        self.errorCode = errorCode
+//        self.message = message
+//    }
+//    
+//    var errorCodeNumber: String {
+//        let numberString = errorCode.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+//        return numberString
+//    }
+//    
+//    private enum CodingKeys: String, CodingKey {
+//        case errorCode
+//        case message
+//    }
+//}
 
-extension ApiErrorNew: Decodable {
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        errorCode = try container.decode(String.self, forKey: .errorCode)
-        message = try container.decode(String.self, forKey: .message)
-    }
-}
-
-enum HTTPHeader: String {
-    case contentType = "Content-Type"
-    case authorization = "Authorization"
-}
-
-enum ContentType: String {
-    case json = "application/json"
-    case xml = "application/xml"
-    case formUrlEncoded = "application/x-www-form-urlencoded"
-}
+//extension ApiErrorNew: Decodable {
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        errorCode = try container.decode(String.self, forKey: .errorCode)
+//        message = try container.decode(String.self, forKey: .message)
+//    }
+//}
+//
+//enum HTTPHeader: String {
+//    case contentType = "Content-Type"
+//    case authorization = "Authorization"
+//}
+//
+//enum ContentType: String {
+//    case json = "application/json"
+//    case xml = "application/xml"
+//    case formUrlEncoded = "application/x-www-form-urlencoded"
+//}
 
 //100-level (Informational) – server acknowledges a request
 //200-level (Success) – server completed the request as expected

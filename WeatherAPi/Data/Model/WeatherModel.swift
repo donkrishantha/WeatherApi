@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Domain Model
 struct WeatherRowData {
     let currentLocation: CurrentLocation
     let currentWeather: CurrentWeather
@@ -35,15 +36,6 @@ extension CurrentLocation: Codable {
         case longitude = "lon"
         case localTime = "localtime"
     }
-    
-    /*init(from dto: CurrentLocationDto) {
-     self.name = dto.name
-     self.country = dto.country
-     self.region = dto.region
-     self.latitude = dto.latitude
-     self.longitude = dto.longitude
-     self.localTime = dto.localTime
-     }*/
 }
 
 struct CurrentWeather: Codable {
@@ -71,56 +63,20 @@ struct CurrentWeather: Codable {
     var weatherIcon: String {
         weatherIcons.first ?? ""
     }
-    
-    /*init(from dto: CurrentWeatherDto) {
-     self.observationTime = dto.observationTime
-     self.windDirection = dto.windDirection
-     
-     self.temperature = dto.temperature
-     self.windSpeed = dto.windSpeed
-     self.windDegree = dto.windDegree
-     self.pressure = dto.pressure
-     self.humidity = dto.humidity
-     self.cloudCover = dto.cloudCover
-     self.feelsLike = dto.feelsLike
-     self.uvIndex = dto.uvIndex
-     self.visibility = dto.visibility
-     
-     self.weatherDescriptions = dto.weatherDescriptions
-     self.weatherIcons = dto.weatherIcons
-     }*/
 }
 
+/// UI Model
 struct WeatherModel: Codable {
-    var weatherDescription: String?
-    var weatherName: String?
-    var temperature: Int?
-    var weatherIcon: String?
-    var observationDate: String?
-    var observationTime: String?
+    let weatherDescription: String?
+    let temperature: String?
+    let weatherIcon: String?
+    let observationTime: String?
     
-    init(data: WeatherRowData) {
-        weatherDescription = "Description" + data.currentWeather.weatherDescription
-        weatherName = data.currentLocation.name
-        temperature = data.currentWeather.temperature
-        weatherIcon = data.currentWeather.weatherIcon
-        observationDate = data.currentLocation.localTime
-        observationTime = data.currentWeather.observationTime
+    init(data: CurrentWeather) {self.weatherDescription = data.weatherDescription
+        self.temperature = String(format: "%i", data.temperature)
+        self.weatherIcon = data.weatherIcon
+        self.observationTime = data.observationTime.timeIn24HourFormat()
     }
 }
 
-struct ErrorModel: Decodable {
-    let status: Bool?
-    let error: ErrorData?
-    
-    enum CodingKeys: String, CodingKey {
-        case status = "success"
-        case error
-    }
-    
-    struct ErrorData: Decodable {
-        let code: Int?
-        let type: String?
-        let info: String?
-    }
-}
+

@@ -107,10 +107,10 @@ struct ImageUploadContentView: View {
 }
 
 #if DEBUG
-struct ImageUploadContentView_Preview: PreviewProvider {
-    static var previews: some View {
-        let viewModel = ImageUploadViewModel()
-        ImageUploadContentView(viewModel: viewModel)
-    }
-}
+//struct ImageUploadContentView_Preview: PreviewProvider {
+//    static var previews: some View {
+//        let viewModel = ImageUploadViewModel()
+//        ImageUploadContentView(viewModel: viewModel)
+//    }
+//}
 #endif
