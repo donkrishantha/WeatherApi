@@ -8,7 +8,7 @@
 import Foundation
 
 enum ImageUploadEndpoint: EndpointProvider {
-    
+
     case checkUserVerify
     case uploadImage(fileString: String?, file: Data?)
     case createPassword(password: Password)
@@ -27,18 +27,18 @@ enum ImageUploadEndpoint: EndpointProvider {
         }
     }
 
-    var body: [String : Any]? {
-        switch self {
-        case .checkUserVerify:
-            return nil
-        case .uploadImage(fileString: _, file: _):
-            return nil
-        case .createPassword(password: let password):
-            return password.toDictionary
-        case .updateUserProfile(userName: _, file: _):
-            return nil
-        }
-    }
+//    var body: [String : Any]? {
+//        switch self {
+//        case .checkUserVerify:
+//            return nil
+//        case .uploadImage(fileString: _, file: _):
+//            return nil
+//        case .createPassword(password: let password):
+//            return password.toDictionary
+//        case .updateUserProfile(userName: _, file: _):
+//            return nil
+//        }
+//    }
     
     var multipart: MultipartRequest2? {
         switch self {
@@ -72,7 +72,13 @@ enum ImageUploadEndpoint: EndpointProvider {
 }
 
 extension Encodable {
-    
+    /*
+     do {
+         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+     } catch {
+         throw  ApiError.encodingError("Error encoding http body")
+     }
+     */
     internal var toDictionary: [String: Any]? {
         guard let data = try? JSONEncoder().encode(self) else { return nil }
         return (try? JSONSerialization.jsonObject(with: data, options: .allowFragments)).flatMap { $0 as? [String: Any] }

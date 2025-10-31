@@ -9,16 +9,17 @@ import Foundation
 import Combine
 import OSLog
 
+/// https://medium.com/@c64midi/modern-generic-network-layer-with-swift-concurrency-async-await-and-combine-part-2-2840fff77106
 protocol APIClientProtocol {
     
     // MARK: Request
     
-    func request<T: Codable>(_ request: RequestModel,
+    func request<T: Codable & Sendable>(_ request: RequestModel<Any>,
                              responseModel: T.Type?) async -> AnyPublisher<T, ApiError>
     
     // MARK: Upload
     
-    func upload<T: Codable>(_ request: RequestModel,
+    func upload<T: Codable>(_ request: RequestModel<Any>,
                             responseModel: T.Type) async -> AnyPublisher<T, ApiError>
 }
 
@@ -49,10 +50,10 @@ final class APIClient: APIClientProtocol {
     
     // MARK: Request
     
-    func request<T: Codable>(_ request: RequestModel,
+    func request<T: Codable>(_ request: RequestModel<Any>,
                              responseModel: T.Type?) async -> AnyPublisher<T, ApiError> {
         return session
-            .dataTaskPublisher(for: try! request.asURLRequest()!)
+            .dataTaskPublisher(for: try! request.asURLRequest())
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in
@@ -69,10 +70,10 @@ final class APIClient: APIClientProtocol {
     
     // MARK: Upload
     
-    func upload<T: Codable>(_ request: RequestModel,
+    func upload<T: Codable>(_ request: RequestModel<Any>,
                             responseModel: T.Type) async -> AnyPublisher<T, ApiError> {
         return session
-            .dataTaskPublisher(for: try! request.asURLRequest()!)
+            .dataTaskPublisher(for: try! request.asURLRequest())
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in

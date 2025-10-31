@@ -27,16 +27,16 @@ final class ImageUploadViewModel: ObservableObject {
     /// MARK: Input
     private(set) var cancelable: Set<AnyCancellable> = []
     private var repository: ImageUploadProtocol?
-    private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
+    //private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
     private let imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol?
     
     
     /// MARK: Init
     init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient()),
-         weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol,
+         //weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol,
          imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol) {
         self.repository = repository
-        self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
+        //self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
         self.imageUploadUseCaseProtocol = imageUploadUseCaseProtocol
     }
     

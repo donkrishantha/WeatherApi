@@ -107,7 +107,12 @@ import Combine
 //    }
 //}
 
-struct MockEndpoint: EndpointProvider {    
+struct MockEndpoint: EndpointProvider {
+    var header: [String : String]?
+    
+    //var body: Data?
+    
+    
     var scheme: String = "https"
     var baseURL: String = "api.weatherstack.com"
     var path: String = "/current"

@@ -29,13 +29,13 @@ struct ImageUploadRepositoryImp: ImageUploadProtocol {
     
     func checkTokenVerify() async -> AnyPublisher<UploadModel, ApiError> {
         let endpoint = ImageUploadEndpoint.checkUserVerify
-        let request = RequestModel(endPoint: endpoint, method: .get)
+        let request = RequestModel<Any>(.get, endpoint)
         return await apiClient.request(request, responseModel: UploadModel.self)
     }
     
     func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<ImageResponse, ApiError> {
         let endPoint = EventsEndpoints.updateUserProfile(userName: userName, file: file)
-        let request = RequestModel(endPoint: endPoint, method: .post)
+        let request = RequestModel<Any>(.post, endPoint)
         return await apiClient.upload(request, responseModel: ImageResponse.self)
     }
     

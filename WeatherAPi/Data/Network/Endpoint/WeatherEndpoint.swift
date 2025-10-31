@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 enum EventsEndpoints: EndpointProvider {
-        
+   
     case getCurrentWeatherDetails(accessKey: String, query: String)
     case getWeatherDetails(id: Int)
     case updateUserProfile(userName: String?, file: Data?)
@@ -34,6 +34,20 @@ enum EventsEndpoints: EndpointProvider {
             return nil
         }
     }
+    
+//    internal var header: [String: String]? {
+//        // Access Token to use in Bearer header
+//        let accessToken = "insert your access token here -> https://www.themoviedb.org/settings/api"
+//        switch self {
+//        case .topRated, .movieDetail:
+//            return [
+//                "Authorization": "Bearer \(accessToken)",
+//                "Content-Type": "application/json;charset=utf-8"
+//            ]
+//        }
+//    }
+// // Set up any request headers or parameters here
+    //endpoint.headers?.forEach { request.addValue($0.value, forHTTPHeaderField: $0.key) }
 }
 
 

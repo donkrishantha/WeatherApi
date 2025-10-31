@@ -25,7 +25,7 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
         let endpoint = EventsEndpoints.getCurrentWeatherDetails(accessKey: AppConstants.Api.apiKey,
                                                                 query: params.searchTerm)
-        let request = RequestModel(endPoint: endpoint, method: .get)
+        let request = RequestModel<Any>(.get, endpoint)
         return await apiClient.request(request, responseModel: WeatherRowData.self)
     }
     

@@ -43,7 +43,7 @@ final class DependencyContainer {
     
     private(set) lazy var weatherApiUseCaseProtocol: any WeatherApiUseCaseProtocol = WeatherApiUseCaseImple(
         repository: weatherApiRepository
-    )
+    )    
 }
 
 /*

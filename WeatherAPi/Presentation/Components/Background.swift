@@ -4,12 +4,12 @@ import SwiftUI
 struct BackgroundView: View {
     var body: some View {
         ZStack {
-            LinearGradient(gradient:
-                            Gradient(colors: [
-                                Color("AccentColor"),
-                                Color("AppBackground"),
-                                Color("AccentColor"),
-                            ]), startPoint: .top, endPoint: .bottomTrailing)
+//            LinearGradient(gradient:
+//                            Gradient(colors: [
+//                                Color("AccentColor"),
+//                                Color("AppBackground"),
+//                                Color("AccentColor"),
+//                            ]), startPoint: .top, endPoint: .bottomTrailing)
 
             VisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
         }

@@ -17,13 +17,13 @@ struct DetailContentView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     init(viewModel: DetailViewModel) {
-#if os(iOS)
-  print("print on iOS only")
-#elseif os(macOS)
-  print("print on macOS only")
-#elseif os(watchOS)
-  print("print on watchOS only")
-#endif
+//#if os(iOS)
+//  print("print on iOS only")
+//#elseif os(macOS)
+//  print("print on macOS only")
+//#elseif os(watchOS)
+//  print("print on watchOS only")
+//#endif
         self.viewModel = viewModel
     }
     

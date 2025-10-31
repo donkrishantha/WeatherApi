@@ -10,7 +10,6 @@ import Combine
 
 protocol ImageUploadUseCaseProtocol {
     func execute() async -> AnyPublisher<UploadModel, ApiError>
-    //func execute2() async -> Result<UploadModel, ApiError>
 }
 
 final class ImageUploadUseCase: ImageUploadUseCaseProtocol {
@@ -25,9 +24,5 @@ final class ImageUploadUseCase: ImageUploadUseCaseProtocol {
         let result = await imageUploadRepository?.checkTokenVerify()
         return result!
     }
-    
-//    func execute2() async -> Result<UploadModel, ApiError> {
-//        let result = (await imageUploadRepository?.checkTokenVerify())!
-//        return result
-//    }
 }
+

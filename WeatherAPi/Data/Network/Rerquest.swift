@@ -15,63 +15,98 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-public struct RequestModel {
-    var endPoint: EndpointProvider
-    var method: HTTPMethod
-    var body: Data?
-    let requestTimeout: Float?
-    var multipart: MultipartRequest2?
+public struct RequestModel<Parameters>: URLRequestConvertible {
     
+    private var method: HTTPMethod
+    private var endPoint: EndpointProvider
+    private var body: Parameters?
+    private var headers: Headers?
+    private let requestTimeout: Double?
+    //private var multipart: MultipartRequest2?
+    
+    public typealias Parameters = [String: Any]
+    public typealias Headers = [String: String]
+
     /// GET
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data? = nil,
-         reqTimeout: Float? =  nil) {
+    init(_ method: HTTPMethod,
+         _ endPoint: EndpointProvider,
+         with parameters: Parameters? = nil,
+         headers: Headers? = nil,
+         reqTimeout: Double? =  nil
+    )where Parameters == Parameters {
         self.endPoint = endPoint
         self.method = method
-        self.body = reqBody
+        self.body = parameters
+        self.headers = headers
         self.requestTimeout = reqTimeout
     }
     
     /// POST
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data,
-         reqTimeout: Float? =  nil) {
+    init<T: Encodable>(
+        _ method: HTTPMethod,
+        _ endPoint: EndpointProvider,
+        with parameters: T,
+        headers: Headers? = nil,
+        reqTimeout: Double? =  nil
+    ) where Parameters == AnyEncodable {
         self.endPoint = endPoint
         self.method = method
-        self.body = reqBody
+        self.body = AnyEncodable(parameters)
+        self.headers = headers
         self.requestTimeout = reqTimeout
     }
     
-    func asURLRequest() throws -> URLRequest? {
-        guard let url = try endPoint.getUrl() else {
-            throw ApiError.apiError("Define error")
-        }
-
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
+    public func asURLRequest() throws -> URLRequest {
+        // Create URL request
+        var request = URLRequest(url: try endPoint.asURL())
         
-        /// post request body
+        // Add HTTP method
+        request.httpMethod = method.rawValue
+        
+        // Add HTTP headers
+        request.allHTTPHeaderFields = endPoint.header
+        
+//        if !endPoint.token!.isEmpty {
+//            request.addValue("Bearer \(endPoint.token ?? "")", forHTTPHeaderField: "Authorization")
+//        }
+        
+        /// Add post request body
         if let body = body {
             do {
-                urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
             } catch {
                 throw  ApiError.encodingError("Error encoding http body")
             }
         }
+        /*
+         if let body = body {
+         //             request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+         //         }
+         */
         
-        /// image upload
-        if let multipart = multipart {
-            urlRequest.setValue(multipart.headerValue, forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("\(multipart.length)", forHTTPHeaderField: "Content-Length")
-            urlRequest.httpBody = multipart.httpBody
-        }
-        
-        return urlRequest
+        return request
+    }
+}
+
+/// Types adopting the `URLRequestConvertible` protocol can be used to safely construct `URLRequest`s.
+public protocol URLRequestConvertible {
+    /// Returns a `URLRequest` or throws if an `Error` was encountered.
+    ///
+    /// - Returns: A `URLRequest`.
+    /// - Throws:  Any error thrown while constructing the `URLRequest`.
+    func asURLRequest() throws -> URLRequest
+}
+
+struct AnyEncodable: Encodable {
+
+    private var encodable: Encodable
+
+    init(_ encodable: Encodable) {
+        self.encodable = encodable
+    }
+
+    func encode(to encoder: Encoder) throws {
+        try encodable.encode(to: encoder)
     }
 }
 
@@ -91,139 +126,78 @@ public struct RequestModel {
 //http://the-internet.herokuapp.com/status_codes/301
 //http://the-internet.herokuapp.com/status_codes/404
 //http://the-internet.herokuapp.com/status_codes/500
-
 /*
-func asURLRequest() throws -> URLRequest? {
-//        guard let url = endPoint.getUrl() else {
-//            debugPrint("URL not found")
-//            //return URLRequest(url: URL(string: "http.kkljk.")!)
-//            throw ApiError2(errorCode: "ERROR-0", message: "URL error")
-//        }
-    
-    guard let url = try endPoint.getNewUrl() else {
-        debugPrint("URL not found")
-        throw ApiError2(errorCode: "ERROR-0", message: "URL error")
-    }
-    
-   // var urlComponents = URLComponents()
-//        urlComponents.scheme = endPoint.scheme
-//        urlComponents.host =  endPoint.baseURL
-//        urlComponents.path = endPoint.path
-//        if let queryItems = endPoint.queryItems {
-//            urlComponents.queryItems = queryItems
-//        }
-            
-//        guard let url = urlComponents.url else {
-//            throw ApiError2(errorCode: "ERROR-0", message: "URL error")
-//        }
-    
-    var urlRequest = URLRequest(url: url)
-    urlRequest.httpMethod = method.rawValue
-    urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-    urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-    urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
-    
-    if let body = body {
+if let queryParams = queryParams {
+    if method == .GET {
+        // For GET requests, append query parameters to the URL
+        
+        var queryItems: [URLQueryItem] = []
+        for (key, value) in queryParams {
+            let queryItem = URLQueryItem(name: key, value: String(describing: value))
+            queryItems.append(queryItem)
+        }
+        components.queryItems = queryItems
+        request.url = components.url
+        
+    } else {
+        // For other methods, add query parameters to the request body
+        
         do {
-            urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            let data = try JSONSerialization.data(withJSONObject: queryParams)
+            request.httpBody = data
         } catch {
-            throw ApiError2(errorCode: "ERROR-0", message: "Error encoding http body")
+            print(error.localizedDescription)
         }
+        
     }
-    return urlRequest
 }
-*/
+ 
+ //Add multipart form data
+//        if let multipartFormData = endPoint.multipartFormData {
+//            let boundary = "Boundary-\(UUID().uuidString)"
+//            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//
+//            for formData in multipartFormData {
+//                request.httpBody?.append("--\(boundary)\r\n".data(using: .utf8)!)
+//                request.httpBody?.append("Content-Disposition: form-data; name=\"\(formData.name)\"; filename=\"\(formData.filename)\"\r\n".data(using: .utf8)!)
+//                request.httpBody?.append("Content-Type: application/octet-stream\r\n\r\n".data(using: .utf8)!)
+//                request.httpBody?.append(formData.data)
+//                request.httpBody?.append("\r\n".data(using: .utf8)!)
+//            }
+//        }
+ 
+ if let queryParams = self.queryParams {
+     let queryItems = queryParams.map({URLQueryItem(name: $0.key, value: $0.value)})
+     urlComponents.queryItems = queryItems
+ }
+ 
+ if let pathParams = self.pathParams {
+     for param in pathParams {
+         urlComponents.path.replace(param.key, with: param.value)
+     }
+ }
+ 
+ /*
+ let req: URLRequest = URLRequest(url: <#T##URL#>,
+                                  cachePolicy: .reloadIgnoringLocalCacheData,
+                                  timeoutInterval: requestTimeout ?? 1.0)
+ 
+ guard var components = URLComponents(url: endPoint.baseURL, resolvingAgainstBaseURL: true) else {
+     throw EndpointError.invalidBaseUrl
+ }
+ 
+ /// Add path
+ components.path = endPoint.path
+ //let url = endPoint.baseURL.appendingPathComponent(endPoint.path) //http://api.weatherstack.com/current
+ 
+ //Add queryParams
+ if let queryItems = endPoint.queryItems {
+     components.queryItems = queryItems
+ }
 
-/*
-func getUrlRequest() -> URLRequest? {
-    guard let url = endPoint.getUrl() else {
-        debugPrint("URL not found")
-        return nil
-    }
-    debugPrint("URL: \(url)")
-    /// create request
-    var request: URLRequest = URLRequest(url: url)
-    //https://api.weatherstack.com/current/?access_key=d207fbf0c9b345a0c23bb5066b7bea54&query=New%20York"
-
-    /// Define method
-    request.httpMethod = endPoint.method.rawValue
-
-    /* /// Add header
-    for header in endPoint.headers {
-        request.addValue(header.values, forHTTPHeaderField: header.keys)
-    }*/
-    let randomError = URLRequest(url: URL(string: "https://httpstat.us/random/200,201,500-504")!)
-    let error400 = URLRequest(url: URL(string: "https://www.domain.com/support/kb/404_not_found_error/")!)
-    let error300 = URLRequest(url: URL(string: "https://httpbin.org/status/300")!)
-    return request
-}*/
-
-/*
-protocol RequestModelProtocol {
-    var endPoint: EndpointProvider { get }
-    var method: HTTPMethod { get }
-    var body: Data?  { get }
-    var requestTimeout: Float?  { get }
-    var multipart: MultipartRequest2? { get }
-}
-
-public struct RequestModel1: RequestModelProtocol {
-    var endPoint: any EndpointProvider
-    var method: HTTPMethod
-    var body: Data?
-    var requestTimeout: Float?
-    var multipart: MultipartRequest2?
-
-    
-    /// GET
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data? = nil,
-         reqTimeout: Float? =  nil) {
-        self.endPoint = endPoint
-        self.method = method
-        self.body = reqBody
-        self.requestTimeout = reqTimeout
-    }
-    
-    /// POST
-    init(endPoint: EndpointProvider,
-         method: HTTPMethod,
-         reqBody: Data,
-         reqTimeout: Float? =  nil) {
-        self.endPoint = endPoint
-        self.method = method
-        self.body = reqBody
-        self.requestTimeout = reqTimeout
-    }
-    
-    func asURLRequest() throws -> URLRequest? {
-        guard let url = try endPoint.getNewUrl() else {
-            throw ApiError.apiError("Define error")
-        }
-
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method.rawValue
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue("true", forHTTPHeaderField: "X-Use-Cache")
-        
-        /// post request
-        if let body = body {
-            do {
-                urlRequest.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            } catch {
-                throw  ApiError.encodingError("Error encoding http body")
-            }
-        }
-        
-        /// image upload
-        if let multipart = multipart {
-            urlRequest.setValue(multipart.headerValue, forHTTPHeaderField: "Content-Type")
-            urlRequest.setValue("\(multipart.length)", forHTTPHeaderField: "Content-Length")
-            urlRequest.httpBody = multipart.httpBody
-        }
-        
-        return urlRequest
-    }
-}*/
+ /// Create request
+ guard let url = components.url else {
+     throw EndpointError.invalidURL
+ }*/
+ 
+ */
