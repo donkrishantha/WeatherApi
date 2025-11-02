@@ -101,7 +101,10 @@ struct MainContentView: View {
                 Text("Description: " + (viewModel.weatherModel?.weatherDescription ?? "N/A"))
                 Text("Temperature: " + (viewModel.weatherModel?.temperature ?? "N/A"))
                 Text("Time: " + (viewModel.weatherModel?.observationTime ?? "N/A"))
-                
+                Button(action: {
+                    self.viewModel.callTMDBDetail()
+                }) {
+                Text("AMDB")}
 //                if (((viewModel.weatherModel?.weatherIcon?.isEmpty) == nil)) {
 //                    ImageView(imageUrl: viewModel.weatherIcon?.weatherIcon, size: 80)
 //                        .foregroundColor(.gray)

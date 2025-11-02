@@ -12,3 +12,5 @@ WEATHER_API_HOST = api.weatherstack.com_test
 API_KEY = d207fbf0c9b345a0c23bb5066b7bea54_test
 ADYEN_API_HOST = a2ccc6ed4c2b13af-GreenMoRent-checkout-live.adyenpayments.com_test
 
+TMDB_API_HOST = api.themoviedb.org/3/
+TMDB_API_KEY = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGFiNTcxM2ZjZWFiYWQ1MWYyZTg3N2E3NzU0OWUzOCIsIm5iZiI6MTY0MTg5NzY4MC40MzM5OTk4LCJzdWIiOiI2MWRkNWVkMDFkNmM1ZjAwMWJmZjJmMTciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.BF25FTUljDa81WHUsIdBvmpR_Y_1OuMf2D3PVeT9mgs

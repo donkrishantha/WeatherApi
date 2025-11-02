@@ -26,3 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
 }
 
+/*
+// https://www.themoviedb.org/settings/api
+"API  KEY" = "e4ab5713fceabad51f2e877a77549e38"
+"Access Token" = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGFiNTcxM2ZjZWFiYWQ1MWYyZTg3N2E3NzU0OWUzOCIsIm5iZiI6MTY0MTg5NzY4MC40MzM5OTk4LCJzdWIiOiI2MWRkNWVkMDFkNmM1ZjAwMWJmZjJmMTciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.BF25FTUljDa81WHUsIdBvmpR_Y_1OuMf2D3PVeT9mgs"
+*/

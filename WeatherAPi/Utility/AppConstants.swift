@@ -9,6 +9,10 @@ import Foundation
 
 enum AppConstants {
     
+    enum TimeInterval {
+        static let value: Double = 60
+    }
+    
     enum Api {
         static let baseUrl = "http://api.weatherstack.com"
         static let apiKey = "d207fbf0c9b345a0c23bb5066b7bea54"
@@ -28,8 +32,8 @@ enum AppConstants {
         case tp = "tp"
     }
     
-    enum Response: String {
-        case json = "application/json"
+    enum HeaderParameterType {
+        static let json: String = "application/json"
     }
 }
 
@@ -75,7 +79,7 @@ enum Configuration {
         case let value as T:
             return value
         case let string as String:
-            guard let value = T(string) else { fallthrough }
+            guard T(string) != nil else { fallthrough }
         default:
             throw Error.invalidValue
         }

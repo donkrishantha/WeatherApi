@@ -19,6 +19,7 @@ protocol EndpointProvider: URLConvertible {
     var mockFile: String? { get }
     var header: [String: String]? { get }
     var token: String? { get }
+    var requestTimeout: TimeInterval? { get }
     var multipartFormData: [(name: String, filename: String, data: Data)]? { get }
 }
 
@@ -36,12 +37,17 @@ extension EndpointProvider {
     }
     
     var header: [String: String]? {
-        //request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         let headers = [
+            "Content-Type": AppConstants.HeaderParameterType.json,
+            "Accept": AppConstants.HeaderParameterType.json,
+            "Authorization": "Bearer " + Environment.apiKy
+        ]
+        /* TMDB http header
+         let headers = [
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Bearer \(token ?? "")": "Authorization"
-        ]
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGFiNTcxM2ZjZWFiYWQ1MWYyZTg3N2E3NzU0OWUzOCIsIm5iZiI6MTY0MTg5NzY4MC40MzM5OTk4LCJzdWIiOiI2MWRkNWVkMDFkNmM1ZjAwMWJmZjJmMTciLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.BF25FTUljDa81WHUsIdBvmpR_Y_1OuMf2D3PVeT9mgs"
+        ]*/
         return headers
     }
     
@@ -54,6 +60,10 @@ extension EndpointProvider {
         return "nil"
     }
     
+    var requestTimeout: TimeInterval? {
+        return 60
+    }
+    
     func asURL() throws -> URL {
         let url = baseURL.appendingPathComponent(path)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
@@ -63,7 +73,6 @@ extension EndpointProvider {
         }
         return url
     }
-    
 }
 
 protocol URLConvertible {

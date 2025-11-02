@@ -11,10 +11,10 @@ import Combine
 protocol WeatherApiRepoProtocol {
     //associatedtype Element
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
+    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
 }
 
 struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
-    
     //typealias Element = AnyPublisher<WeatherRowData, ApiError>
     private var apiClient: APIClient
     
@@ -23,10 +23,15 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
     }
     
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
-        let endpoint = EventsEndpoints.getCurrentWeatherDetails(accessKey: AppConstants.Api.apiKey,
-                                                                query: params.searchTerm)
+        let endpoint = EventsEndpoints.getCurrentWeatherDetails(query: params.searchTerm)
         let request = RequestModel<Any>(.get, endpoint)
         return await apiClient.request(request, responseModel: WeatherRowData.self)
+    }
+    
+    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError> {
+        let endPoint = TMDBEndPoint.getTMDBDetails(accountId: accountId)
+        let request = RequestModel<Any>(.get, endPoint)
+        return await apiClient.request(request, responseModel: TMDBModel.self)
     }
     
     /*

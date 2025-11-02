@@ -12,6 +12,7 @@ protocol WeatherApiUseCaseProtocol {
     ///associatedtype Element
     ///func execute(params: WeatherDetailParams) async -> Element
     func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
+    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
 }
 
 final class WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
@@ -25,6 +26,11 @@ final class WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
 
     func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
         let result: AnyPublisher<WeatherRowData, ApiError> = await repository.searchWeatherData(params: params)
+        return result
+    }
+    
+    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError> {
+        let result: AnyPublisher<TMDBModel, ApiError> = await repository.getTMDBDetails(accountId: accountId)
         return result
     }
 }

@@ -10,6 +10,8 @@
 		BD00ADBD2C78564B0064415F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD00ADBC2C78564B0064415F /* LoginView.swift */; };
 		BD010BE72C99DA910060CCDF /* Multipart.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD010BE62C99DA910060CCDF /* Multipart.swift */; };
 		BD077EDD2CEC7A5200253CF5 /* WeatherStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD077EDC2CEC7A5200253CF5 /* WeatherStation.swift */; };
+		BD079D812EB608130038AE5A /* TMDBEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD079D802EB608130038AE5A /* TMDBEndpoint.swift */; };
+		BD079D832EB64B180038AE5A /* TMDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD079D822EB64B180038AE5A /* TMDB.swift */; };
 		BD10F1492BCFADC700B79888 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F1482BCFADC700B79888 /* ImageView.swift */; };
 		BD10F14B2BD1079200B79888 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F14A2BD1079100B79888 /* AppConstants.swift */; };
 		BD10F14D2BD5173600B79888 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD10F14C2BD5173600B79888 /* SearchBar.swift */; };
@@ -102,6 +104,8 @@
 		BD010BE82C9B2F6B0060CCDF /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		BD010BE92C9B2F800060CCDF /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		BD077EDC2CEC7A5200253CF5 /* WeatherStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStation.swift; sourceTree = "<group>"; };
+		BD079D802EB608130038AE5A /* TMDBEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBEndpoint.swift; sourceTree = "<group>"; };
+		BD079D822EB64B180038AE5A /* TMDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDB.swift; sourceTree = "<group>"; };
 		BD10F1482BCFADC700B79888 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		BD10F14A2BD1079100B79888 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
 		BD10F14C2BD5173600B79888 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
@@ -371,6 +375,7 @@
 				BD2171712B56BEEE00F58C14 /* WeatherModel.swift */,
 				BD4B570B2C908CC10025814A /* UploadModel.swift */,
 				BD6BFEC22EA926E300F24B73 /* ErrorModel.swift */,
+				BD079D822EB64B180038AE5A /* TMDB.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -410,6 +415,7 @@
 				BD2171802B56C5E000F58C14 /* Endpoint.swift */,
 				BD2171832B56C60400F58C14 /* WeatherEndpoint.swift */,
 				BD4B57112C9097500025814A /* ImageUploadEndpoint.swift */,
+				BD079D802EB608130038AE5A /* TMDBEndpoint.swift */,
 			);
 			path = Endpoint;
 			sourceTree = "<group>";
@@ -701,6 +707,7 @@
 				BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */,
 				BD2171752B56C21A00F58C14 /* APIClient.swift in Sources */,
 				BD9A20492EA4B416003D67B8 /* ImageUploadUseCase.swift in Sources */,
+				BD079D812EB608130038AE5A /* TMDBEndpoint.swift in Sources */,
 				BD4B57062C90873E0025814A /* ImageUploadViewController.swift in Sources */,
 				BD10F1492BCFADC700B79888 /* ImageView.swift in Sources */,
 				BD2171812B56C5E000F58C14 /* Endpoint.swift in Sources */,
@@ -741,6 +748,7 @@
 				BD21717D2B56C2E400F58C14 /* WeatherRepository.swift in Sources */,
 				BD1297672C6CF74E007938F1 /* Logger.swift in Sources */,
 				BDC11F2E2CC117C500A01088 /* LoginViewController.swift in Sources */,
+				BD079D832EB64B180038AE5A /* TMDB.swift in Sources */,
 				BD5457DE2D0EF4000097F865 /* PropertyWrappers.swift in Sources */,
 				BD21716B2B56BE2900F58C14 /* DetailViewController.swift in Sources */,
 				BDF3E9162CAC5A2000E2C32E /* UIKit.swift in Sources */,

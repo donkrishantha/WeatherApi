@@ -128,6 +128,24 @@ extension MainViewModel {
         return
     }
     
+    func callTMDBDetail() {
+        Task (priority: .medium) {
+            await self.getTMDBDetails()
+        }
+    }
+    
+    func getTMDBDetails() async {
+        let tmdbData = await self.weatherApiUseCaseProtocol?.execute(accountId: 11737776)
+        tmdbData?.sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] tmdbResponse in
+                guard let self = self else { return }
+                let response = tmdbResponse
+                print(response.username)
+            }.store(in: &cancelable)
+    }
+    
     /// process error in further
     private func processErrorResponse(completion: Subscribers.Completion<ApiError>) {
         switch completion { case .finished: break; case .failure(let error):

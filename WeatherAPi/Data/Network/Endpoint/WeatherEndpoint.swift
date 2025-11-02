@@ -10,13 +10,13 @@ import Combine
 
 enum EventsEndpoints: EndpointProvider {
    
-    case getCurrentWeatherDetails(accessKey: String, query: String)
+    case getCurrentWeatherDetails(query: String)
     case getWeatherDetails(id: Int)
     case updateUserProfile(userName: String?, file: Data?)
     
     internal var path: String {
         switch self {
-        case .getCurrentWeatherDetails(accessKey: _, query: _):
+        case .getCurrentWeatherDetails(query: _):
             return "/current"
         case .getWeatherDetails(id: let id):
             return "/users/\(id)"
@@ -27,9 +27,9 @@ enum EventsEndpoints: EndpointProvider {
     
     internal var queryItems: [URLQueryItem]? {
         switch self {
-        case .getCurrentWeatherDetails(let accessKey, let query):
-            return [URLQueryItem(name: AppConstants.QueryKey.apiKey.rawValue, value: "\(accessKey)"),
-                    URLQueryItem(name: AppConstants.QueryKey.searchString.rawValue, value: "\(query)")]
+        case .getCurrentWeatherDetails(let query):
+            return [URLQueryItem(name: AppConstants.QueryKey.apiKey.rawValue, value: Environment.apiKy),
+                    URLQueryItem(name: AppConstants.QueryKey.searchString.rawValue, value: String(query))]
         default:
             return nil
         }

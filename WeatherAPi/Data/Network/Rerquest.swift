@@ -21,7 +21,7 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
     private var endPoint: EndpointProvider
     private var body: Parameters?
     private var headers: Headers?
-    private let requestTimeout: Double?
+    private let requestTimeout: TimeInterval?
     //private var multipart: MultipartRequest2?
     
     public typealias Parameters = [String: Any]
@@ -32,7 +32,7 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
          _ endPoint: EndpointProvider,
          with parameters: Parameters? = nil,
          headers: Headers? = nil,
-         reqTimeout: Double? =  nil
+         reqTimeout: TimeInterval? =  nil
     )where Parameters == Parameters {
         self.endPoint = endPoint
         self.method = method
@@ -47,7 +47,7 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
         _ endPoint: EndpointProvider,
         with parameters: T,
         headers: Headers? = nil,
-        reqTimeout: Double? =  nil
+        reqTimeout: TimeInterval? =  nil
     ) where Parameters == AnyEncodable {
         self.endPoint = endPoint
         self.method = method
@@ -65,6 +65,9 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
         
         // Add HTTP headers
         request.allHTTPHeaderFields = endPoint.header
+        
+        // Add request time out
+        request.timeoutInterval = endPoint.requestTimeout ?? AppConstants.TimeInterval.value
         
 //        if !endPoint.token!.isEmpty {
 //            request.addValue("Bearer \(endPoint.token ?? "")", forHTTPHeaderField: "Authorization")
