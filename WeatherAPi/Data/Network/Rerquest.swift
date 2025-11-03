@@ -73,10 +73,18 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
 //            request.addValue("Bearer \(endPoint.token ?? "")", forHTTPHeaderField: "Authorization")
 //        }
         
+        //let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+//        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted)
+//        // Convert JSON data to a string for printing or further use
+//        if let jsonString = String(data: jsonData, encoding: .utf8) {
+//            print(jsonString)
+//        }
+        
         /// Add post request body
         if let body = body {
             do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+                //JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch {
                 throw  ApiError.encodingError("Error encoding http body")
             }

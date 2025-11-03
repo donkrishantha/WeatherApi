@@ -13,10 +13,14 @@ protocol WeatherApiUseCaseProtocol {
     ///func execute(params: WeatherDetailParams) async -> Element
     func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
     func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
+    
+    // JSONPlaceholderApi
+    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
+    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
+    func execute(title: String) async -> AnyPublisher<PatchRequestModel, ApiError>
 }
 
 final class WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
-
     //typealias Element = AnyPublisher<WeatherRowData, ApiError>
     private let repository: WeatherApiRepoProtocol
 
@@ -31,6 +35,22 @@ final class WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
     
     func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError> {
         let result: AnyPublisher<TMDBModel, ApiError> = await repository.getTMDBDetails(accountId: accountId)
+        return result
+    }
+    
+    // JSONPlaceholderApi
+    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+        let result: AnyPublisher<JsonPlaceHolderModel, ApiError> = await repository.getJsonPlaceHolderPostRequest(parms: params)
+        return result
+    }
+    
+    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+        let result: AnyPublisher<JsonPlaceHolderModel, ApiError> = await repository.getJsonPlaceHolderPutRequest(parms: params)
+        return result
+    }
+    
+    func execute(title: String) async -> AnyPublisher<PatchRequestModel, ApiError> {
+        let result: AnyPublisher<PatchRequestModel, ApiError> = await repository.getJsonPlaceHolderPatchRequest(title: title)
         return result
     }
 }

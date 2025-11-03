@@ -140,9 +140,69 @@ extension MainViewModel {
                 guard let self = self else { return }
                 self.processErrorResponse(completion: completion)
             } receiveValue: { [weak self] tmdbResponse in
-                guard let self = self else { return }
+                guard self != nil else { return }
                 let response = tmdbResponse
                 print(response.username)
+            }.store(in: &cancelable)
+    }
+    
+    func callJsonPlaceHolderPostRequestMethod() {
+        Task(priority: .medium) {
+            await self.getPostData()
+        }
+    }
+    
+    func getPostData() async {
+        let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
+                                                                          body: "Gayan Body",
+                                                                          userId: 812100297)
+        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute(params: params)
+        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] jsonPlaceHolderResponse in
+                guard self != nil else { return }
+                let response = jsonPlaceHolderResponse
+                print(response)
+            }.store(in: &cancelable)
+    }
+    
+    func callJsonPlaceHolderPutRequestMethod() {
+        Task(priority: .medium) {
+            await self.getPutData()
+        }
+    }
+    
+    func getPutData() async {
+        let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
+                                                                          body: "Gayan Body",
+                                                                          userId: 812100297)
+        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute2(params: params)
+        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] jsonPlaceHolderResponse in
+                guard self != nil else { return }
+                let response = jsonPlaceHolderResponse
+                print(response)
+            }.store(in: &cancelable)
+    }
+    
+    func callJsonPlaceHolderPatchRequestMethod() {
+        Task(priority: .medium) {
+            await self.getPatchData()
+        }
+    }
+    
+    func getPatchData() async {
+        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute(title: "My personal")
+        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
+                guard let self = self else { return }
+                self.processErrorResponse(completion: completion)
+            } receiveValue: { [weak self] jsonPlaceHolderResponse in
+                guard self != nil else { return }
+                let response = jsonPlaceHolderResponse
+                print(response)
             }.store(in: &cancelable)
     }
     
@@ -205,3 +265,22 @@ class WeatherApp: ObserverProtocol {
         print("MainViewModel: temp \(temp) humidity \(humidity) pressure \(pressure)")
     }
 }
+
+
+struct JsonPlaceHolderPostParams: Encodable {
+    let title: String
+    let body: String
+    let userId: Int
+    
+    init(title: String, body: String, userId: Int) {
+        self.title = title
+        self.body = body
+        self.userId = userId
+    }
+}
+
+//{
+//"title": "foodan",
+//"body": "bar",
+//"userId": 2
+//}

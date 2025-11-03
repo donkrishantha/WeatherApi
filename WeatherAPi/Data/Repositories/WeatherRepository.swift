@@ -12,6 +12,11 @@ protocol WeatherApiRepoProtocol {
     //associatedtype Element
     func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
     func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
+    
+    // JSONPlaceholderApi
+    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
+    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, ApiError>
 }
 
 struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
@@ -32,6 +37,38 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
         let endPoint = TMDBEndPoint.getTMDBDetails(accountId: accountId)
         let request = RequestModel<Any>(.get, endPoint)
         return await apiClient.request(request, responseModel: TMDBModel.self)
+    }
+    
+    // JSONPlaceholderApi
+    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+        let endpoint = JsonPlaceHolderEndpoint.postWebRequest
+        let params: [String: Any] = [
+            "title": parms.title,
+            "body": parms.body,
+            "userId": parms.userId
+        ]
+        let request = RequestModel<Any>(.post, endpoint, with: params)
+        return await apiClient.request(request, responseModel: JsonPlaceHolderModel.self)
+    }
+    
+    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+        let endPoint = JsonPlaceHolderEndpoint.putWebRequest
+        let params: [String: Any] = [
+            "title": parms.title,
+            "body": parms.body,
+            "userId": parms.userId
+        ]
+        let request = RequestModel<Any>(.put, endPoint, with: params)
+        return await apiClient.request(request, responseModel: JsonPlaceHolderModel.self)
+    }
+    
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, ApiError> {
+        let endPoint = JsonPlaceHolderEndpoint.patchWebRequest
+        let params: [String: Any] = [
+            "title": title
+        ]
+        let request = RequestModel<Any>(.patch, endPoint, with: params)
+        return await apiClient.request(request, responseModel: PatchRequestModel.self)
     }
     
     /*

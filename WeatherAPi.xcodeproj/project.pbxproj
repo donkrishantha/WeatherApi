@@ -69,6 +69,8 @@
 		BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */; };
 		BDDCA68E2C5792B400750EB0 /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */; };
 		BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5CCB12D1F075500D47330 /* CustomAlert.swift */; };
+		BDEF59A52EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */; };
+		BDEF59A72EB74BFF00857667 /* JsonPlaceHolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */; };
 		BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF21CE32B62266E00932F42 /* Rerquest.swift */; };
 		BDF3E9162CAC5A2000E2C32E /* UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF3E9152CAC5A1F00E2C32E /* UIKit.swift */; };
 		BDF743ED2EAD12D000AAE739 /* ImageUploadUseCase2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF743EC2EAD12D000AAE739 /* ImageUploadUseCase2.swift */; };
@@ -169,6 +171,8 @@
 		BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		BDE5CCB12D1F075500D47330 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsosnPlaceHoderEndPoint.swift; sourceTree = "<group>"; };
+		BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonPlaceHolderModel.swift; sourceTree = "<group>"; };
 		BDF21CE32B62266E00932F42 /* Rerquest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rerquest.swift; sourceTree = "<group>"; };
 		BDF3E9152CAC5A1F00E2C32E /* UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKit.swift; sourceTree = "<group>"; };
 		BDF743EC2EAD12D000AAE739 /* ImageUploadUseCase2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadUseCase2.swift; sourceTree = "<group>"; };
@@ -376,6 +380,7 @@
 				BD4B570B2C908CC10025814A /* UploadModel.swift */,
 				BD6BFEC22EA926E300F24B73 /* ErrorModel.swift */,
 				BD079D822EB64B180038AE5A /* TMDB.swift */,
+				BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -416,6 +421,7 @@
 				BD2171832B56C60400F58C14 /* WeatherEndpoint.swift */,
 				BD4B57112C9097500025814A /* ImageUploadEndpoint.swift */,
 				BD079D802EB608130038AE5A /* TMDBEndpoint.swift */,
+				BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */,
 			);
 			path = Endpoint;
 			sourceTree = "<group>";
@@ -715,6 +721,7 @@
 				BD077EDD2CEC7A5200253CF5 /* WeatherStation.swift in Sources */,
 				BD4B57012C8B618F0025814A /* MultipartRequest.swift in Sources */,
 				BD4B57082C9087510025814A /* ImageUploadViewModel.swift in Sources */,
+				BDEF59A72EB74BFF00857667 /* JsonPlaceHolderModel.swift in Sources */,
 				BD21716D2B56BE3B00F58C14 /* DetailViewMoidel.swift in Sources */,
 				BD21717F2B56C4CF00F58C14 /* NavigationController.swift in Sources */,
 				BD4B570C2C908CC10025814A /* UploadModel.swift in Sources */,
@@ -736,6 +743,7 @@
 				BD1297652C6BC169007938F1 /* Background.swift in Sources */,
 				BD81F91E2C88BF1100B81077 /* DependencyContainer.swift in Sources */,
 				BD2171692B56BDF500F58C14 /* MainContentView.swift in Sources */,
+				BDEF59A52EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift in Sources */,
 				BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */,
 				BD6BFEC32EA926E300F24B73 /* ErrorModel.swift in Sources */,
 				BDFEFE142CB57CFE00F47842 /* Base64.swift in Sources */,

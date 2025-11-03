@@ -25,7 +25,7 @@ protocol EndpointProvider: URLConvertible {
 
 extension EndpointProvider {
     var baseURL: URL {
-        return .WeatherApi
+        return .Jsonplaceholder
     }
     
     var queryItems: [URLQueryItem]? {

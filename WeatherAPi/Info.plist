@@ -36,5 +36,7 @@
 	<string>$(TMDB_API_HOST)</string>
 	<key>TMDB_API_KEY</key>
 	<string>$(TMDB_API_KEY)</string>
+	<key>JSONPLACEHOLDER_API_HOST</key>
+	<string>$(JSONPLACEHOLDER_API_HOST)</string>
 </dict>
 </plist>

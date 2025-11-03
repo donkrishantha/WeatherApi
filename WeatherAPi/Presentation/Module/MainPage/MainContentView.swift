@@ -105,6 +105,18 @@ struct MainContentView: View {
                     self.viewModel.callTMDBDetail()
                 }) {
                 Text("AMDB")}
+                Button(action: {
+                    self.viewModel.callJsonPlaceHolderPostRequestMethod()
+                }) {
+                Text("POST_REQUEST")}
+                Button(action: {
+                    self.viewModel.callJsonPlaceHolderPutRequestMethod()
+                }) {
+                Text("PUT_REQUEST")}
+                Button(action: {
+                    self.viewModel.callJsonPlaceHolderPatchRequestMethod()
+                }) {
+                Text("PATCH_REQUEST")}
 //                if (((viewModel.weatherModel?.weatherIcon?.isEmpty) == nil)) {
 //                    ImageView(imageUrl: viewModel.weatherIcon?.weatherIcon, size: 80)
 //                        .foregroundColor(.gray)
