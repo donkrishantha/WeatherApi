@@ -8,8 +8,8 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-WEATHER_API_HOST = api.weatherstack.com_test
-API_KEY = d207fbf0c9b345a0c23bb5066b7bea54_test
+WEATHER_API_HOST = api.weatherstack.com
+API_KEY = d207fbf0c9b345a0c23bb5066b7bea54
 ADYEN_API_HOST = a2ccc6ed4c2b13af-GreenMoRent-checkout-live.adyenpayments.com_test
 
 TMDB_API_HOST = api.themoviedb.org/3/

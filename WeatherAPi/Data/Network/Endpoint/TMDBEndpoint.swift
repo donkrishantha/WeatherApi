@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 
 enum TMDBEndPoint: EndpointProvider {
     

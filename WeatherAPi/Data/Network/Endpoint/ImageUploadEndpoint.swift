@@ -6,15 +6,16 @@
 //
 
 import Foundation
+import Network
 
-enum ImageUploadEndpoint: EndpointProvider {
+enum ImageUploadEndpoint: EndpointProvider2 {
 
     case checkUserVerify
     case uploadImage(fileString: String?, file: Data?)
     case createPassword(password: Password)
     case updateUserProfile(userName: String?, file: Data?)
     
-    var path: String {
+    internal var path: String {
         switch self {
         case .checkUserVerify:
             return "/client/v4/user/tokens/verify"
@@ -40,7 +41,7 @@ enum ImageUploadEndpoint: EndpointProvider {
 //        }
 //    }
     
-    var multipart: MultipartRequest2? {
+    internal var multipart: MultipartRequest2? {
         switch self {
         case .uploadImage(fileString: let fileString, file: let file):
             let multipart = MultipartRequest2()

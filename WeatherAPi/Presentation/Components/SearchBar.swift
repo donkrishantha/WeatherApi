@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchBar: View {
+struct SearchBars: View {
     @Binding var searchText: String
     @State var showClearButton = false
     var placeholder = "Search for location"
@@ -47,6 +47,6 @@ struct ClearButton: ViewModifier {
 
 struct SearchBar_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBar(searchText: .constant(""))
+        SearchBars(searchText: .constant(""))
     }
 }

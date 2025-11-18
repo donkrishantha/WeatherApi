@@ -7,20 +7,22 @@
 
 import Foundation
 import Combine
+import Network
 
 protocol ImageUploadUseCaseProtocol {
-    func execute() async -> AnyPublisher<UploadModel, ApiError>
+    func execute() async -> AnyPublisher<UploadModel, APIError>
 }
 
-final class ImageUploadUseCase: ImageUploadUseCaseProtocol {
-    
+final class ImageUploadUseCase {
     private let imageUploadRepository: ImageUploadProtocol?
     
     init(imageUploadRepository: ImageUploadProtocol) {
         self.imageUploadRepository = imageUploadRepository
     }
+}
     
-    func execute() async -> AnyPublisher<UploadModel, ApiError> {
+extension ImageUploadUseCase: ImageUploadUseCaseProtocol {
+    func execute() async -> AnyPublisher<UploadModel, APIError> {
         let result = await imageUploadRepository?.checkTokenVerify()
         return result!
     }

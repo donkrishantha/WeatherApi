@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import OSLog
+import Network
 
 /// Api request type
 enum ImageUploadViewModelRequestType {
@@ -32,11 +33,8 @@ final class ImageUploadViewModel: ObservableObject {
     
     
     /// MARK: Init
-    init(repository: ImageUploadProtocol = ImageUploadRepositoryImp(apiClient: APIClient()),
-         //weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol,
-         imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol) {
+    init(repository: ImageUploadProtocol, imageUploadUseCaseProtocol: ImageUploadUseCaseProtocol) {
         self.repository = repository
-        //self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
         self.imageUploadUseCaseProtocol = imageUploadUseCaseProtocol
     }
     
@@ -67,7 +65,7 @@ extension ImageUploadViewModel {
     
     /// api request "verifyToken"
     private func verifyTokenRequest(requestType: ImageUploadViewModelRequestType) async {
-        let response: AnyPublisher<UploadModel, ApiError>? = await imageUploadUseCaseProtocol?.execute()
+        let response: AnyPublisher<UploadModel, APIError>? = await imageUploadUseCaseProtocol?.execute()
         responseHandler(response: response, requestType: requestType)
         /*await repository?.checkTokenVerify()
         response1?.sink { [weak self] completion in
@@ -83,7 +81,7 @@ extension ImageUploadViewModel {
     private func imageUploadRequest(requestType: ImageUploadViewModelRequestType,
                                     userName: String?,
                                     file: Data?) async {
-        let response: AnyPublisher<ImageResponse, ApiError>? = await repository?.updateUserProfile(userName: userName, file: file)
+        let response: AnyPublisher<ImageResponse, APIError>? = await repository?.updateUserProfile(userName: userName, file: file)
         responseHandler(response: response, requestType: requestType)
         /*await repository?.updateUserProfile(userName: userName, file: file)
             .sink { [weak self] completion in
@@ -95,7 +93,7 @@ extension ImageUploadViewModel {
             }.store(in: &cancelable)*/
     }
     
-    private func responseHandler<T: Codable>(response: AnyPublisher<T, ApiError>?,
+    private func responseHandler<T: Codable>(response: AnyPublisher<T, APIError>?,
                          requestType: ImageUploadViewModelRequestType) {
         response?.sink { [weak self] completion in
             guard let self = self else { return }
@@ -111,7 +109,7 @@ extension ImageUploadViewModel {
 extension ImageUploadViewModel {
     /// process error response
     private func processErrorResponseWith(type: ImageUploadViewModelRequestType,
-                                          with completion: Subscribers.Completion<ApiError>){
+                                          with completion: Subscribers.Completion<APIError>){
         switch completion { case .finished: break; case .failure(let error):
             logger.error("ERROR : \(error)")
             switch type {

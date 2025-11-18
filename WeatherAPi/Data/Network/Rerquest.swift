@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Network
 
 enum HTTPMethod: String {
     case get = "GET"
@@ -15,7 +16,7 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-public struct RequestModel<Parameters>: URLRequestConvertible {
+public struct RequestModel2<Parameters>: URLRequestConvertible {
     
     private var method: HTTPMethod
     private var endPoint: EndpointProvider
@@ -86,7 +87,7 @@ public struct RequestModel<Parameters>: URLRequestConvertible {
                 request.httpBody = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
                 //JSONSerialization.jsonObject(with: data, options: []) as? [String:AnyObject]
             } catch {
-                throw  ApiError.encodingError("Error encoding http body")
+                throw  APIError.encodingError("Error encoding http body")
             }
         }
         /*

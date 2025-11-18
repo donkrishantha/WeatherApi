@@ -7,40 +7,49 @@
 
 import Foundation
 import Combine
+import Network
 
 protocol WeatherApiRepoProtocol {
     //associatedtype Element
-    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
-    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
+    
+    // Weather api
+    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, APIError>
+    
+    // TMDN
+    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, APIError>
     
     // JSONPlaceholderApi
-    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
-    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
-    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, ApiError>
+    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, APIError>
 }
 
-struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
+struct WeatherApiRepoImplement {
     //typealias Element = AnyPublisher<WeatherRowData, ApiError>
-    private var apiClient: APIClient
+    private var apiClient: APIClientProtocol
     
-    init(apiClient: APIClient) {
+    init(apiClient: APIClientProtocol) {
         self.apiClient = apiClient
     }
+}
+
+// Weather api
+extension WeatherApiRepoImplement: WeatherApiRepoProtocol {
     
-    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
+    func searchWeatherData(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, APIError> {
         let endpoint = EventsEndpoints.getCurrentWeatherDetails(query: params.searchTerm)
         let request = RequestModel<Any>(.get, endpoint)
         return await apiClient.request(request, responseModel: WeatherRowData.self)
     }
     
-    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError> {
+    func getTMDBDetails(accountId: Int) async -> AnyPublisher<TMDBModel, APIError> {
         let endPoint = TMDBEndPoint.getTMDBDetails(accountId: accountId)
         let request = RequestModel<Any>(.get, endPoint)
         return await apiClient.request(request, responseModel: TMDBModel.self)
     }
     
     // JSONPlaceholderApi
-    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+    func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError> {
         let endpoint = JsonPlaceHolderEndpoint.postWebRequest
         let params: [String: Any] = [
             "title": parms.title,
@@ -51,7 +60,7 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
         return await apiClient.request(request, responseModel: JsonPlaceHolderModel.self)
     }
     
-    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
+    func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError> {
         let endPoint = JsonPlaceHolderEndpoint.putWebRequest
         let params: [String: Any] = [
             "title": parms.title,
@@ -62,7 +71,7 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
         return await apiClient.request(request, responseModel: JsonPlaceHolderModel.self)
     }
     
-    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, ApiError> {
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, APIError> {
         let endPoint = JsonPlaceHolderEndpoint.patchWebRequest
         let params: [String: Any] = [
             "title": title
@@ -70,19 +79,4 @@ struct WeatherApiRepoImplement: WeatherApiRepoProtocol {
         let request = RequestModel<Any>(.patch, endPoint, with: params)
         return await apiClient.request(request, responseModel: PatchRequestModel.self)
     }
-    
-    /*
-     func searchWeatherData2(searchTerm: String, accessKey: String) async -> AnyPublisher<WeatherDetail, ApiError> {
-     let endpoint = WeatherEndpoint.getCurrentWeatherDetails(accessKey: accessKey, query: searchTerm)
-     let req = RequestModel(endPoint: endpoint)
-     return await networkManager.request(req)
-     }
-     
-     func searchWeatherData(searchTerm: String, accessKey: String) async -> AnyPublisher<ResponseDTO<WeatherDetailDto, ApiError> {
-     //let endpoint = EventsEndpoints.getCurrentWeatherDetails(accessKey: searchTerm, query: accessKey)
-     //let endpoint = WeatherEndpoint.getCurrentWeatherDetails(accessKey: accessKey, query: searchTerm)
-     let endpointNew = EventsEndpoints.getCurrentWeatherDetails(accessKey: accessKey, query: searchTerm)
-     let request = RequestModel(endPoint: endpointNew, method: .get)
-     return await networkManager.request(request)
-     }*/
 }

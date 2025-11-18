@@ -107,7 +107,7 @@ import Combine
 //    }
 //}
 
-struct MockEndpoint: EndpointProvider {
+struct MockEndpoint: EndpointProvider2 {
     var header: [String : String]?
     
     //var body: Data?

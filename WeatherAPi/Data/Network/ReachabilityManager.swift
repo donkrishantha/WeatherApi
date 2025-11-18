@@ -8,7 +8,7 @@
 import Foundation
 import Network
 
-final class NetworkMonitor: ObservableObject {
+/*final class NetworkMonitor: ObservableObject {
     static let shared = NetworkMonitor()
     let queue = DispatchQueue(label: "NetworkMonitor")
     let monitor = NWPathMonitor()
@@ -164,7 +164,7 @@ public class NetworkReachability {
         }
         return false
     }
-}
+}*/
 
 /*
 class NetworkMonitor {

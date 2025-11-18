@@ -12,7 +12,7 @@ enum EndpointError: Error {
     case invalidBaseUrl
 }
 
-protocol EndpointProvider: URLConvertible {
+protocol EndpointProvider2: URLConvertible {
     var baseURL: URL { get }
     var path: String { get }
     var queryItems: [URLQueryItem]? { get }
@@ -23,7 +23,7 @@ protocol EndpointProvider: URLConvertible {
     var multipartFormData: [(name: String, filename: String, data: Data)]? { get }
 }
 
-extension EndpointProvider {
+extension EndpointProvider2 {
     var baseURL: URL {
         return .Jsonplaceholder
     }
@@ -71,6 +71,7 @@ extension EndpointProvider {
         guard let url = components?.url else {
             throw EndpointError.invalidURL
         }
+        print(url)
         return url
     }
 }

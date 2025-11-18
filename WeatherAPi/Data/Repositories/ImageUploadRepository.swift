@@ -7,11 +7,12 @@
 
 import Foundation
 import Combine
+import Network
 
 protocol ImageUploadProtocol {
     
-    func checkTokenVerify() async -> AnyPublisher<UploadModel, ApiError>
-    func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<ImageResponse, ApiError>
+    func checkTokenVerify() async -> AnyPublisher<UploadModel, APIError>
+    func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<ImageResponse, APIError>
     
     //func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<WeatherRowData, ApiError>
     //func upload(data: Data, fileName: String, mediaType: String) -> Promise<Int>
@@ -19,21 +20,24 @@ protocol ImageUploadProtocol {
     //func upload(data: Data, fileName: String, mediaType: String) async -> AnyPublisher<WeatherRowData, ApiError>
 }
 
-struct ImageUploadRepositoryImp: ImageUploadProtocol {
+struct ImageUploadRepositoryImp {
     
-    private var apiClient: APIClient
+    private var apiClient: APIClientProtocol
     
     init(apiClient: APIClient) {
         self.apiClient = apiClient
     }
+}
+
+extension ImageUploadRepositoryImp: ImageUploadProtocol {
     
-    func checkTokenVerify() async -> AnyPublisher<UploadModel, ApiError> {
+    func checkTokenVerify() async -> AnyPublisher<UploadModel, APIError> {
         let endpoint = ImageUploadEndpoint.checkUserVerify
-        let request = RequestModel<Any>(.get, endpoint)
+        let request = RequestModel<Any>(.get, endpoint as! EndpointProvider)
         return await apiClient.request(request, responseModel: UploadModel.self)
     }
     
-    func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<ImageResponse, ApiError> {
+    func updateUserProfile(userName: String?, file: Data?) async -> AnyPublisher<ImageResponse, APIError> {
         let endPoint = EventsEndpoints.updateUserProfile(userName: userName, file: file)
         let request = RequestModel<Any>(.post, endPoint)
         return await apiClient.upload(request, responseModel: ImageResponse.self)

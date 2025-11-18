@@ -16,6 +16,7 @@ final class AppCoordinatorImplement: AppCoordinatorProtocol {
     
     private let dependencyContainer: DependencyContainer
     unowned private let navigationController: NavigationController
+    //private weak var navigationController: NavigationController?
     
     init(dependencyContainer: DependencyContainer, navigationController: NavigationController) {
         self.navigationController = navigationController

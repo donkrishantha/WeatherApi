@@ -7,50 +7,51 @@
 
 import Foundation
 import Combine
+import Network
 
 protocol WeatherApiUseCaseProtocol {
-    ///associatedtype Element
-    ///func execute(params: WeatherDetailParams) async -> Element
-    func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError>
-    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError>
+    func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, APIError>
+    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, APIError>
     
     // JSONPlaceholderApi
-    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
-    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError>
-    func execute(title: String) async -> AnyPublisher<PatchRequestModel, ApiError>
+    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    func execute(title: String) async -> AnyPublisher<PatchRequestModel, APIError>
 }
 
-final class WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
-    //typealias Element = AnyPublisher<WeatherRowData, ApiError>
+final class WeatherApiUseCaseImple {
     private let repository: WeatherApiRepoProtocol
-
+    
     init(repository: any WeatherApiRepoProtocol) {
         self.repository = repository
     }
+}
 
-    func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, ApiError> {
-        let result: AnyPublisher<WeatherRowData, ApiError> = await repository.searchWeatherData(params: params)
+extension WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
+
+    func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, APIError> {
+        let result: AnyPublisher<WeatherRowData, APIError> = await repository.searchWeatherData(params: params)
         return result
     }
     
-    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, ApiError> {
-        let result: AnyPublisher<TMDBModel, ApiError> = await repository.getTMDBDetails(accountId: accountId)
+    func execute(accountId: Int) async -> AnyPublisher<TMDBModel, APIError> {
+        let result: AnyPublisher<TMDBModel, APIError> = await repository.getTMDBDetails(accountId: accountId)
         return result
     }
     
     // JSONPlaceholderApi
-    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
-        let result: AnyPublisher<JsonPlaceHolderModel, ApiError> = await repository.getJsonPlaceHolderPostRequest(parms: params)
+    func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError> {
+        let result: AnyPublisher<JsonPlaceHolderModel, APIError> = await repository.getJsonPlaceHolderPostRequest(parms: params)
         return result
     }
     
-    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, ApiError> {
-        let result: AnyPublisher<JsonPlaceHolderModel, ApiError> = await repository.getJsonPlaceHolderPutRequest(parms: params)
+    func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError> {
+        let result: AnyPublisher<JsonPlaceHolderModel, APIError> = await repository.getJsonPlaceHolderPutRequest(parms: params)
         return result
     }
     
-    func execute(title: String) async -> AnyPublisher<PatchRequestModel, ApiError> {
-        let result: AnyPublisher<PatchRequestModel, ApiError> = await repository.getJsonPlaceHolderPatchRequest(title: title)
+    func execute(title: String) async -> AnyPublisher<PatchRequestModel, APIError> {
+        let result: AnyPublisher<PatchRequestModel, APIError> = await repository.getJsonPlaceHolderPatchRequest(title: title)
         return result
     }
 }

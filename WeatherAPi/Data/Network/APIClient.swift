@@ -10,20 +10,20 @@ import Combine
 import OSLog
 
 /// https://medium.com/@c64midi/modern-generic-network-layer-with-swift-concurrency-async-await-and-combine-part-2-2840fff77106
-protocol APIClientProtocol {
+ protocol APIClientProtocol2 {
     
     // MARK: Request
     
-    func request<T: Codable & Sendable>(_ request: RequestModel<Any>,
-                             responseModel: T.Type?) async -> AnyPublisher<T, ApiError>
+    func request2<T: Codable & Sendable>(_ request: RequestModel2<Any>,
+                             responseModel: T.Type?) async -> AnyPublisher<T, ApiError2>
     
     // MARK: Upload
     
-    func upload<T: Codable>(_ request: RequestModel<Any>,
-                            responseModel: T.Type) async -> AnyPublisher<T, ApiError>
+    func upload2<T: Codable>(_ request: RequestModel2<Any>,
+                            responseModel: T.Type) async -> AnyPublisher<T, ApiError2>
 }
 
-final class APIClient: APIClientProtocol {
+final class APIClient2: APIClientProtocol2 {
     
     private let session: URLSession
     private let logger = Logger.apiClient
@@ -32,7 +32,7 @@ final class APIClient: APIClientProtocol {
         self.session = session
     }
     
-    convenience init() {
+    public convenience init() {
         let configuration = URLSessionConfiguration.default
         // Cash policy
         //configuration.requestCachePolicy = .useProtocolCachePolicy
@@ -50,19 +50,20 @@ final class APIClient: APIClientProtocol {
     
     // MARK: Request
     
-    func request<T: Codable>(_ request: RequestModel<Any>,
-                             responseModel: T.Type?) async -> AnyPublisher<T, ApiError> {
+    func request2<T: Codable>(_ request: RequestModel2<Any>,
+                             responseModel: T.Type?) async -> AnyPublisher<T, ApiError2> {
         return session
             .dataTaskPublisher(for: try! request.asURLRequest())
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in
                 self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")
+                self.logger.log(level: .error, "APIClient: \(error.localizedDescription)")
                 return .transportError(error.localizedDescription, error.code.rawValue) //-1009
             }
             //.print()
             .retry(1)
-            .flatMap { output -> AnyPublisher<T, ApiError> in
+            .flatMap { output -> AnyPublisher<T, ApiError2> in
                 self.manageResponse(data: output.data, response: output.response)
             }
             .eraseToAnyPublisher()
@@ -70,30 +71,30 @@ final class APIClient: APIClientProtocol {
     
     // MARK: Upload
     
-    func upload<T: Codable>(_ request: RequestModel<Any>,
-                            responseModel: T.Type) async -> AnyPublisher<T, ApiError> {
+    func upload2<T: Codable>(_ request: RequestModel2<Any>,
+                            responseModel: T.Type) async -> AnyPublisher<T, ApiError2> {
         return session
             .dataTaskPublisher(for: try! request.asURLRequest())
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)
             .mapError { error in
-                self.logger.error("NETWORK MANAGER: \(error.localizedDescription)")
+                self.logger.log(level: .error, "APIClient: \(error.localizedDescription)")
                 return .transportError(error.localizedDescription, error.code.rawValue) //-1009
             }
             //.print()
             .retry(1)
-            .flatMap { output -> AnyPublisher<T, ApiError> in
+            .flatMap { output -> AnyPublisher<T, ApiError2> in
                 self.manageResponse(data: output.data, response: output.response)
             }
             .eraseToAnyPublisher()
     }
 }
 
-extension APIClient {
-    private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError> {
+extension APIClient2 {
+    private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError2> {
         guard let response = response as? HTTPURLResponse else {
             #if DEBUG
-            logger.error("NETWORK MANAGER: Response not valid")
+            logger.log(level: .error, "APIClient: Response not valid")
             #endif
             return Fail(error: .invalidResponse(error: "Response not valid"))
                 .eraseToAnyPublisher()
@@ -136,7 +137,7 @@ extension APIClient {
     /// - Parameter statusCode: HTTP status code
     /// - Returns: Mapped Error
     
-    private func httpErrorHandel(_ statusCode: Int) -> ApiError {
+    private func httpErrorHandel(_ statusCode: Int) -> ApiError2 {
         switch statusCode {
         case 400:
             return .badRequest(statusCode)

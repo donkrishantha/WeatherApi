@@ -79,7 +79,7 @@ struct Article {
 class TestWrapper {
     
     func testPropertrappers() {
-        var display = Article(vendor: "Asus", name: "X127", price: 139.0)
+        let display = Article(vendor: "Asus", name: "X127", price: 139.0)
         /*
          expression failed to parse:
          error: Playground.playground:33:60: error: cannot convert value of type 'Double' to expected argument type 'Price'

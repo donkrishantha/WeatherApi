@@ -63,6 +63,7 @@
 		BD9A20492EA4B416003D67B8 /* ImageUploadUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9A20482EA4B416003D67B8 /* ImageUploadUseCase.swift */; };
 		BD9FA0722C5F6A8500A15CD7 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9FA0712C5F6A8500A15CD7 /* MockURLProtocol.swift */; };
 		BD9FA0742C5F6CE000A15CD7 /* MockHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9FA0732C5F6CE000A15CD7 /* MockHttpClient.swift */; };
+		BDA738FF2EC86AD500E43565 /* Network in Frameworks */ = {isa = PBXBuildFile; productRef = BDA738FE2EC86AD500E43565 /* Network */; };
 		BDB3E2072C3C1772000DB0C9 /* Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB3E2062C3C1772000DB0C9 /* Url.swift */; };
 		BDC11F2E2CC117C500A01088 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC11F2D2CC117C500A01088 /* LoginViewController.swift */; };
 		BDC11F302CC117D100A01088 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC11F2F2CC117D100A01088 /* LoginViewModel.swift */; };
@@ -162,6 +163,7 @@
 		BD9A20482EA4B416003D67B8 /* ImageUploadUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadUseCase.swift; sourceTree = "<group>"; };
 		BD9FA0712C5F6A8500A15CD7 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		BD9FA0732C5F6CE000A15CD7 /* MockHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHttpClient.swift; sourceTree = "<group>"; };
+		BDA738FD2EC86AC100E43565 /* NetworkModule */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NetworkModule; sourceTree = "<group>"; };
 		BDB3E2032C3C1689000DB0C9 /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Test.xcconfig; sourceTree = "<group>"; };
 		BDB3E2062C3C1772000DB0C9 /* Url.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Url.swift; sourceTree = "<group>"; };
 		BDB3E2092C3D3C76000DB0C9 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 		BDC11F2F2CC117D100A01088 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		BDC92C432D5B56E400E8758B /* WeatherAPiRelease-Test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "WeatherAPiRelease-Test.entitlements"; sourceTree = "<group>"; };
 		BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		BDD177872EC1EDB400D40F7A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		BDE5CCB12D1F075500D47330 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsosnPlaceHoderEndPoint.swift; sourceTree = "<group>"; };
@@ -190,6 +193,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDA738FF2EC86AD500E43565 /* Network in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,9 +260,12 @@
 		BD2171232B56B9C600F58C14 = {
 			isa = PBXGroup;
 			children = (
+				BDD177872EC1EDB400D40F7A /* README.md */,
+				BDA738FD2EC86AC100E43565 /* NetworkModule */,
 				BD21712E2B56B9C600F58C14 /* WeatherAPi */,
 				BD2171452B56B9D100F58C14 /* WeatherAPiTests */,
 				BD21714F2B56B9D100F58C14 /* WeatherAPiUITests */,
+				BDD177842EC0FCEB00D40F7A /* Frameworks */,
 				BD21712D2B56B9C600F58C14 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -543,6 +550,13 @@
 				BD5457DA2D0D4C450097F865 /* FactoryPattern3.swift */,
 			);
 			path = Factories;
+			sourceTree = "<group>";
+		};
+		BDD177842EC0FCEB00D40F7A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		BDE5CCB02D1F073400D47330 /* Alert */ = {
@@ -1904,6 +1918,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDA738FE2EC86AD500E43565 /* Network */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Network;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BD2171242B56B9C600F58C14 /* Project object */;
 }

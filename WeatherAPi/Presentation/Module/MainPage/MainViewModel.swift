@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import OSLog
 import UIKit
+import Network
 
 enum AsyncErrors: Error {
     case dataNotAvailable
@@ -24,14 +25,17 @@ final class MainViewModel: ObservableObject {
     
     /// MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
+    @Published private(set) var tMDBModel: TMDBModel?
+    @Published private(set) var jsonPlaceHolderModel: JsonPlaceHolderModel?
     @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
+    @Published private(set) var isLoading: Bool = false
     private let logger = Logger.dataStore
     
     /// MARK: - Input
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
-    private var loadDataSubject = PassthroughSubject<Bool, ApiError>()
+    private var loadDataSubject = PassthroughSubject<Bool, ApiError2>()
     private var repository: (any WeatherApiRepoProtocol)? = nil
     //@Injected var repository: (any WeatherApiRepoProtocol)?
     private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
@@ -110,7 +114,6 @@ extension MainViewModel {
             return
         }*/
         #if DEBUG
-        /// logger status
         logger.trace("REQUEST: /current")
         #endif
         
@@ -129,6 +132,7 @@ extension MainViewModel {
     }
     
     func callTMDBDetail() {
+        self.isLoading = true
         Task (priority: .medium) {
             await self.getTMDBDetails()
         }
@@ -141,12 +145,13 @@ extension MainViewModel {
                 self.processErrorResponse(completion: completion)
             } receiveValue: { [weak self] tmdbResponse in
                 guard self != nil else { return }
-                let response = tmdbResponse
-                print(response.username)
+                self?.tMDBModel = tmdbResponse
+                self?.isLoading = false
             }.store(in: &cancelable)
     }
     
     func callJsonPlaceHolderPostRequestMethod() {
+        self.isLoading = true
         Task(priority: .medium) {
             await self.getPostData()
         }
@@ -159,15 +164,18 @@ extension MainViewModel {
         let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute(params: params)
         jsonPlaceHolderPostRequst?.sink { [weak self] completion in
                 guard let self = self else { return }
+                self.isLoading = false
                 self.processErrorResponse(completion: completion)
             } receiveValue: { [weak self] jsonPlaceHolderResponse in
                 guard self != nil else { return }
-                let response = jsonPlaceHolderResponse
-                print(response)
+                self?.jsonPlaceHolderModel = jsonPlaceHolderResponse
+                print(self?.jsonPlaceHolderModel?.title ?? "N/A")
+                self?.isLoading = false
             }.store(in: &cancelable)
     }
     
     func callJsonPlaceHolderPutRequestMethod() {
+        self.isLoading = true
         Task(priority: .medium) {
             await self.getPutData()
         }
@@ -183,12 +191,14 @@ extension MainViewModel {
                 self.processErrorResponse(completion: completion)
             } receiveValue: { [weak self] jsonPlaceHolderResponse in
                 guard self != nil else { return }
-                let response = jsonPlaceHolderResponse
-                print(response)
+                self?.jsonPlaceHolderModel = jsonPlaceHolderResponse
+                print(self?.jsonPlaceHolderModel?.body ?? "N/A")
+                self?.isLoading = false
             }.store(in: &cancelable)
     }
     
     func callJsonPlaceHolderPatchRequestMethod() {
+        self.isLoading = true
         Task(priority: .medium) {
             await self.getPatchData()
         }
@@ -203,13 +213,15 @@ extension MainViewModel {
                 guard self != nil else { return }
                 let response = jsonPlaceHolderResponse
                 print(response)
+                self?.isLoading = false
             }.store(in: &cancelable)
     }
     
     /// process error in further
-    private func processErrorResponse(completion: Subscribers.Completion<ApiError>) {
+    private func processErrorResponse(completion: Subscribers.Completion<APIError>) {
         switch completion { case .finished: break; case .failure(let error):
             logger.error("ERROR : \(error)")
+            self.isLoading = false
             DispatchQueue.main.async {
                 self.showAlert = true
                 self.alertMessage = AlertMessage(title: "Error!", message: error.errorDescription ?? "N/A")
@@ -222,6 +234,7 @@ extension MainViewModel {
         #if DEBUG
         self.logger.info("SUCCESS:")
         #endif
+        self.isLoading = false
         //self.weatherModel = WeatherModel(data: rowWeatherResponse)
         let response = WeatherModel(data: rowWeatherResponse)
         self.weatherModel = response
@@ -235,15 +248,12 @@ extension MainViewModel {
         guard let data = FileLoader.readLocalFile("mock_weather_data") else {
             fatalError("Unable to locate file \"weatherData.json\" in main bundle.")
         }
-        print("Test")
-        
         let rawWeather = FileLoader.loadJson(data)
         #if DEBUG
         self.logger.debug("Local database")
         #endif
         self.weatherModel = WeatherModel(data: rawWeather.currentWeather)
     }
-    
 }
 
 /// request parameters
@@ -266,7 +276,6 @@ class WeatherApp: ObserverProtocol {
     }
 }
 
-
 struct JsonPlaceHolderPostParams: Encodable {
     let title: String
     let body: String
@@ -278,9 +287,3 @@ struct JsonPlaceHolderPostParams: Encodable {
         self.userId = userId
     }
 }
-
-//{
-//"title": "foodan",
-//"body": "bar",
-//"userId": 2
-//}

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+//import Module2
 
 struct LoginView: View {
     
@@ -33,12 +34,19 @@ struct LoginView: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    //.background(Color.blue)
                     .foregroundColor(.white)
                     .opacity(buttonOpacity)
                     .cornerRadius(8)
                     .disabled(!viewModel.formIsValid)
                 }
+                //https://unsplash.com/photos/yC-Yzbqy7PY
+//                AsyncImageView(imageUrl: "https://hws.dev/imgh/logo.png",
+//                               placeHolder: "questionmark",
+//                               height: 44,
+//                               width: 44,
+//                               cornerRadius: 5,
+//                               shouldShowLoading: true)
                 BasketballGameView()
             }
         }.navigationTitle("Login!")

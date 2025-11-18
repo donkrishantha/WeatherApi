@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Network
+//import Module2
 
 struct MainContentView: View {
     
@@ -26,7 +27,6 @@ struct MainContentView: View {
     }
     
     var body: some View {
-        
         TabView {
             mainView
                 .tabItem {
@@ -37,11 +37,6 @@ struct MainContentView: View {
                 .tabItem {
                     Label("Register", systemImage: "person.badge.plus")
                 }
-//            let viewModel1 = ImageUploadViewModel()
-//            ImageUploadContentView(viewModel: viewModel1)
-//                .tabItem {
-//                    Label("Feedback", systemImage: "bubble.left.fill")
-//                }
             let repository = WeatherApiRepoImplement(apiClient: APIClient())
             let viewM = DetailViewModel(repository: repository)
             DetailContentView(viewModel: viewM)
@@ -55,37 +50,27 @@ struct MainContentView: View {
         return AnyView(
             NavigationView{
                 ZStack{
-                    BackgroundView()
-                    VStack(alignment: .leading) {
-                        SearchBar(searchText: $viewModel.searchText, placeholder: "Search..." )
-                        
-                        //                        if viewModel.searchText.isEmpty {
-                        //                            /// History
-                        //                            //placesListView
-                        //                        } else {
-                        //                            /// Search results
-                        //                            //searchPlacesListView
-                        //                        }
-                        
-                        self.detailView
-                        self.timerView
-                        
-                        Spacer()
-                        
-                            .disableAutocorrection(true)
+                    ScrollView {
+                        BackgroundView()
+                        VStack(alignment: .leading) {
+                            SearchBars(searchText: $viewModel.searchText, placeholder: "Search..." )
+                            //SearchBar(searchText: viewModel.searchText , placeholder: "Search...")
+                            self.detailView
+                            self.timerView
+                            Spacer()
+                                .disableAutocorrection(true)
+                        }
+                        .alert(isPresented: $viewModel.showAlert) {
+                            Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
+                                  message: Text(viewModel.alertMessage?.message ?? "N/A"),
+                                  primaryButton:.destructive(Text("Ok"), action: {
+                                print("Deleting...")
+                            }) , secondaryButton: .cancel()
+                            )
+                        }
+                        .navigationTitle("Weather details")
+                        .padding([.leading, .trailing], 15)
                     }
-                    //.onAppear(perform: viewModel.loadAsyncData("dfdf"))
-                    .alert(isPresented: $viewModel.showAlert) {
-                        Alert(title: Text(viewModel.alertMessage?.title ?? "A/A"),
-                              message: Text(viewModel.alertMessage?.message ?? "N/A"),
-                              //dismissButton: .default(Text("Ok")
-                              primaryButton:.destructive(Text("Ok"), action: {
-                            print("Deleting...")
-                        }) , secondaryButton: .cancel()
-                        )
-                    }
-                    .navigationTitle("Weather details")
-                    .padding([.leading, .trailing], 15)
                 }
                 .sheet(isPresented: $showImagePicker) {
                     ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
@@ -98,52 +83,87 @@ struct MainContentView: View {
     private var detailView: some View {
         return AnyView(
             VStack(alignment: .leading) {
-                Text("Description: " + (viewModel.weatherModel?.weatherDescription ?? "N/A"))
-                Text("Temperature: " + (viewModel.weatherModel?.temperature ?? "N/A"))
-                Text("Time: " + (viewModel.weatherModel?.observationTime ?? "N/A"))
-                Button(action: {
-                    self.viewModel.callTMDBDetail()
-                }) {
-                Text("AMDB")}
-                Button(action: {
-                    self.viewModel.callJsonPlaceHolderPostRequestMethod()
-                }) {
-                Text("POST_REQUEST")}
-                Button(action: {
-                    self.viewModel.callJsonPlaceHolderPutRequestMethod()
-                }) {
-                Text("PUT_REQUEST")}
-                Button(action: {
-                    self.viewModel.callJsonPlaceHolderPatchRequestMethod()
-                }) {
-                Text("PATCH_REQUEST")}
-//                if (((viewModel.weatherModel?.weatherIcon?.isEmpty) == nil)) {
-//                    ImageView(imageUrl: viewModel.weatherIcon?.weatherIcon, size: 80)
-//                        .foregroundColor(.gray)
-//                }
-                /*
-                Button(viewModel.buttonTitle) {
-                    viewModel.loadAsyncData(viewModel.searchText)
-                    viewModel.showAlert = true
-                    viewModel.alertMessage = AlertMessage(title: "Alert!", message: "Please enter search term.")
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Text("Description: ")
+                        .unredacted()
+                    Text(viewModel.weatherModel?.weatherDescription ?? "N/A")
+                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                    }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Text("Temperature: ")
+                        .unredacted()
+                    Text(viewModel.weatherModel?.temperature ?? "N/A")
+                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Text("Time: ")
+                        .unredacted()
+                    Text(viewModel.weatherModel?.observationTime ?? "N/A")
+                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                }
+
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Button(action: {
+                        self.viewModel.callTMDBDetail()
+                    }) {
+                        Text("TMDB: GET_REQUEST")
+                    }
+                    .unredacted()
+                    Text(viewModel.tMDBModel?.username ?? "N/A")
+                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Button(action: {
+                        self.viewModel.callJsonPlaceHolderPostRequestMethod()
+                    }) {
+                        Text("POST_REQUEST")
+                    }
+                    .unredacted()
+                    Text(viewModel.jsonPlaceHolderModel?.title ?? "N/A")
+                        .redacted(reason: viewModel.isLoading ? .placeholder : .init())
+                }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Button(action: {
+                        self.viewModel.callJsonPlaceHolderPutRequestMethod()
+                    }) {
+                        Text("PUT_REQUEST")
+                    }
+                    .unredacted()
+                    Text(String(viewModel.jsonPlaceHolderModel?.userId ?? 000))
+                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    Button(action: {
+                        self.viewModel.callJsonPlaceHolderPatchRequestMethod()
+                    }) {
+                        Text("PATCH_REQUEST")
+                    }
+                    .unredacted()
+                    
+                }
+                LazyHStack(alignment: .firstTextBaseline) {
+//                    SwiftUIButtonView{
+//                        print("Test Module Buton")
+//                    }
                 }
                 
-                Button("Show 1") {
-                    viewModel.showAlert = true
-                    viewModel.alertMessage = AlertMessage(title: "Alert1", message: "Please enter search term.")
-                }
-                
-                Button("Show 2") {
-                    viewModel.showAlert = true
-                    viewModel.alertMessage = AlertMessage(title: "Alert2", message: "Please enter search term.")
-                }*/
-                
-                self.timerView
-                    .disabled(viewModel.isRequestSendingDisabled)
-                    .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
-                    .font(.title)
+                    //https://unsplash.com/photos/yC-Yzbqy7PY
+//                    AsyncImageView(imageUrl: "https://hws.dev/img/logo.png",
+//                                   placeHolder: "questionmark",
+//                                   height: 44,
+//                                   width: 44,
+//                                   cornerRadius: 5,
+//                                   shouldShowLoading: false)
+//                    .redacted(reason: viewModel.isLoading ? .placeholder : .init())
+                    
+//                Spacer()
+//                self.timerView
+//                    .disabled(viewModel.isRequestSendingDisabled)
+//                    .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
+//                    .font(.title)
                 
             }.padding([.top], 20)
+             //.redacted(reason: .placeholder)
         )
     }
     
@@ -181,13 +201,13 @@ struct MainContentView: View {
 }
 
 #if DEBUG
-//struct MainContentView_Preview: PreviewProvider {
-//    static var previews: some View {
-//        let networkManager = APIClient()
-//        let repo = WeatherApiRepoImplement(apiClient: networkManager)
-//        let viewModel: MainViewModel = MainViewModel(repository: repo)
-//        MainContentView(viewModel: viewModel)
-//    }
-//}
+struct MainContentView_Preview: PreviewProvider {
+    static var previews: some View {
+        let networkManager = APIClient()
+        let repo = WeatherApiRepoImplement(apiClient: networkManager)
+        let viewModel: MainViewModel = MainViewModel(weatherApiUseCaseProtocol: repo as! WeatherApiUseCaseProtocol)
+        MainContentView(viewModel: viewModel)
+    }
+}
 #endif
 
