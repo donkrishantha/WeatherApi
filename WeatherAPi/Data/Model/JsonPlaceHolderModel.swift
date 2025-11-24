@@ -23,6 +23,10 @@ struct JsonPlaceHolderModel: Codable{
 //}
 
 struct PatchRequestModel: Codable {
+    let title: String
+}
+
+struct PatchModel: Codable {
     let userId: Int
     let id: Int
     let title: String

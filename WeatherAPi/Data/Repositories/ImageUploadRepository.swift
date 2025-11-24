@@ -34,6 +34,7 @@ extension ImageUploadRepositoryImp: ImageUploadProtocol {
     func checkTokenVerify() async -> AnyPublisher<UploadModel, APIError> {
         let endpoint = ImageUploadEndpoint.checkUserVerify
         let request = RequestModel<Any>(.get, endpoint as! EndpointProvider)
+        //if Task.isCancelled { return }
         return await apiClient.request(request, responseModel: UploadModel.self)
     }
     
@@ -57,35 +58,35 @@ extension ImageUploadRepositoryImp: ImageUploadProtocol {
         return await apiClient.upload(request, responseModel: WeatherRowData.self)
     }*/
         
-        /*
-        func upload(data: Data, fileName: String, mediaType: String) -> Promise<Int> {
-            let formData = MultipartFormData()
-            formData.append(data, withName: "multipart", fileName: fileName, mimeType: mediaType)
+    /*
+    func upload(data: Data, fileName: String, mediaType: String) -> Promise<Int> {
+        let formData = MultipartFormData()
+        formData.append(data, withName: "multipart", fileName: fileName, mimeType: mediaType)
 
-            let queryItems: [URLQueryItem] = [
-                URLQueryItem(name: "public", value: "false"),
-                URLQueryItem(name: "fileName", value: fileName),
-                URLQueryItem(name: "mediaType", value: mediaType)
-            ]
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "public", value: "false"),
+            URLQueryItem(name: "fileName", value: fileName),
+            URLQueryItem(name: "mediaType", value: mediaType)
+        ]
 
-            return firstly { () -> Promise<ResponseDTO<FileDTO>> in
-                privateNetwork.upload(formData, with: Route(.post, .files(with: queryItems)))
-            }
-            .map(\.data.id)
-        }*/
-         
-        /*
-        func upload(image: UIImage, withName name: String) -> Promise<Int> {
-            let fileName = "\(name).jpeg"
+        return firstly { () -> Promise<ResponseDTO<FileDTO>> in
+            privateNetwork.upload(formData, with: Route(.post, .files(with: queryItems)))
+        }
+        .map(\.data.id)
+    }*/
+     
+    /*
+    func upload(image: UIImage, withName name: String) -> Promise<Int> {
+        let fileName = "\(name).jpeg"
 
-            guard let data = image.jpegData(
-                resizeImageTo: CGSize(dimensions: 2000),
-                maxSizeInMB: 0.5,
-                initialCompressionQuality: 0.7
-            ) else {
-                return Promise(error: FileUploadError.failedToProcessImage)
-            }
+        guard let data = image.jpegData(
+            resizeImageTo: CGSize(dimensions: 2000),
+            maxSizeInMB: 0.5,
+            initialCompressionQuality: 0.7
+        ) else {
+            return Promise(error: FileUploadError.failedToProcessImage)
+        }
 
-            return upload(data: data, fileName: fileName, mediaType: "image/jpeg")
-        }*/
+        return upload(data: data, fileName: fileName, mediaType: "image/jpeg")
+    }*/
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ImageUploadContentView: View {
     
+    // MARK: - Properties -
     @ObservedObject var viewModel: ImageUploadViewModel
     //@State private var selectedImage: UIImage? = nil
     //@State private var showImagePicker: Bool = false
@@ -23,6 +24,7 @@ struct ImageUploadContentView: View {
     @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State private var image2: UIImage?
     
+    // MARK: - View -
     var body: some View {
         NavigationView{
             /*VStack {
@@ -70,7 +72,7 @@ struct ImageUploadContentView: View {
                     .cornerRadius(15.0)
                 Button("Choose Picture") {
                     //self.showSheet = true
-                    viewModel.verifyTokenTask()
+                    verifyTokenTask()
                 }.padding()
                     .actionSheet(isPresented: $showSheet) {
                         UIDevice.isSimulator() ? (
@@ -104,13 +106,44 @@ struct ImageUploadContentView: View {
             }
         }
     }
+    
+    // MARK: - Methods -
+    /// request data async way
+    private func verifyTokenTask() {
+        Task(priority: .medium) {
+            await viewModel.verifyTokenRequest(requestType: .userVerify)
+        }
+    }
+
+    /// request data async way
+    private func imageUploadTask(userName: String?, file: Data?) {
+        Task(priority: .medium) {
+            await viewModel.imageUploadRequest(requestType: .imageUpload,
+                                     userName: userName,
+                                     file: file)
+        }
+    }
 }
 
 #if DEBUG
-//struct ImageUploadContentView_Preview: PreviewProvider {
-//    static var previews: some View {
-//        let viewModel = ImageUploadViewModel()
-//        ImageUploadContentView(viewModel: viewModel)
-//    }
-//}
+struct ImageUploadContentView_Preview: PreviewProvider {
+    static var previews: some View {
+        let protocol1 = ImageUploadProtocol.self
+        let protocol2 = ImageUploadUseCaseProtocol.self
+        let viewModel = ImageUploadViewModel(repository: protocol1 as! ImageUploadProtocol,
+                                             imageUploadUseCaseProtocol: protocol2 as! ImageUploadUseCaseProtocol)
+        ImageUploadContentView(viewModel: viewModel)
+    }
+}
 #endif
+
+
+//func testMacro() {
+//    #if PRODCUTION
+//    print("-----PRODUCTION")
+//    #elseif STAGING
+//    print("------STAGING")
+//    #elseif TEST
+//    print("-----TEST")
+//    #endif
+//}

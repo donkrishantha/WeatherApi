@@ -16,7 +16,7 @@ protocol WeatherApiUseCaseProtocol {
     // JSONPlaceholderApi
     func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
     func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
-    func execute(title: String) async -> AnyPublisher<PatchRequestModel, APIError>
+    func execute(title: String) async -> AnyPublisher<PatchModel, APIError>
 }
 
 final class WeatherApiUseCaseImple {
@@ -50,8 +50,8 @@ extension WeatherApiUseCaseImple: WeatherApiUseCaseProtocol {
         return result
     }
     
-    func execute(title: String) async -> AnyPublisher<PatchRequestModel, APIError> {
-        let result: AnyPublisher<PatchRequestModel, APIError> = await repository.getJsonPlaceHolderPatchRequest(title: title)
+    func execute(title: String) async -> AnyPublisher<PatchModel, APIError> {
+        let result: AnyPublisher<PatchModel, APIError> = await repository.getJsonPlaceHolderPatchRequest(title: title)
         return result
     }
 }

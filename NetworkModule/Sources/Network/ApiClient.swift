@@ -16,11 +16,13 @@ public protocol APIClientProtocol {
     
     // MARK: Request
     @available(iOS 13.0, *)
+    @discardableResult
     func request<T: Codable>(_ request: RequestModel<Any>,
                              responseModel: T.Type?) async -> APIResponse<T>
     
     // MARK: Upload
     @available(iOS 13.0, *)
+    @discardableResult
     func upload<T: Codable>(_ request: RequestModel<Any>,
                             responseModel: T.Type) async -> APIResponse<T>
 }

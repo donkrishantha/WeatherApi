@@ -48,7 +48,7 @@ struct MainContentView: View {
     
     private var mainView: some View {
         return AnyView(
-            NavigationView{
+            NavigationView {
                 ZStack{
                     ScrollView {
                         BackgroundView()
@@ -76,7 +76,8 @@ struct MainContentView: View {
                     ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
                 }
             }
-        )
+                .onAppear(perform: onAppear)
+                .onDisappear(perform: onDisappear))
     }
     
     
@@ -104,7 +105,7 @@ struct MainContentView: View {
 
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
-                        self.viewModel.callTMDBDetail()
+                        callTMDBDetails()
                     }) {
                         Text("TMDB: GET_REQUEST")
                     }
@@ -114,9 +115,15 @@ struct MainContentView: View {
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
-                        self.viewModel.callJsonPlaceHolderPostRequestMethod()
+                        callPostRequest()
                     }) {
-                        Text("POST_REQUEST")
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                                .controlSize(.small)
+                        } else {
+                            Text("POST_REQUEST")
+                        }
                     }
                     .unredacted()
                     Text(viewModel.jsonPlaceHolderModel?.title ?? "N/A")
@@ -124,7 +131,7 @@ struct MainContentView: View {
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
-                        self.viewModel.callJsonPlaceHolderPutRequestMethod()
+                        callPutRequest()
                     }) {
                         Text("PUT_REQUEST")
                     }
@@ -134,36 +141,29 @@ struct MainContentView: View {
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
-                        self.viewModel.callJsonPlaceHolderPatchRequestMethod()
+                        callPatchRequest()
                     }) {
                         Text("PATCH_REQUEST")
                     }
                     .unredacted()
                     
                 }
-                LazyHStack(alignment: .firstTextBaseline) {
-//                    SwiftUIButtonView{
-//                        print("Test Module Buton")
-//                    }
-                }
-                
-                    //https://unsplash.com/photos/yC-Yzbqy7PY
-//                    AsyncImageView(imageUrl: "https://hws.dev/img/logo.png",
-//                                   placeHolder: "questionmark",
-//                                   height: 44,
-//                                   width: 44,
-//                                   cornerRadius: 5,
-//                                   shouldShowLoading: false)
-//                    .redacted(reason: viewModel.isLoading ? .placeholder : .init())
-                    
-//                Spacer()
-//                self.timerView
-//                    .disabled(viewModel.isRequestSendingDisabled)
-//                    .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
-//                    .font(.title)
-                
+                /*
+                //https://unsplash.com/photos/yC-Yzbqy7PY
+                AsyncImageView(imageUrl: "https://hws.dev/img/logo.png",
+                               placeHolder: "questionmark",
+                               height: 44,
+                               width: 44,
+                               cornerRadius: 5,
+                               shouldShowLoading: false)
+                .redacted(reason: viewModel.isLoading ? .placeholder : .init())
+
+                Spacer()
+                self.timerView
+                    .disabled(viewModel.isRequestSendingDisabled)
+                    .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
+                    .font(.title)*/
             }.padding([.top], 20)
-             //.redacted(reason: .placeholder)
         )
     }
     
@@ -197,6 +197,39 @@ struct MainContentView: View {
                 }
             }
         }
+    }
+    
+    private func callTMDBDetails() {
+        self.viewModel.apiTask = Task(priority: .medium) {
+            await viewModel.getTMDBDetailsWith(type: .tMDBDetails)
+        }
+    }
+    
+    private func callPostRequest() {
+        self.viewModel.apiTask = Task(priority: .medium) {
+            await viewModel.getPostDataWith(type: .postData)
+        }
+    }
+    
+    private func callPutRequest() {
+        self.viewModel.apiTask = Task(priority: .medium) {
+            await viewModel.getPutDataWith(type: .putData)
+        }
+    }
+    
+    private func callPatchRequest() {
+        self.viewModel.apiTask = Task(priority: .medium) {
+            await viewModel.getPatchDataWith(type: .patchData)
+        }
+    }
+    
+    private func onAppear() {
+        print("ON_APPEAR")
+    }
+    
+    private func onDisappear() {
+        print("ON_DIAPPEAR")
+        viewModel.disappear()
     }
 }
 

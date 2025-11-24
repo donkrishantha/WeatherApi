@@ -21,7 +21,7 @@ protocol WeatherApiRepoProtocol {
     // JSONPlaceholderApi
     func getJsonPlaceHolderPostRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
     func getJsonPlaceHolderPutRequest(parms: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
-    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, APIError>
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchModel, APIError>
 }
 
 struct WeatherApiRepoImplement {
@@ -71,12 +71,12 @@ extension WeatherApiRepoImplement: WeatherApiRepoProtocol {
         return await apiClient.request(request, responseModel: JsonPlaceHolderModel.self)
     }
     
-    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchRequestModel, APIError> {
+    func getJsonPlaceHolderPatchRequest(title: String) async -> AnyPublisher<PatchModel, APIError> {
         let endPoint = JsonPlaceHolderEndpoint.patchWebRequest
         let params: [String: Any] = [
             "title": title
         ]
         let request = RequestModel<Any>(.patch, endPoint, with: params)
-        return await apiClient.request(request, responseModel: PatchRequestModel.self)
+        return await apiClient.request(request, responseModel: PatchModel.self)
     }
 }

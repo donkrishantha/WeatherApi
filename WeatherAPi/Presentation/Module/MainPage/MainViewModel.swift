@@ -11,66 +11,55 @@ import OSLog
 import UIKit
 import Network
 
-enum AsyncErrors: Error {
-    case dataNotAvailable
-    case dataExist
+/// Api request type
+enum MainModelRequestType {
+    case weatherDetail
+    case tMDBDetails
+    case postData
+    case putData
+    case patchData
 }
 
-enum MainViewModelError: Error {
-    case networkError
-    case dataParsingError
-}
-
-final class MainViewModel: ObservableObject {
-    
+final class MainViewModel: ObservableObject, Sendable {
     /// MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
     @Published private(set) var tMDBModel: TMDBModel?
     @Published private(set) var jsonPlaceHolderModel: JsonPlaceHolderModel?
+    @Published private(set) var patchModel: PatchModel?
+    @Published private(set) var isLoading: Bool = false
     @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
-    @Published private(set) var isLoading: Bool = false
     private let logger = Logger.dataStore
+    var apiTask: Task<Void, Never>?
     
     /// MARK: - Input
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private var loadDataSubject = PassthroughSubject<Bool, ApiError2>()
     private var repository: (any WeatherApiRepoProtocol)? = nil
-    //@Injected var repository: (any WeatherApiRepoProtocol)?
     private let weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol?
     private(set) var isRequestSending = false
     
     var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
     var isRequestSendingDisabled: Bool { isRequestSending || searchText.isEmpty }
     
-    
     /// MARK: - Initialisation
     init(weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol) {
-        //init(repository: WeatherApiRepoProtocol = MockWeatherRepository()) {
         self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
         if !searchText.isEmpty {
             self.loadAsyncData(searchText)
         }
         self.searchLocation()
-        self.testMacro()
-    }
-    
-    func testMacro() {
-        //#if DEBUG
-        
-        #if PRODCUTION
-        print("-----PRODUCTION")
-        #elseif STAGING
-        print("------STAGING")
-        #elseif TEST
-        print("-----TEST")
-        #endif
     }
     
     // MARK: - De-Initialisation
     deinit {
         print("DE INIT")
+    }
+    
+    func disappear() {
+        print("TASK_CANCEL")
+        apiTask?.cancel()
     }
 }
 
@@ -90,156 +79,137 @@ extension MainViewModel {
     func loadAsyncData(_ searchText: String) {
         guard !searchText.isEmpty else { return }
         
-        isRequestSending = true
-        
-        Task (priority: .medium) {
-            await getWeatherDetail(searchText)
-            //self.loadLocalJsonData()
-            DispatchQueue.main.sync {
+        self.apiTask = Task(priority: .medium) {
+            await getWeatherDetail(type: .weatherDetail, text: searchText)
+            Task { @MainActor in // DispatchQueue.main.async {}
                 self.searchText = ""
+                isLoading = true
             }
-            isRequestSending = false
+            try? Task.checkCancellation()
         }
     }
     
-    func getWeatherDetail(_ text: String) async {
-        /// request parameters
-        let requestParameters = WeatherDetailParams(searchTerm: text)
-        
-        /// validate repository
-        /*
-        guard repository != nil else {
-            self.showAlert = true
-            self.alertMessage = AlertMessage(title: "Error!", message: "Missing service")
-            return
-        }*/
-        #if DEBUG
-        logger.trace("REQUEST: /current")
-        #endif
-        
-        /// request to get "weather details"
-        //let searchWeatherData = await self.repository?.searchWeatherData(params: requestParameters) as? AnyPublisher<WeatherRowData, ApiError>
-        let searchWeatherData = await self.weatherApiUseCaseProtocol?.execute(params: requestParameters)
-        searchWeatherData?
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] rowWeatherResponse in
-                guard let self = self else { return }
-                self.processSuccessResponse(rowWeatherResponse: rowWeatherResponse.currentWeather)
-            }.store(in: &cancelable)
-        return
+    func getWeatherDetail(type: MainModelRequestType, text: String) async {
+        loading()
+        let parameters = WeatherDetailParams(searchTerm: text)
+        let response: AnyPublisher<WeatherRowData, APIError>? = await weatherApiUseCaseProtocol?.execute(params: parameters)
+        responseHandler(response: response, requestType: type)
     }
     
-    func callTMDBDetail() {
-        self.isLoading = true
-        Task (priority: .medium) {
-            await self.getTMDBDetails()
-        }
+    func getTMDBDetailsWith(type: MainModelRequestType) async {
+        loading()
+        let response: AnyPublisher<TMDBModel, APIError>? = await weatherApiUseCaseProtocol?.execute(accountId: 11737776)
+        responseHandler(response: response, requestType: type)
     }
     
-    func getTMDBDetails() async {
-        let tmdbData = await self.weatherApiUseCaseProtocol?.execute(accountId: 11737776)
-        tmdbData?.sink { [weak self] completion in
-                guard let self = self else { return }
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] tmdbResponse in
-                guard self != nil else { return }
-                self?.tMDBModel = tmdbResponse
-                self?.isLoading = false
-            }.store(in: &cancelable)
-    }
-    
-    func callJsonPlaceHolderPostRequestMethod() {
-        self.isLoading = true
-        Task(priority: .medium) {
-            await self.getPostData()
-        }
-    }
-    
-    func getPostData() async {
+    func getPostDataWith(type: MainModelRequestType) async {
+        loading()
         let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
                                                                           body: "Gayan Body",
                                                                           userId: 812100297)
-        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute(params: params)
-        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
-                guard let self = self else { return }
-                self.isLoading = false
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] jsonPlaceHolderResponse in
-                guard self != nil else { return }
-                self?.jsonPlaceHolderModel = jsonPlaceHolderResponse
-                print(self?.jsonPlaceHolderModel?.title ?? "N/A")
-                self?.isLoading = false
-            }.store(in: &cancelable)
+        let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute(params: params)
+        responseHandler(response: response, requestType: type)
     }
     
-    func callJsonPlaceHolderPutRequestMethod() {
-        self.isLoading = true
-        Task(priority: .medium) {
-            await self.getPutData()
-        }
-    }
-    
-    func getPutData() async {
+    func getPutDataWith(type: MainModelRequestType) async {
+        loading()
         let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
-                                                                          body: "Gayan Body",
+                                                                          body: "Saman Body",
                                                                           userId: 812100297)
-        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute2(params: params)
-        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
-                guard let self = self else { return }
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] jsonPlaceHolderResponse in
-                guard self != nil else { return }
-                self?.jsonPlaceHolderModel = jsonPlaceHolderResponse
-                print(self?.jsonPlaceHolderModel?.body ?? "N/A")
-                self?.isLoading = false
-            }.store(in: &cancelable)
+        let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute2(params: params)
+        responseHandler(response: response, requestType: type)
     }
     
-    func callJsonPlaceHolderPatchRequestMethod() {
-        self.isLoading = true
-        Task(priority: .medium) {
-            await self.getPatchData()
-        }
+    
+    func getPatchDataWith(type: MainModelRequestType) async {
+        loading()
+        let response: AnyPublisher<PatchModel, APIError>? = await weatherApiUseCaseProtocol?.execute(title: "My personal")
+        responseHandler(response: response, requestType: type)
     }
     
-    func getPatchData() async {
-        let jsonPlaceHolderPostRequst = await self.weatherApiUseCaseProtocol?.execute(title: "My personal")
-        jsonPlaceHolderPostRequst?.sink { [weak self] completion in
-                guard let self = self else { return }
-                self.processErrorResponse(completion: completion)
-            } receiveValue: { [weak self] jsonPlaceHolderResponse in
-                guard self != nil else { return }
-                let response = jsonPlaceHolderResponse
-                print(response)
-                self?.isLoading = false
-            }.store(in: &cancelable)
+    private func loading() {
+        guard !isLoading else { return }
+        Task { @MainActor in isLoading = true }
+        try? Task.checkCancellation()
     }
     
-    /// process error in further
-    private func processErrorResponse(completion: Subscribers.Completion<APIError>) {
-        switch completion { case .finished: break; case .failure(let error):
-            logger.error("ERROR : \(error)")
-            self.isLoading = false
-            DispatchQueue.main.async {
-                self.showAlert = true
-                self.alertMessage = AlertMessage(title: "Error!", message: error.errorDescription ?? "N/A")
-            }
-        }
-    }
-    
-    /// process response in further
-    private func processSuccessResponse(rowWeatherResponse: CurrentWeather) {
-        #if DEBUG
-        self.logger.info("SUCCESS:")
-        #endif
-        self.isLoading = false
-        //self.weatherModel = WeatherModel(data: rowWeatherResponse)
-        let response = WeatherModel(data: rowWeatherResponse)
-        self.weatherModel = response
+    /// Handel the response  in generally
+    /// - Parameters:
+    ///   - response: api response
+    ///   - requestType: type of the response
+    private func responseHandler<T: Codable>(response: AnyPublisher<T, APIError>?,
+                         requestType: MainModelRequestType) {
+        response?.sink { [weak self] completion in
+            guard let self = self else { return }
+            self.processErrorResponseWith(type: requestType, with: completion)
+        } receiveValue: { [weak self] response in
+            guard let self = self else { return }
+            self.processSuccessResponseWith(type: requestType, and: response)
+        }.store(in: &cancelable)
     }
 }
+
+// Handel request responses & errors
+extension MainViewModel {
+    
+    /// Process error response  generally
+    /// - Parameters:
+    ///   - type: response  type
+    ///   - completion: response model
+    private func processErrorResponseWith(type: MainModelRequestType,
+                                          with completion: Subscribers.Completion<APIError>){
+        switch completion { case .finished: break; case .failure(let error):
+            switch type {
+            case .weatherDetail, .tMDBDetails, .postData, .putData, .patchData:
+                defer { isLoading = false }
+                DispatchQueue.main.async {
+                    self.showAlert = true
+                    self.alertMessage = AlertMessage(title: "Error!",
+                                                     message: error.errorDescription ?? "N/A")
+                }
+            }
+        }
+    }
+    
+    
+    /// Process success response  generally
+    /// - Parameters:
+    ///   - type: response  type
+    ///   - response: response model
+    private func processSuccessResponseWith<T: Codable>(type: MainModelRequestType,
+                                                         and response: T) {
+        //self.logger.info("SUCCESS:")
+        defer { isLoading = false }
+        switch type {
+        case .weatherDetail:
+            Task { @MainActor in // DispatchQueue.main.async {}
+                guard let response = response as? WeatherModel else { return }
+                self.weatherModel = response
+            }
+        case .tMDBDetails:
+            Task { @MainActor in // DispatchQueue.main.async {}
+                guard let response = response as? TMDBModel else { return }
+                self.tMDBModel = response
+            }
+        case .postData:
+            Task { @MainActor in // DispatchQueue.main.async {}
+                guard let response = response as? JsonPlaceHolderModel else { return }
+                self.jsonPlaceHolderModel = response
+            }
+        case .putData:
+            Task { @MainActor in // DispatchQueue.main.async {}
+                guard let response = response as? JsonPlaceHolderModel else { return }
+                self.jsonPlaceHolderModel = response
+            }
+        case .patchData:
+            Task { @MainActor in // DispatchQueue.main.async {}
+                guard let response = response as? PatchModel else { return }
+                self.patchModel = response
+            }
+        }
+    }
+}
+
 
 extension MainViewModel {
     
