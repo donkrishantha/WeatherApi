@@ -11,6 +11,21 @@ import OSLog
 import UIKit
 import Network
 
+//Dashboard status
+enum DashboardPhase {
+    case loading
+    case content
+    case empty
+    case error
+}
+
+// Status
+enum ProfilePhase {
+    case loading
+    case loaded
+    case error(String)
+}
+
 /// Api request type
 enum MainModelRequestType {
     case weatherDetail
@@ -20,19 +35,24 @@ enum MainModelRequestType {
     case patchData
 }
 
-final class MainViewModel: ObservableObject, Sendable {
-    /// MARK: - Output
+final class MainViewModel: ObservableObject {
+    // loading status
+    @Published var phase: ProfilePhase = .loading
+    
+    
+    // MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
     @Published private(set) var tMDBModel: TMDBModel?
     @Published private(set) var jsonPlaceHolderModel: JsonPlaceHolderModel?
     @Published private(set) var patchModel: PatchModel?
-    @Published private(set) var isLoading: Bool = false
+    @Published var isLoading: Bool = false
     @Published var alertMessage: AlertMessage?
     @Published var showAlert = false
     private let logger = Logger.dataStore
-    var apiTask: Task<Void, Never>?
+    private var apiTask: Task<Void, Never>?
+    private var taskPriority: TaskPriority = .background
     
-    /// MARK: - Input
+    // MARK: - Input
     @Published var searchText: String = ""
     private(set) fileprivate var cancelable: Set<AnyCancellable> = []
     private var loadDataSubject = PassthroughSubject<Bool, ApiError2>()
@@ -43,7 +63,7 @@ final class MainViewModel: ObservableObject, Sendable {
     var buttonTitle: String { isRequestSending ? "Sending..." : "Send" }
     var isRequestSendingDisabled: Bool { isRequestSending || searchText.isEmpty }
     
-    /// MARK: - Initialisation
+    // MARK: - Initialisation
     init(weatherApiUseCaseProtocol: WeatherApiUseCaseProtocol) {
         self.weatherApiUseCaseProtocol = weatherApiUseCaseProtocol
         if !searchText.isEmpty {
@@ -55,16 +75,50 @@ final class MainViewModel: ObservableObject, Sendable {
     // MARK: - De-Initialisation
     deinit {
         print("DE INIT")
+        checkCancellation()
     }
     
+    // MARK: - Cancel tanks when View is dissipated.
     func disappear() {
         print("TASK_CANCEL")
-        apiTask?.cancel()
+        checkCancellation()
+    }
+    
+    func testFaceApi() {
+        //apiTask?.cancel()
+        //print("before - isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
+        //guard apiTask == nil else { return }
+        //loading()
+        isLoading = true
+        print("after - isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            await fakeApiCall()
+        }
+    }
+
+    func fakeApiCall() async {
+        for i in 1...2 {
+            print("loop: \(i), isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
+            sleep(1)
+            try? Task.checkCancellation()
+            await Task.yield()
+//            Task { @MainActor in
+//                isLoading = true
+//            }
+        }
+        await MainActor.run {
+            isLoading = false
+            //defer { isLoading = false }
+            print("isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
+        }
+    }
+    
+    private func performWork() async {
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
     }
 }
 
 extension MainViewModel {
-    
     /// search places in text field
     func searchLocation() {
         $searchText
@@ -79,7 +133,7 @@ extension MainViewModel {
     func loadAsyncData(_ searchText: String) {
         guard !searchText.isEmpty else { return }
         
-        self.apiTask = Task(priority: .medium) {
+        apiTask = Task(priority: taskPriority) {
             await getWeatherDetail(type: .weatherDetail, text: searchText)
             Task { @MainActor in // DispatchQueue.main.async {}
                 self.searchText = ""
@@ -89,47 +143,90 @@ extension MainViewModel {
         }
     }
     
+    /// Api request for retrieve the weather details
+    /// - Parameters:
+    ///   - type: request type for handel generic function
+    ///   - text: search text
     func getWeatherDetail(type: MainModelRequestType, text: String) async {
         loading()
-        let parameters = WeatherDetailParams(searchTerm: text)
-        let response: AnyPublisher<WeatherRowData, APIError>? = await weatherApiUseCaseProtocol?.execute(params: parameters)
-        responseHandler(response: response, requestType: type)
+        checkCancellation()
+
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
+            let parameters = WeatherDetailParams(searchTerm: text)
+            let response: AnyPublisher<WeatherRowData, APIError>? = await weatherApiUseCaseProtocol?.execute(params: parameters)
+            await responseHandler(response: response, requestType: type)
+        }
     }
     
-    func getTMDBDetailsWith(type: MainModelRequestType) async {
+    
+    /// Api request for retrieve for weather details
+    /// - Parameter type: request type for handel generic function
+    func getTMDBDetailsWith(type: MainModelRequestType) {
         loading()
-        let response: AnyPublisher<TMDBModel, APIError>? = await weatherApiUseCaseProtocol?.execute(accountId: 11737776)
-        responseHandler(response: response, requestType: type)
+        checkCancellation()
+
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
+            let response: AnyPublisher<TMDBModel, APIError>? = await weatherApiUseCaseProtocol?.execute(accountId: 11737776)
+            await responseHandler(response: response, requestType: type)
+        }
     }
     
-    func getPostDataWith(type: MainModelRequestType) async {
+    /// Api request for retrieve for post api details
+    /// - Parameter type: request type for handel generic function
+    func getPostDataWith(type: MainModelRequestType) {
         loading()
-        let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
-                                                                          body: "Gayan Body",
-                                                                          userId: 812100297)
-        let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute(params: params)
-        responseHandler(response: response, requestType: type)
+        checkCancellation()
+
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
+            let params: JsonPlaceHolderPostParams =
+            JsonPlaceHolderPostParams(title: "Gayan Dias",body: "Gayan Body",userId: 812100297)
+            let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute(params: params)
+            await responseHandler(response: response, requestType: type)
+        }
     }
     
-    func getPutDataWith(type: MainModelRequestType) async {
+    /// Api request for retrieve for put api request details
+    /// - Parameter type: request type for handel generic function
+    func getPutDataWith(type: MainModelRequestType) {
         loading()
-        let params: JsonPlaceHolderPostParams = JsonPlaceHolderPostParams(title: "Gayan Dias",
-                                                                          body: "Saman Body",
-                                                                          userId: 812100297)
-        let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute2(params: params)
-        responseHandler(response: response, requestType: type)
+        checkCancellation()
+
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
+            let params: JsonPlaceHolderPostParams =
+            JsonPlaceHolderPostParams(title: "Gayan Dias",body: "Saman Body",userId: 812100297)
+            let response: AnyPublisher<JsonPlaceHolderModel, APIError>? = await weatherApiUseCaseProtocol?.execute2(params: params)
+            await responseHandler(response: response, requestType: type)
+        }
     }
     
-    
-    func getPatchDataWith(type: MainModelRequestType) async {
+    /// Api request for retrieve for patch api details
+    /// - Parameter type: request type for handel generic function
+    func getPatchDataWith(type: MainModelRequestType) {
         loading()
-        let response: AnyPublisher<PatchModel, APIError>? = await weatherApiUseCaseProtocol?.execute(title: "My personal")
-        responseHandler(response: response, requestType: type)
+        checkCancellation()
+        
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
+            //print(Thread.isMainThread)
+            let response: AnyPublisher<PatchModel, APIError>? = await weatherApiUseCaseProtocol?.execute(title: "My personal")
+            await responseHandler(response: response, requestType: type)
+        }
     }
     
+    /// Loading activity
     private func loading() {
+        //guard apiTask == nil else { return }
         guard !isLoading else { return }
-        Task { @MainActor in isLoading = true }
+        isLoading = true
+    }
+    
+    private func checkCancellation() {
+        apiTask?.cancel()
+        apiTask = nil
         try? Task.checkCancellation()
     }
     
@@ -138,13 +235,17 @@ extension MainViewModel {
     ///   - response: api response
     ///   - requestType: type of the response
     private func responseHandler<T: Codable>(response: AnyPublisher<T, APIError>?,
-                         requestType: MainModelRequestType) {
+                         requestType: MainModelRequestType) async {
         response?.sink { [weak self] completion in
             guard let self = self else { return }
-            self.processErrorResponseWith(type: requestType, with: completion)
+            Task { @MainActor in self.errorResponseWith(type: requestType,
+                                                               with: completion)
+            }
         } receiveValue: { [weak self] response in
             guard let self = self else { return }
-            self.processSuccessResponseWith(type: requestType, and: response)
+            Task { @MainActor in self.successResponseWith(type: requestType,
+                                                                 and: response)
+            }
         }.store(in: &cancelable)
     }
 }
@@ -156,63 +257,50 @@ extension MainViewModel {
     /// - Parameters:
     ///   - type: response  type
     ///   - completion: response model
-    private func processErrorResponseWith(type: MainModelRequestType,
+    private func errorResponseWith(type: MainModelRequestType,
                                           with completion: Subscribers.Completion<APIError>){
         switch completion { case .finished: break; case .failure(let error):
             switch type {
             case .weatherDetail, .tMDBDetails, .postData, .putData, .patchData:
                 defer { isLoading = false }
-                DispatchQueue.main.async {
                     self.showAlert = true
                     self.alertMessage = AlertMessage(title: "Error!",
                                                      message: error.errorDescription ?? "N/A")
-                }
             }
         }
     }
-    
     
     /// Process success response  generally
     /// - Parameters:
     ///   - type: response  type
     ///   - response: response model
-    private func processSuccessResponseWith<T: Codable>(type: MainModelRequestType,
+    private func successResponseWith<T: Codable>(type: MainModelRequestType,
                                                          and response: T) {
         //self.logger.info("SUCCESS:")
         defer { isLoading = false }
         switch type {
         case .weatherDetail:
-            Task { @MainActor in // DispatchQueue.main.async {}
-                guard let response = response as? WeatherModel else { return }
-                self.weatherModel = response
-            }
+            //Task { @MainActor in // DispatchQueue.main.async {}
+            guard let response = response as? WeatherModel else { return }
+            self.weatherModel = response
+            //}
         case .tMDBDetails:
-            Task { @MainActor in // DispatchQueue.main.async {}
-                guard let response = response as? TMDBModel else { return }
-                self.tMDBModel = response
-            }
+            guard let response = response as? TMDBModel else { return }
+            self.tMDBModel = response
         case .postData:
-            Task { @MainActor in // DispatchQueue.main.async {}
-                guard let response = response as? JsonPlaceHolderModel else { return }
-                self.jsonPlaceHolderModel = response
-            }
+            guard let response = response as? JsonPlaceHolderModel else { return }
+            self.jsonPlaceHolderModel = response
         case .putData:
-            Task { @MainActor in // DispatchQueue.main.async {}
-                guard let response = response as? JsonPlaceHolderModel else { return }
-                self.jsonPlaceHolderModel = response
-            }
+            guard let response = response as? JsonPlaceHolderModel else { return }
+            self.jsonPlaceHolderModel = response
         case .patchData:
-            Task { @MainActor in // DispatchQueue.main.async {}
-                guard let response = response as? PatchModel else { return }
-                self.patchModel = response
-            }
+            guard let response = response as? PatchModel else { return }
+            self.patchModel = response
         }
     }
 }
 
-
 extension MainViewModel {
-    
     /// load local json data
     fileprivate func loadLocalJsonData() {
         guard let data = FileLoader.readLocalFile("mock_weather_data") else {
@@ -257,3 +345,41 @@ struct JsonPlaceHolderPostParams: Encodable {
         self.userId = userId
     }
 }
+
+class TAskViewModel {
+    private var task: Task<Void, Never>? // Using "private var task"
+
+    func fetchData() {
+        task = Task {
+            do {
+                let data = try await performNetworkRequest()
+                print("Data received: \(data)")
+            } catch {
+                print("Task failed with error: \(error)")
+            }
+        }
+    }
+
+    func cancelTask() {
+        task?.cancel()
+    }
+
+    private func performNetworkRequest() async throws -> String {
+        // Simulate network request
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+        return "Sample Data"
+    }
+}
+
+/*
+func fetchData() async {
+    do {
+        print("Task has started")
+        try await apiCall()
+        print("Task has ended successfully")
+    } catch where error is CancellationError {
+        print("Task was cancelled")
+    } catch {
+        // Show UI error
+    }
+}*/

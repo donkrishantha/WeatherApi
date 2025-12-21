@@ -66,7 +66,7 @@ struct CurrentWeather: Codable {
 }
 
 /// UI Model
-struct WeatherModel: Codable {
+struct WeatherModel: Codable, Sendable {
     let weatherDescription: String?
     let temperature: String?
     let weatherIcon: String?

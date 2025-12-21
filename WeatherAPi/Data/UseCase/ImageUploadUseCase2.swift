@@ -10,12 +10,17 @@ import Combine
 import Network
 
 protocol WeatherApiUseCaseProtocol {
+    @discardableResult
     func execute(params: WeatherDetailParams) async -> AnyPublisher<WeatherRowData, APIError>
+    @discardableResult
     func execute(accountId: Int) async -> AnyPublisher<TMDBModel, APIError>
     
     // JSONPlaceholderApi
+    @discardableResult
     func execute(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    @discardableResult
     func execute2(params: JsonPlaceHolderPostParams) async -> AnyPublisher<JsonPlaceHolderModel, APIError>
+    @discardableResult
     func execute(title: String) async -> AnyPublisher<PatchModel, APIError>
 }
 

@@ -24,10 +24,6 @@ final class AppCoordinatorImplement: AppCoordinatorProtocol {
     }
     
     func start() {
-//        let viewModel: MainViewModel = MainViewModel(repository: dependencyContainer.weatherApiRepository)
-//        let viewController = MainViewController(viewModel: viewModel)
-//        navigationController.setViewControllers([viewController], animated: true)
-        
         let viewModel: MainViewModel = MainViewModel(weatherApiUseCaseProtocol: dependencyContainer.weatherApiUseCaseProtocol)
         let viewController = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([viewController], animated: true)
