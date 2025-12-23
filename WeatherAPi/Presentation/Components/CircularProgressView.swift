@@ -9,28 +9,20 @@ import SwiftUI
 
 @frozen public struct CircularProgressView: View {
     
-    //let progress: CGFloat? = 0.0
     var isLoading: Bool? = false
-    //@Binding var isLoading: Bool
     let loaderAnimationSpeed: LoaderAnimation? = .medium
     let progress: Double? = 2.0
-    
-    //    init(isLoading: Bool, loaderAnimationSpeed: LoaderAnimation, progress: Double) {
-    //        self.isLoading = isLoading
-    //        self.loaderAnimationSpeed = loaderAnimationSpeed
-    //        self.progress = progress
-    //    }
     
     public var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.pink.opacity(0.5),lineWidth: 6)
+                .stroke(Color.white.opacity(0.5),lineWidth: 5)
                 .opacity(isLoading ?? false ? 1 : 0)
             Circle()
                 //.trim(from: 0.0, to: Double(min(progress, 1.0)))
                 .trim(from: 0.0, to: 0.75)
-                .stroke(Color.pink, style: StrokeStyle(
-                        lineWidth: 6,
+                .stroke(Color.white, style: StrokeStyle(
+                        lineWidth: 5,
                         lineCap: .round,
                         lineJoin: .round
                     )
@@ -83,7 +75,7 @@ import SwiftUI
                  .repeatForever(autoreverses: false),
                             value: isLoading)*/
         }
-        .frame(width: 20, height: 20)
+        .frame(width: 15, height: 15)
     }
 }
 

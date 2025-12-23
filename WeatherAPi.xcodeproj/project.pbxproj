@@ -71,6 +71,7 @@
 		BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */; };
 		BDDCA68E2C5792B400750EB0 /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */; };
 		BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5CCB12D1F075500D47330 /* CustomAlert.swift */; };
+		BDEDA5B42EF7F0AE0066D398 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */; };
 		BDEF59A52EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */; };
 		BDEF59A72EB74BFF00857667 /* JsonPlaceHolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */; };
 		BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF21CE32B62266E00932F42 /* Rerquest.swift */; };
@@ -176,6 +177,7 @@
 		BDD177872EC1EDB400D40F7A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		BDE5CCB12D1F075500D47330 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsosnPlaceHoderEndPoint.swift; sourceTree = "<group>"; };
 		BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonPlaceHolderModel.swift; sourceTree = "<group>"; };
 		BDF21CE32B62266E00932F42 /* Rerquest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rerquest.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */,
 				BDFEFE132CB57CFE00F47842 /* Base64.swift */,
 				BDCD91352EE0480100DA8797 /* CircularProgressView.swift */,
+				BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -755,6 +758,7 @@
 				BD2171652B56BD9700F58C14 /* MainViewController.swift in Sources */,
 				BD4B570A2C9087650025814A /* ImageUploadContentView.swift in Sources */,
 				BDF743ED2EAD12D000AAE739 /* ImageUploadUseCase2.swift in Sources */,
+				BDEDA5B42EF7F0AE0066D398 /* CustomButton.swift in Sources */,
 				BDF79D4D2C660DFE004FF5A8 /* Extension+String.swift in Sources */,
 				BD5457D92D0D4B7D0097F865 /* FactoryPattern2.swift in Sources */,
 				BD16517D2C2BD82A00E7BDE1 /* ReachabilityManager.swift in Sources */,

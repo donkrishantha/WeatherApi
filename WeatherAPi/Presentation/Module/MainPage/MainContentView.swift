@@ -185,36 +185,55 @@ struct MainContentView: View {
                     .unredacted()
                     
                 }
-                HStack {
+                LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
                         viewModel.testFaceApi()
                     }) {
                         Text("TEST API REQUEST")
                         .lineLimit(1)
                         //.minimumScaleFactor(0.5)
-                        //.minimumScaleFactor(viewModel.isLoading ? 0.5 : 0)
-                        .padding([.leading, .trailing], viewModel.isLoading ? 10 : 0)
-                        .offset(x : viewModel.isLoading ? -15 : 0)
-                        .frame(width: 155)
+                        .minimumScaleFactor(viewModel.isLoading ? 0.5 : 1)
+                        //.padding([.leading, .trailing], viewModel.isLoading ? 10 : 0)
+                        //.offset(x : viewModel.isLoading ? -15 : 0)
+                        //.frame(width: 155)
                     }
                     .overlay(alignment: .trailing, content: {
                         CircularProgressView(isLoading: viewModel.isLoading)
                             .padding([.trailing, .leading], +8)
                     })
+                    .background(.yellow)
                     .disabled(viewModel.isLoading)
                     .buttonStyle(.borderedProminent)
                     .unredacted()
                     Text("\(viewModel.isLoading)")
                 }
-                Button {
-                    viewModel.testFaceApi()
-                } label: {
+//                Button {
+//                    viewModel.testFaceApi()
+//                } label: {
+//                }
+//                //---------------------------------
+//                VStack {
+//                    CircularProgressView(isLoading: viewModel.isLoading)
+//                    .frame(width: 30, height: 30)
+//                }
+                LazyHStack(alignment: .firstTextBaseline) {
+                    CustomButton(isLoading: viewModel.isLoading, title: "Test Api Request") {
+                        viewModel.testFaceApi()
+                    }
                 }
-                //---------------------------------
-                VStack {
-                    CircularProgressView(isLoading: viewModel.isLoading)
-                    .frame(width: 30, height: 30)
+                
+                LazyHStack {
+                    CustomButton(isLoading: viewModel.isLoading, title: "Maximum Width") {
+                        viewModel.testFaceApi()
+                    }
+                    //.border(.yellow)
+                    //.frame(maxWidth: .infinity)
+                    //.frame(width: UIScreen().bounds.width)
                 }
+                //.background(.yellow)
+                //.border(.red)
+                //.frame(maxWidth: .infinity)
+                //.frame(width: 300)
                 /*Text("Hello World!")
                  .font(.title)
                  .foregroundColor(.red)
