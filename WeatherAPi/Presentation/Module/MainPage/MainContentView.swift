@@ -5,11 +5,27 @@
 //  Created by Gayan Dias on 16/01/2024.
 //
 
+//Enum 'Environment' cannot be used as an attribute -> Error with the same name.
 import SwiftUI
 import Network
 //import Module2
+import UIKit
+
+enum ButtonTags {
+    case logIn
+    case send
+    case Unknown
+}
+
+//enum ButtonTag: String {
+//    case sendButton
+//}
 
 struct MainContentView: View {
+    //@Environment(\.isAppLoading) var isAppLoading : Bool
+    //@Environment(\.fsNumber) var number: Int // 👈🏻
+    //@Environment(\.myBoolBinding) var myBool: Binding<Bool>
+
     @ObservedObject private var viewModel: MainViewModel
     //@StateObject private var viewModel: MainViewModel
     
@@ -23,7 +39,7 @@ struct MainContentView: View {
     
     var progress: Float = 0.2
     
-    var attributedText: AttributedString{
+    var attributedText: AttributedString {
         
         var text = AttributedString("Please read the Privacy Policy and Terms and Condition")
         
@@ -109,31 +125,33 @@ struct MainContentView: View {
                     ImagePicker(selectedImage: $selectedImage, isPresented: $showImagePicker)
                 }
             }
-                .onAppear(perform: onAppear)
-                .onDisappear(perform: onDisappear))
+            .onAppear(perform: onAppear)
+            .onDisappear(perform: onDisappear))
+        .environment(\.isAppLoading, viewModel.isLoading)
+        //.environment(\.fsNumber, 10)
+        //.environment(\.viewModel.isLoading, $myBool)
     }
-    
     
     private var detailView: some View {
         return AnyView(
             VStack(alignment: .leading) {
                 LazyHStack(alignment: .firstTextBaseline) {
                     Text("Description: ")
-                        .unredacted()
+                        //.unredacted()
                     Text(viewModel.weatherModel?.weatherDescription ?? "N/A")
-                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : [])
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Text("Temperature: ")
-                        .unredacted()
+                        //.unredacted()
                     Text(viewModel.weatherModel?.temperature ?? "N/A")
-                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : [])
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Text("Time: ")
-                        .unredacted()
+                        //.unredacted()
                     Text(viewModel.weatherModel?.observationTime ?? "N/A")
-                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : [])
                 }
                 
                 LazyHStack(alignment: .firstTextBaseline) {
@@ -144,9 +162,9 @@ struct MainContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
-                    .unredacted()
+                    //.unredacted()
                     Text(viewModel.tMDBModel?.username ?? "N/A")
-                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : [])
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
@@ -154,13 +172,13 @@ struct MainContentView: View {
                     }) {
                         Text("POST_REQUEST")
                     }
-                    .disabled(viewModel.isLoading)
+                    //.disabled(viewModel.isLoading)
                     .buttonStyle(.borderedProminent)
                     //.controlSize(.regular)
-                    .unredacted()
+                    //.unredacted()
                     .frame(width: 200)
                     Text(viewModel.jsonPlaceHolderModel?.title ?? "N/A")
-                        .redacted(reason: viewModel.isLoading ? .placeholder : .init())
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : .init())
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
@@ -170,9 +188,9 @@ struct MainContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
-                    .unredacted()
+                    //.unredacted()
                     Text(String(viewModel.jsonPlaceHolderModel?.userId ?? 000))
-                        .redacted(reason: viewModel.isLoading ? .placeholder : [])
+                        //.redacted(reason: viewModel.isLoading ? .placeholder : [])
                 }
                 LazyHStack(alignment: .firstTextBaseline) {
                     Button(action: {
@@ -182,127 +200,24 @@ struct MainContentView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
-                    .unredacted()
-                    
+                    //.unredacted()
                 }
-                LazyHStack(alignment: .firstTextBaseline) {
-                    Button(action: {
-                        viewModel.testFaceApi()
-                    }) {
-                        Text("TEST API REQUEST")
-                        .lineLimit(1)
-                        //.minimumScaleFactor(0.5)
-                        .minimumScaleFactor(viewModel.isLoading ? 0.5 : 1)
-                        //.padding([.leading, .trailing], viewModel.isLoading ? 10 : 0)
-                        //.offset(x : viewModel.isLoading ? -15 : 0)
-                        //.frame(width: 155)
-                    }
-                    .overlay(alignment: .trailing, content: {
-                        CircularProgressView(isLoading: viewModel.isLoading)
-                            .padding([.trailing, .leading], +8)
-                    })
-                    .background(.yellow)
-                    .disabled(viewModel.isLoading)
-                    .buttonStyle(.borderedProminent)
-                    .unredacted()
-                    Text("\(viewModel.isLoading)")
-                }
-//                Button {
-//                    viewModel.testFaceApi()
-//                } label: {
-//                }
-//                //---------------------------------
-//                VStack {
-//                    CircularProgressView(isLoading: viewModel.isLoading)
-//                    .frame(width: 30, height: 30)
-//                }
-                LazyHStack(alignment: .firstTextBaseline) {
-                    CustomButton(isLoading: viewModel.isLoading, title: "Test Api Request") {
-                        viewModel.testFaceApi()
-                    }
-                }
-                
-                LazyHStack {
-                    CustomButton(isLoading: viewModel.isLoading, title: "Maximum Width") {
-                        viewModel.testFaceApi()
-                    }
-                    //.border(.yellow)
-                    //.frame(maxWidth: .infinity)
-                    //.frame(width: UIScreen().bounds.width)
-                }
-                //.background(.yellow)
-                //.border(.red)
-                //.frame(maxWidth: .infinity)
-                //.frame(width: 300)
-                /*Text("Hello World!")
-                 .font(.title)
-                 .foregroundColor(.red)
-                 Text("Hello World!")
-                 .font(.title)
-                 .background(.red)
-                 Text("Hello World!")
-                 .font(.title)
-                 .underline(true,color: .red)
-                 Text("Hello World!")
-                 .font(.title)
-                 .strikethrough(true,color: .red)
-                 Text("Hello\nHow are you?")
-                 .font(.title)
-                 .multilineTextAlignment(.center)
-                 Text("Hello, World!")
-                 .font(.title)
-                 .blur(radius: 2)
-                 Text(Date(), style: .date)
-                 Text(attributedText)
-                 .font(.title3)
-                 Text(Date(),style: .date) // 4 October 2025
-                 Text(Date(),style: .time) // 11:24 PM
-                 Text(Date(),style: .relative) // This will show the count up timer like this: 1 min 25 sec)
-                 Text(Date(),style: .timer) // This will show the count up timer like this: 1:15
-                 Text(Date(),style: .offset) // This will show the count up timer like this: +1 minute
-                 Text(verbatim: "Hello, \\(name)")
-                 Text(122, format: .currency(code: "USD"))
-                 .font(.largeTitle)
-                 Text(122, format: .percent)
-                 .font(.largeTitle)
-                 Text("Hello Swift!")
-                 .kerning(10)
-                 Text("Hello Swift!")
-                 .hidden()
-                 Text("Hello Swift!")
-                 .textSelection(.enabled)
-                 Text("Hello Swift!")
-                 .textSelection(.disabled)
-                 Text("Hello SwiftUI")
-                 .accessibilityLabel("Hello from SwiftUI")
-                 /// When you hover over the button, a tooltip will appear as a hint.
-                 Button("Delete") {
-                 print("Deleted!")
-                 }
-                 .help("Deletes the item")
-                 if #available(iOS 16.0, *) {
-                 Text(timerInterval: Date.now...Date.now.addingTimeInterval(3600),
-                 countsDown: true)
-                 } else {
-                 // Fallback on earlier versions
-                 }*/
-                /*
-                 //https://unsplash.com/photos/yC-Yzbqy7PY
-                 AsyncImageView(imageUrl: "https://hws.dev/img/logo.png",
-                 placeHolder: "questionmark",
-                 height: 44,
-                 width: 44,
-                 cornerRadius: 5,
-                 shouldShowLoading: false)
-                 .redacted(reason: viewModel.isLoading ? .placeholder : .init())
-                 
-                 Spacer()
-                 self.timerView
-                 .disabled(viewModel.isRequestSendingDisabled)
-                 .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
-                 .font(.title)*/
-            }.padding([.top], 20)
+            }// end view
+            .padding([.top], 20)
         )
+    }
+    
+    private func buttonAction(_ tag: ButtonTags) {
+        switch tag {
+        case .logIn:
+            print("---------Login------")
+            viewModel.testFaceApi()
+        case .send:
+            print("---------Send------")
+            viewModel.testFaceApi()
+        default:
+            print("---------Unknown------")
+        }
     }
     
     private var timerView: some View {
@@ -401,3 +316,93 @@ struct MainContentView_Preview: PreviewProvider {
     }
 }
 #endif
+
+public struct Sample: View {
+    
+    @State var isLoading = false
+    //@Binding var isLoading: Bool
+    
+    public var body: some View {
+        ZStack {
+            Circle()
+                .fill(isLoading ? Color.green : Color.red)
+                .frame(width: 50, height: 50)
+                .animation(.easeInOut, value: isLoading)
+                .onTapGesture {
+                    var t = Transaction(animation: .linear(duration: 2))
+                    t.disablesAnimations = true
+                    withTransaction(t) {
+                        isLoading.toggle()
+                    }
+                }
+        }
+    }
+}
+
+/*Text("Hello World!")
+ .font(.title)
+ .foregroundColor(.red)
+ Text("Hello World!")
+ .font(.title)
+ .background(.red)
+ Text("Hello World!")
+ .font(.title)
+ .underline(true,color: .red)
+ Text("Hello World!")
+ .font(.title)
+ .strikethrough(true,color: .red)
+ Text("Hello\nHow are you?")
+ .font(.title)
+ .multilineTextAlignment(.center)
+ Text("Hello, World!")
+ .font(.title)
+ .blur(radius: 2)
+ Text(Date(), style: .date)
+ Text(attributedText)
+ .font(.title3)
+ Text(Date(),style: .date) // 4 October 2025
+ Text(Date(),style: .time) // 11:24 PM
+ Text(Date(),style: .relative) // This will show the count up timer like this: 1 min 25 sec)
+ Text(Date(),style: .timer) // This will show the count up timer like this: 1:15
+ Text(Date(),style: .offset) // This will show the count up timer like this: +1 minute
+ Text(verbatim: "Hello, \\(name)")
+ Text(122, format: .currency(code: "USD"))
+ .font(.largeTitle)
+ Text(122, format: .percent)
+ .font(.largeTitle)
+ Text("Hello Swift!")
+ .kerning(10)
+ Text("Hello Swift!")
+ .hidden()
+ Text("Hello Swift!")
+ .textSelection(.enabled)
+ Text("Hello Swift!")
+ .textSelection(.disabled)
+ Text("Hello SwiftUI")
+ .accessibilityLabel("Hello from SwiftUI")
+ /// When you hover over the button, a tooltip will appear as a hint.
+ Button("Delete") {
+ print("Deleted!")
+ }
+ .help("Deletes the item")
+ if #available(iOS 16.0, *) {
+ Text(timerInterval: Date.now...Date.now.addingTimeInterval(3600),
+ countsDown: true)
+ } else {
+ // Fallback on earlier versions
+ }*/
+/*
+ //https://unsplash.com/photos/yC-Yzbqy7PY
+ AsyncImageView(imageUrl: "https://hws.dev/img/logo.png",
+ placeHolder: "questionmark",
+ height: 44,
+ width: 44,
+ cornerRadius: 5,
+ shouldShowLoading: false)
+ .redacted(reason: viewModel.isLoading ? .placeholder : .init())
+ 
+ Spacer()
+ self.timerView
+ .disabled(viewModel.isRequestSendingDisabled)
+ .foregroundColor(viewModel.isRequestSendingDisabled ? Color.gray : Color.blue)
+ .font(.title)*/

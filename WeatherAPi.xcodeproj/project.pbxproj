@@ -41,6 +41,8 @@
 		BD21717F2B56C4CF00F58C14 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD21717E2B56C4CF00F58C14 /* NavigationController.swift */; };
 		BD2171812B56C5E000F58C14 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2171802B56C5E000F58C14 /* Endpoint.swift */; };
 		BD2171842B56C60400F58C14 /* WeatherEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2171832B56C60400F58C14 /* WeatherEndpoint.swift */; };
+		BD2D5E782EFD32A100C08A70 /* AppColorKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2D5E772EFD32A100C08A70 /* AppColorKey.swift */; };
+		BD2D5E7A2F03CA7A00C08A70 /* CustomBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2D5E792F03CA7A00C08A70 /* CustomBtn.swift */; };
 		BD4B56FF2C8B61680025814A /* ImagePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4B56FE2C8B61680025814A /* ImagePickerController.swift */; };
 		BD4B57012C8B618F0025814A /* MultipartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4B57002C8B618F0025814A /* MultipartRequest.swift */; };
 		BD4B57032C8B6A5D0025814A /* MultipartRequest2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4B57022C8B6A5D0025814A /* MultipartRequest2.swift */; };
@@ -72,6 +74,7 @@
 		BDDCA68E2C5792B400750EB0 /* ApiClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */; };
 		BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE5CCB12D1F075500D47330 /* CustomAlert.swift */; };
 		BDEDA5B42EF7F0AE0066D398 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */; };
+		BDEDA5B62EFBE5270066D398 /* CustonButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEDA5B52EFBE5260066D398 /* CustonButtonStyle.swift */; };
 		BDEF59A52EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */; };
 		BDEF59A72EB74BFF00857667 /* JsonPlaceHolderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */; };
 		BDF21CE42B62266E00932F42 /* Rerquest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF21CE32B62266E00932F42 /* Rerquest.swift */; };
@@ -81,6 +84,7 @@
 		BDF79D492C65DE06004FF5A8 /* JsonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF79D482C65DE06004FF5A8 /* JsonLoader.swift */; };
 		BDF79D4B2C6609C6004FF5A8 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF79D4A2C6609C6004FF5A8 /* Date.swift */; };
 		BDF79D4D2C660DFE004FF5A8 /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF79D4C2C660DFE004FF5A8 /* Extension+String.swift */; };
+		BDFAF1E42F0927770052C78A /* MainContentView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFAF1E32F0927760052C78A /* MainContentView2.swift */; };
 		BDFBFD982C4D150D0002AA76 /* WeatherDetailDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBFD972C4D150D0002AA76 /* WeatherDetailDTO.swift */; };
 		BDFEFE122CB57B7A00F47842 /* Extension+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFEFE112CB57B7A00F47842 /* Extension+UIImage.swift */; };
 		BDFEFE142CB57CFE00F47842 /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFEFE132CB57CFE00F47842 /* Base64.swift */; };
@@ -144,6 +148,8 @@
 		BD21717E2B56C4CF00F58C14 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		BD2171802B56C5E000F58C14 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		BD2171832B56C60400F58C14 /* WeatherEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherEndpoint.swift; sourceTree = "<group>"; };
+		BD2D5E772EFD32A100C08A70 /* AppColorKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColorKey.swift; sourceTree = "<group>"; };
+		BD2D5E792F03CA7A00C08A70 /* CustomBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBtn.swift; sourceTree = "<group>"; };
 		BD4B56FE2C8B61680025814A /* ImagePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerController.swift; sourceTree = "<group>"; };
 		BD4B57002C8B618F0025814A /* MultipartRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartRequest.swift; sourceTree = "<group>"; };
 		BD4B57022C8B6A5D0025814A /* MultipartRequest2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartRequest2.swift; sourceTree = "<group>"; };
@@ -178,6 +184,7 @@
 		BDDCA68D2C5792B400750EB0 /* ApiClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClientTests.swift; sourceTree = "<group>"; };
 		BDE5CCB12D1F075500D47330 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
 		BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		BDEDA5B52EFBE5260066D398 /* CustonButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustonButtonStyle.swift; sourceTree = "<group>"; };
 		BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsosnPlaceHoderEndPoint.swift; sourceTree = "<group>"; };
 		BDEF59A62EB74BFF00857667 /* JsonPlaceHolderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonPlaceHolderModel.swift; sourceTree = "<group>"; };
 		BDF21CE32B62266E00932F42 /* Rerquest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rerquest.swift; sourceTree = "<group>"; };
@@ -187,6 +194,7 @@
 		BDF79D482C65DE06004FF5A8 /* JsonLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonLoader.swift; sourceTree = "<group>"; };
 		BDF79D4A2C6609C6004FF5A8 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		BDF79D4C2C660DFE004FF5A8 /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
+		BDFAF1E32F0927760052C78A /* MainContentView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContentView2.swift; sourceTree = "<group>"; };
 		BDFBFD972C4D150D0002AA76 /* WeatherDetailDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetailDTO.swift; sourceTree = "<group>"; };
 		BDFEFE112CB57B7A00F47842 /* Extension+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIImage.swift"; sourceTree = "<group>"; };
 		BDFEFE132CB57CFE00F47842 /* Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64.swift; sourceTree = "<group>"; };
@@ -254,11 +262,13 @@
 				BD4B56FE2C8B61680025814A /* ImagePickerController.swift */,
 				BD4B57002C8B618F0025814A /* MultipartRequest.swift */,
 				BD4B57022C8B6A5D0025814A /* MultipartRequest2.swift */,
+				BDEDA5B52EFBE5260066D398 /* CustonButtonStyle.swift */,
 				BD010BE62C99DA910060CCDF /* Multipart.swift */,
 				BDCF2D2E2CAC0C5C00A567ED /* ImagePicker.swift */,
 				BDFEFE132CB57CFE00F47842 /* Base64.swift */,
 				BDCD91352EE0480100DA8797 /* CircularProgressView.swift */,
 				BDEDA5B32EF7F0AD0066D398 /* CustomButton.swift */,
+				BD2D5E792F03CA7A00C08A70 /* CustomBtn.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -289,6 +299,7 @@
 		BD21712E2B56B9C600F58C14 /* WeatherAPi */ = {
 			isa = PBXGroup;
 			children = (
+				BD2D5E762EFD326900C08A70 /* Environmnet Keys */,
 				BDC92C432D5B56E400E8758B /* WeatherAPiRelease-Test.entitlements */,
 				BDE5CCB02D1F073400D47330 /* Alert */,
 				BD21712F2B56B9C600F58C14 /* AppDelegate.swift */,
@@ -371,6 +382,7 @@
 				BD2171642B56BD9700F58C14 /* MainViewController.swift */,
 				BD2171662B56BDAE00F58C14 /* MainViewModel.swift */,
 				BD2171682B56BDF500F58C14 /* MainContentView.swift */,
+				BDFAF1E32F0927760052C78A /* MainContentView2.swift */,
 			);
 			path = MainPage;
 			sourceTree = "<group>";
@@ -437,6 +449,14 @@
 				BDEF59A42EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift */,
 			);
 			path = Endpoint;
+			sourceTree = "<group>";
+		};
+		BD2D5E762EFD326900C08A70 /* Environmnet Keys */ = {
+			isa = PBXGroup;
+			children = (
+				BD2D5E772EFD32A100C08A70 /* AppColorKey.swift */,
+			);
+			path = "Environmnet Keys";
 			sourceTree = "<group>";
 		};
 		BD4B57042C90871B0025814A /* ImageUpload */ = {
@@ -749,6 +769,7 @@
 				BD5457E02D119A270097F865 /* Inject.swift in Sources */,
 				BD2171302B56B9C600F58C14 /* AppDelegate.swift in Sources */,
 				BD5457DB2D0D4C450097F865 /* FactoryPattern3.swift in Sources */,
+				BD2D5E782EFD32A100C08A70 /* AppColorKey.swift in Sources */,
 				BD5457D72D0D497F0097F865 /* FactoryPattern1.swift in Sources */,
 				BDC11F302CC117D100A01088 /* LoginViewModel.swift in Sources */,
 				BD4B56FF2C8B61680025814A /* ImagePickerController.swift in Sources */,
@@ -767,6 +788,7 @@
 				BD2171692B56BDF500F58C14 /* MainContentView.swift in Sources */,
 				BDEF59A52EB749AF00857667 /* JsosnPlaceHoderEndPoint.swift in Sources */,
 				BDCF2D2F2CAC0C5C00A567ED /* ImagePicker.swift in Sources */,
+				BDFAF1E42F0927770052C78A /* MainContentView2.swift in Sources */,
 				BD6BFEC32EA926E300F24B73 /* ErrorModel.swift in Sources */,
 				BDFEFE142CB57CFE00F47842 /* Base64.swift in Sources */,
 				BD010BE72C99DA910060CCDF /* Multipart.swift in Sources */,
@@ -774,9 +796,11 @@
 				BDFBFD982C4D150D0002AA76 /* WeatherDetailDTO.swift in Sources */,
 				BD4B57032C8B6A5D0025814A /* MultipartRequest2.swift in Sources */,
 				BD10F14D2BD5173600B79888 /* SearchBar.swift in Sources */,
+				BDEDA5B62EFBE5270066D398 /* CustonButtonStyle.swift in Sources */,
 				BDE5CCB22D1F075600D47330 /* CustomAlert.swift in Sources */,
 				BD21717D2B56C2E400F58C14 /* WeatherRepository.swift in Sources */,
 				BD1297672C6CF74E007938F1 /* Logger.swift in Sources */,
+				BD2D5E7A2F03CA7A00C08A70 /* CustomBtn.swift in Sources */,
 				BDC11F2E2CC117C500A01088 /* LoginViewController.swift in Sources */,
 				BD079D832EB64B180038AE5A /* TMDB.swift in Sources */,
 				BD5457DE2D0EF4000097F865 /* PropertyWrappers.swift in Sources */,

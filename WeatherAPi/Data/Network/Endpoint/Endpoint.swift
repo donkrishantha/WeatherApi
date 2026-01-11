@@ -40,7 +40,7 @@ extension EndpointProvider2 {
         let headers = [
             "Content-Type": AppConstants.HeaderParameterType.json,
             "Accept": AppConstants.HeaderParameterType.json,
-            "Authorization": "Bearer " + Environment.apiKy
+            "Authorization": "Bearer " + AppEnvironment.apiKy
         ]
         /* TMDB http header
          let headers = [

@@ -37,7 +37,7 @@ enum AppConstants {
     }
 }
 
-enum Environment {
+enum AppEnvironment {
     
     private static let infoDic: [String: Any] = {
         guard let dic =  Bundle.main.infoDictionary else {
@@ -47,7 +47,7 @@ enum Environment {
     }()
     
     static let baseUrl: URL = {
-        guard let urlString = Environment.infoDic["WEATHER_API_HOST"] as? String else {
+        guard let urlString = AppEnvironment.infoDic["WEATHER_API_HOST"] as? String else {
             fatalError("BASE_ URL is not found")
         }
         
@@ -58,32 +58,32 @@ enum Environment {
     }()
     
     static let apiKy: String = {
-        guard let key = Environment.infoDic["API_KEY"] as? String else {
+        guard let key = AppEnvironment.infoDic["API_KEY"] as? String else {
             fatalError("API_KEY is not found")
         }
         return key
     }()
 }
 
-enum Configuration {
-    enum Error: Swift.Error {
-        case missingKey, invalidValue
-    }
-    
-    static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
-        guard let object = Bundle.main.object(forInfoDictionaryKey: key) else {
-            throw Error.missingKey
-        }
-        
-        switch object {
-        case let value as T:
-            return value
-        case let string as String:
-            guard T(string) != nil else { fallthrough }
-        default:
-            throw Error.invalidValue
-        }
-        
-        return object as! T
-    }
-}
+//enum Configuration {
+//    enum Error: Swift.Error {
+//        case missingKey, invalidValue
+//    }
+//    
+//    static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
+//        guard let object = Bundle.main.object(forInfoDictionaryKey: key) else {
+//            throw Error.missingKey
+//        }
+//        
+//        switch object {
+//        case let value as T:
+//            return value
+//        case let string as String:
+//            guard T(string) != nil else { fallthrough }
+//        default:
+//            throw Error.invalidValue
+//        }
+//        
+//        return object as! T
+//    }
+//}

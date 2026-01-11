@@ -31,8 +31,8 @@ struct DetailContentView: View {
         NavigationView{
             ZStack(alignment: .topLeading){
                 VStack(alignment: .leading) {
-                    Text("BASE_URL: \(Environment.baseUrl)")
-                    Text("\(Environment.apiKy)")
+                    Text("BASE_URL: \(AppEnvironment.baseUrl)")
+                    Text("\(AppEnvironment.apiKy)")
                 }
                 Spacer()
                 VStack {

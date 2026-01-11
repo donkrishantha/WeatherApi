@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-@frozen public struct CircularProgressView: View {
-    
-    var isLoading: Bool? = false
-    let loaderAnimationSpeed: LoaderAnimation? = .medium
+public struct CircularProgressView: View {
+    var isLoading: Bool = false
+    let speed: LoaderAnimation = .medium
     let progress: Double? = 2.0
     
     public var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.white.opacity(0.5),lineWidth: 5)
-                .opacity(isLoading ?? false ? 1 : 0)
+                .stroke(Color.white.opacity(0.5), lineWidth: 5)
+                .opacity(isLoading ? 1 : 0)
             Circle()
                 //.trim(from: 0.0, to: Double(min(progress, 1.0)))
                 .trim(from: 0.0, to: 0.75)
@@ -27,13 +26,11 @@ import SwiftUI
                         lineJoin: .round
                     )
                 )
-                .rotationEffect(.degrees(isLoading ?? false ? 360 : 0))
-                .animation(Animation.linear(duration: isLoading ?? false ? loaderAnimationSpeed?.animationSpeed ?? 0.0 : 0)
-                    .repeatForever(autoreverses: false),
-                           value: isLoading)
-                .opacity(isLoading ?? false ? 1 : 0)
-            
-            /*Circle()
+                .rotationEffect(.degrees(isLoading ? 360 : 0))
+                .animation(.linear(duration: isLoading ? 0.8 : 0.0)
+                    .repeatForever(autoreverses: false), value: isLoading)
+                .opacity(isLoading ? 1 : 0)
+                /*Circle()
              .stroke(lineWidth: 5)
              .opacity(0.3)
              .foregroundColor(Color(UIColor.systemGray3))
@@ -75,7 +72,7 @@ import SwiftUI
                  .repeatForever(autoreverses: false),
                             value: isLoading)*/
         }
-        .frame(width: 15, height: 15)
+        .frame(width: 25, height: 25)
     }
 }
 

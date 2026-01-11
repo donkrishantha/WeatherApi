@@ -29,7 +29,7 @@ enum EventsEndpoints: EndpointProvider {
     internal var queryItems: [URLQueryItem]? {
         switch self {
         case .getCurrentWeatherDetails(let query):
-            return [URLQueryItem(name: AppConstants.QueryKey.apiKey.rawValue, value: Environment.apiKy),
+            return [URLQueryItem(name: AppConstants.QueryKey.apiKey.rawValue, value: AppEnvironment.apiKy),
                     URLQueryItem(name: AppConstants.QueryKey.searchString.rawValue, value: String(query))]
         default:
             return nil

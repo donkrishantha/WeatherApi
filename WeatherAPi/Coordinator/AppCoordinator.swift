@@ -12,7 +12,7 @@ protocol AppCoordinatorProtocol: AnyObject {
     func start()
 }
 
-final class AppCoordinatorImplement: AppCoordinatorProtocol {
+final class AppCoordinatorImplement: @preconcurrency AppCoordinatorProtocol {
     
     private let dependencyContainer: DependencyContainer
     unowned private let navigationController: NavigationController
@@ -23,8 +23,9 @@ final class AppCoordinatorImplement: AppCoordinatorProtocol {
         self.dependencyContainer = dependencyContainer
     }
     
-    func start() {
-        let viewModel: MainViewModel = MainViewModel(weatherApiUseCaseProtocol: dependencyContainer.weatherApiUseCaseProtocol)
+    @MainActor func start() {
+        //let viewModel: MainViewModel = MainViewModel(weatherApiUseCaseProtocol: dependencyContainer.weatherApiUseCaseProtocol)
+        let viewModel: MainModel = MainModel()
         let viewController = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([viewController], animated: true)
     }

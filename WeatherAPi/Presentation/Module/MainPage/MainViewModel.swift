@@ -38,7 +38,7 @@ enum MainModelRequestType {
 final class MainViewModel: ObservableObject {
     // loading status
     @Published var phase: ProfilePhase = .loading
-    
+    //@Environment(\.appColor) var appColor
     
     // MARK: - Output
     @Published private(set) var weatherModel: WeatherModel?
@@ -88,32 +88,31 @@ final class MainViewModel: ObservableObject {
         //apiTask?.cancel()
         //print("before - isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
         //guard apiTask == nil else { return }
-        //loading()
-        isLoading = true
-        print("after - isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
-        apiTask = Task(priority: taskPriority) { [weak self] in
+        loading()
+        //isLoading = true
+        apiTask = Task(priority: .userInitiated) {
             await fakeApiCall()
+            // performWork()
         }
     }
 
     func fakeApiCall() async {
         for i in 1...2 {
-            print("loop: \(i), isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
+            print("loop: \(i), isLoading: \(isLoading)")
             sleep(1)
             try? Task.checkCancellation()
             await Task.yield()
-//            Task { @MainActor in
-//                isLoading = true
-//            }
         }
         await MainActor.run {
             isLoading = false
+            checkCancellation()
             //defer { isLoading = false }
             print("isLoading: \(isLoading), isMainThread: \(Thread.isMainThread)")
         }
     }
     
-    private func performWork() async {
+    // wait for 2 seconds
+    func performWork() async {
         try? await Task.sleep(nanoseconds: 2_000_000_000)
     }
 }
@@ -133,12 +132,14 @@ extension MainViewModel {
     func loadAsyncData(_ searchText: String) {
         guard !searchText.isEmpty else { return }
         
-        apiTask = Task(priority: taskPriority) {
+        apiTask = Task(priority: taskPriority) { [weak self] in
+            guard let self = self else { return }
             await getWeatherDetail(type: .weatherDetail, text: searchText)
             Task { @MainActor in // DispatchQueue.main.async {}
                 self.searchText = ""
-                isLoading = true
+                
             }
+            isLoading = true
             try? Task.checkCancellation()
         }
     }
@@ -151,9 +152,10 @@ extension MainViewModel {
         loading()
         checkCancellation()
 
+        let parameters = WeatherDetailParams(searchTerm: text)
+        
         apiTask = Task(priority: taskPriority) { [weak self] in
             guard let self = self else { return }
-            let parameters = WeatherDetailParams(searchTerm: text)
             let response: AnyPublisher<WeatherRowData, APIError>? = await weatherApiUseCaseProtocol?.execute(params: parameters)
             await responseHandler(response: response, requestType: type)
         }
@@ -351,9 +353,17 @@ class TAskViewModel {
 
     func fetchData() {
         task = Task {
+            /*do {
+                let data = try await performNetworkRequest()
+                print("Data received: \(data)")
+            } catch {
+                print("Task failed with error: \(error)")
+            }*/
             do {
                 let data = try await performNetworkRequest()
                 print("Data received: \(data)")
+            } catch is CancellationError {
+                print("Task was cancelled")
             } catch {
                 print("Task failed with error: \(error)")
             }

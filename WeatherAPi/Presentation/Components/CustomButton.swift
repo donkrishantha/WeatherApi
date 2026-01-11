@@ -6,20 +6,18 @@
 //
 
 import SwiftUI
-//import Foundation
 
 struct CustomButton: View {
     var isLoading: Bool? = false
     var icon: String?
     var title: String
-    var action: (() -> Void)
     var bgColor: Color? = .blue
-    //var buttonStyle: (any ButtonStyle)? = .borderless
     var foregroundColor: Color? = .gray
+    var action: (() -> Void)
     
     init(isLoading: Bool? = nil, icon: String? = nil, title: String,
-         action: @escaping () -> Void, bgColor: Color? = nil,
-         foregroundColor: Color? = nil) {
+         bgColor: Color? = nil, foregroundColor: Color? = nil,
+         action: @escaping () -> Void) {
         self.isLoading = isLoading
         self.icon = icon
         self.title = title
@@ -29,38 +27,25 @@ struct CustomButton: View {
     }
     
     var body: some View {
-        Button(action: action) { /// call the closure here
-            HStack {
-                if let icon {
-                    Image(systemName: icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 28, height: 28)
-                }
-                Text(title) /// your text
+            Button(action: action) { /// call the closure here
+                Label(String(describing: "Button"), systemImage: "plus.circle")
                     .font(.headline)
                     .lineLimit(1)
-                    .background(bgColor)
-                    //.foregroundStyle(foregroundColor ?? .white)
                     .minimumScaleFactor(0.5)
-                    //.minimumScaleFactor(isLoading ?? false ? 0.9 : 0)
-                    //.padding([.leading],5)
                     .offset(x : isLoading ?? false ? -15 : 0)
             }
+            .overlay(content: {
+                CircularProgressView(isLoading: isLoading ?? false)
+                        .offset(x : -10)
+            })
+            .tint(bgColor)
+            .opacity(isLoading ?? false ? 0.6 : 1)
+            .allowsHitTesting(isLoading ?? false ? false : true)
+            .buttonStyle(.borderedProminent)
+            .controlSize(.regular)
+            .foregroundColor(foregroundColor)
+            .buttonBorderShape(.roundedRectangle)
         }
-        //.border(.green)
-        .overlay(alignment: .trailing, content: {
-                CircularProgressView(isLoading: isLoading)
-                    .offset(x : -10)
-        })
-        //.disabled(isLoading ?? false)
-        .opacity(isLoading ?? false ? 0.6 : 1)
-        .allowsHitTesting(isLoading ?? false ? false : true)
-        .buttonStyle(.borderedProminent)
-        .controlSize(.large)
-        .foregroundColor(foregroundColor)
-        .buttonBorderShape(.roundedRectangle)
-    }
 }
 
 #Preview {
@@ -72,5 +57,21 @@ extension String {
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = self.size(withAttributes: fontAttributes)
         return size.width
+    }
+}
+
+extension String {
+    var isBlank: Bool {
+        return allSatisfy({ $0.isWhitespace })
+    }
+}
+
+extension Optional where Wrapped == String {
+    var isBlank: Bool {
+        return self?.isBlank ?? true
+    }
+    
+    var isEmptyOrNil: Bool {
+        return self?.isEmpty ?? true
     }
 }

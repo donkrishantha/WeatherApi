@@ -8,10 +8,10 @@
 import UIKit
 import SwiftUI
 
-class MainViewController: UIHostingController<MainContentView> {
+class MainViewController: UIHostingController<MainContentView2> {
     
-    init(viewModel: MainViewModel) {
-        super.init(rootView: MainContentView(viewModel: viewModel))
+    init(viewModel: MainModel) {
+        super.init(rootView: MainContentView2(viewModel: viewModel))
     }
     
     required init?(coder aDecoder: NSCoder) {
