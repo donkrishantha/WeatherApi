@@ -100,4 +100,3 @@ struct AnyEncodable: Encodable {
         try encodable.encode(to: encoder)
     }
 }
-

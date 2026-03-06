@@ -32,6 +32,13 @@ final class APIClient2: APIClientProtocol2 {
         self.session = session
     }
     
+    private let decoder: JSONDecoder = {
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        jsonDecoder.dateDecodingStrategy = .iso8601
+        return jsonDecoder
+    }()
+    
     public convenience init() {
         let configuration = URLSessionConfiguration.default
         // Cash policy
@@ -92,6 +99,7 @@ final class APIClient2: APIClientProtocol2 {
 
 extension APIClient2 {
     private func manageResponse<T: Codable>(data: Data, response: URLResponse) -> AnyPublisher<T, ApiError2> {
+        
         guard let response = response as? HTTPURLResponse else {
             #if DEBUG
             logger.log(level: .error, "APIClient: Response not valid")
@@ -159,4 +167,27 @@ extension APIClient2 {
             return .unknownError(statusCode)
         }
     }
+}
+
+extension JSONDecoder {
+    static let apiDecoder: JSONDecoder = {
+        let jsonDecoder = JSONDecoder()
+        
+        // Handle snake_case keys
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        // Handle ISO8601 dates
+        jsonDecoder.dateDecodingStrategy = .iso8601
+        
+        return jsonDecoder
+    }()
+}
+
+extension JSONEncoder {
+    static let apiEncoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.dateEncodingStrategy = .iso8601
+        return encoder
+    }()
 }

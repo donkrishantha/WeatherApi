@@ -238,15 +238,19 @@ extension MainViewModel {
     ///   - requestType: type of the response
     private func responseHandler<T: Codable>(response: AnyPublisher<T, APIError>?,
                          requestType: MainModelRequestType) async {
+        
+        //response?.receive(on: DispatchQueue.main)
         response?.sink { [weak self] completion in
             guard let self = self else { return }
-            Task { @MainActor in self.errorResponseWith(type: requestType,
-                                                               with: completion)
+            /// Ensures all code inside this class runs on the main thread
+            /// Important for updating @Published properties that affect the UI
+            Task { @MainActor in
+                self.errorResponseWith(type: requestType, with: completion)
             }
         } receiveValue: { [weak self] response in
             guard let self = self else { return }
-            Task { @MainActor in self.successResponseWith(type: requestType,
-                                                                 and: response)
+            Task { @MainActor in
+                self.successResponseWith(type: requestType,and: response)
             }
         }.store(in: &cancelable)
     }
@@ -393,3 +397,34 @@ func fetchData() async {
         // Show UI error
     }
 }*/
+
+/*
+ @MainActor
+ // Ensures all code inside this class runs on the main thread
+ // Important for updating @Published properties that affect the UI
+
+ class CarRepairViewModel: ObservableObject {
+     // This class conforms to ObservableObject so SwiftUI views can observe changes
+
+     @Published var availableSlots: [RepairSlot] = []
+     // A published property that notifies any observing SwiftUI view when updated
+     // Automatically refreshes the UI when this array is changed
+
+     func fetchAvailableSlots() async {
+         // Asynchronous function to fetch repair slots from the service
+
+         do {
+             let slots = try await CarRepairService.shared.getAvailableSlots()
+             // Await the result from the service
+             // If successful, assign the result to the slots constant
+
+             availableSlots = slots
+             // Update the published property with the fetched slots
+             // This triggers UI updates on any observing SwiftUI view
+         } catch {
+             print("Error: \(error.localizedDescription)")
+             // Handle and print any error that occurred during fetching
+         }
+     }
+ }
+ */

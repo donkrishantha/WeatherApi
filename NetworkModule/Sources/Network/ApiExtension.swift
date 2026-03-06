@@ -9,6 +9,11 @@ import Foundation
 import OSLog
 import Combine
 
+///  https://medium.com/@chandra.welim/codable-and-json-parsing-api-responses-the-right-way-df3d247abe3d
+///  https://medium.com/@chandra.welim/swift-codable-stop-manually-parsing-json-forever-b8c23c88ffe2
+///  https://medium.com/@chandra.welim/swift-codable-stop-manually-parsing-json-forever-b8c23c88ffe2
+///  
+
 /// Extension for the making url request.
 extension URL {
     static var WeatherApi: URL {

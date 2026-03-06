@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct LoadingButtonStyle: ButtonStyle {
-    @Environment(\.appButtonTags) private var appButtonTag : MainModelButtonTags
+    @SwiftUI.Environment(\.appButtonTags) private var appButtonTag : MainModelButtonTags
     @Binding var tag: MainModelButtonTags
     @Binding var isLoading: Bool
     var bgColor: Color? = Color.blue
@@ -40,7 +40,7 @@ struct LoadingButtonStyle: ButtonStyle {
 }
 
 struct GeneralButtonStyle: ButtonStyle {
-    @Environment(\.appButtonTags) var appButtonTag : MainModelButtonTags
+    @SwiftUI.Environment(\.appButtonTags) private var appButtonTag : MainModelButtonTags
     @Binding var tag: MainModelButtonTags
     var bgColor: Color? = Color.blue
 
@@ -59,7 +59,7 @@ struct GeneralButtonStyle: ButtonStyle {
     }
 }
 
-struct PrimaryButtonModifier: ViewModifier {
+private struct PrimaryButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding()
@@ -67,7 +67,7 @@ struct PrimaryButtonModifier: ViewModifier {
     }
 }
 
-extension View {
+private extension View {
     func commonButtonStyle() -> some View {
         self.modifier(PrimaryButtonModifier())
     }

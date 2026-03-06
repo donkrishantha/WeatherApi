@@ -33,7 +33,7 @@ public final class APIClient: APIClientProtocol {
     /// Session for the url request
     private let session: URLSession
     
-    /// Api log ststes
+    /// Api log states
     let logger = Logger.apiClient
     
     public init(session: URLSession) {
